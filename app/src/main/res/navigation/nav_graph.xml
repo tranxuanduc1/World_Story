@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/userFragment">
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.worldstory.fragments.UserFragment"
+        android:label="@string/manage_users" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.worldstory.fragments.CategoryFragment"
+        android:label="@string/manage_categories" />
+    <fragment
+        android:id="@+id/storyFragment"
+        android:name="com.example.worldstory.fragments.StoryFragment"
+        android:label="@string/manage_stories" />
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.example.worldstory.fragments.CommentFragment"
+        android:label="@string/manage_comments" />
+</navigation>
