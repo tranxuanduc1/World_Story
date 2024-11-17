@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducactivity.DucChapterActivity"
+    android:fitsSystemWindows="true"
+    android:windowSoftInputMode="adjustResize"
+    >
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollParagraph_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_marginVertical="50dp"
+            android:id="@+id/linear_containerContent_chapter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+<!--            <TextView-->
+<!--                android:padding="20dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="20sp"-->
+<!--                android:text="@string/loremIpsum"-->
+<!--                />-->
+            <!--            <com.github.chrisbanes.photoview.PhotoView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:src="@drawable/pa1"-->
+            <!--                android:scaleType="centerInside"-->
+            <!--                />-->
+            <!--            <com.github.chrisbanes.photoview.PhotoView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:src="@drawable/pa2"-->
+            <!--                android:scaleType="centerInside"-->
+            <!--                />-->
+            <!--            <com.github.chrisbanes.photoview.PhotoView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:src="@drawable/pa3"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:scaleType="centerInside"-->
+            <!--                />-->
+            <!--            <com.github.chrisbanes.photoview.PhotoView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:src="@drawable/pa4"-->
+            <!--                android:scaleType="centerInside"-->
+            <!--                />-->
+
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <FrameLayout
+
+        android:id="@+id/frameTop_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green1"
+        >
+        <ImageButton
+            android:id="@+id/btnBack_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back"
+            android:background="@drawable/image_button_search_slector"
+            android:padding="10dp"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/txt_titleChapter_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonReadFromChapter1StoryOverview"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            />
+        <ImageButton
+            android:id="@+id/btnOpenCommentDialog_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/icon_comment"
+            android:background="@drawable/image_button_search_slector"
+            android:layout_gravity="center_vertical|right"
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameBottom_chapter"
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green1"
+        android:layout_gravity="bottom"
+        >
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_previousChapter_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/image_button_search_slector"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/icon_arrow_left"
+            android:text="@string/previousChapter"
+            />
+        <ImageButton
+            android:id="@+id/btn_markChapter_chapter"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_mark_outline"
+            android:background="@drawable/image_button_search_slector"
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_nextChapter_chapter"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:drawableEnd="@drawable/icon_arrow_right"
+            android:text="@string/nextChapter"
+            android:background="@drawable/image_button_search_slector"
+            android:layout_gravity="center_vertical|right"
+            />
+
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameContainerCommentDialog_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@android:color/transparent"
+        android:visibility="visible"
+        >
+        <FrameLayout
+            android:id="@+id/viewBackground_commentDialog_chapter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/duc_opacity20"
+            android:elevation="0dp"
+
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/frameCommentDialog_chapter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_rectangle_top_left_curved"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="100dp"
+            android:elevation="1dp"
+            android:clickable="true"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/linearMainCommentDialog_chapter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="65dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/frameBottomCommentDialog_chapter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frameTopCommentDialog_chapter"
+
+                >
+
+
+                <ScrollView
+                    android:id="@+id/scrollViewMainCommentDialog_Chapter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/linear_containerComment_chapter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/frameTopCommentDialog_chapter"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_rectangle_top_left_curved"
+                android:backgroundTint="@color/green3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/btnBack_commentDialog_chaper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/image_button_search_slector"
+                    android:clickable="true"
+                    android:elevation="2dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_back_light"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:text="@string/comment"
+                    android:textColor="@color/skin"
+                    android:textSize="25sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameBottomCommentDialog_chapter"
+
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_gravity="bottom"
+                android:background="@color/green3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <EditText
+                    android:id="@+id/etxt_commentUser_chapter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="50dp"
+                    android:background="@drawable/shape_rectangle_curved"
+                    android:backgroundTint="@color/white"
+                    android:textSize="18sp"
+                    android:paddingHorizontal="10dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/btn_sendCommentUser_chapter"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/image_button_search_slector"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_send_light" />
+
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</FrameLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="0dp"
+    android:orientation="horizontal"
+    >
+    <TextView
+        android:id="@+id/idGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="idgenre"
+        android:visibility="gone"
+        />
+<com.google.android.material.button.MaterialButton
+    android:id="@+id/btn_genreItemlayout"
+    android:layout_margin="0dp"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    android:text="hello"
+    android:backgroundTint="@color/skin"
+    android:textColor="@color/green3"
+    android:elevation="8dp"
+    android:translationZ="10dp"
+
+    />
+<TextView
+    android:id="@+id/txtIDGenre_genreItemlayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"/>
+</LinearLayout>

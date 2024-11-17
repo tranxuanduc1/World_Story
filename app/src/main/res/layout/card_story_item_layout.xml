@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="15dp"
+
+    app:cardElevation="5dp"
+    >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    >
+
+        <ImageView
+            android:id="@+id/imgCardStoryItemLayout"
+            android:layout_width="110dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/constraintLayoutCardStoryLayout"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+
+
+            android:background="@drawable/shape_red_card_story_item_layout"
+            app:layout_constraintEnd_toEndOf="@+id/imgCardStoryItemLayout"
+            app:layout_constraintTop_toTopOf="@id/imgCardStoryItemLayout" >
+
+            <TextView
+                android:id="@+id/txtRankCardStoryItemLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/txtTitleCardStoryItemLayout"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingBottom="0dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:text="Tieu Đề asd asd asd a s"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/green3"
+            />
+        <TextView
+            android:id="@+id/txtAuthorCardStoryItemLayout"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:text="tac gia"
+            android:textSize="14sp"
+
+            android:paddingBottom="7dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            />
+    </LinearLayout>
+<TextView
+    android:id="@+id/idStory_CardStoryItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="id story"
+    android:visibility="gone"
+    />
+</LinearLayout>
+</androidx.cardview.widget.CardView>

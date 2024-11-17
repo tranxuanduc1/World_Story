@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducfragment.Duc_Setting_User_Fragment"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+
+    <ImageButton
+        android:layout_margin="20dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/cat"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        />
+<TextView
+    android:textSize="22sp"
+    android:textStyle="bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Ten Cua Nguoi Ta"
+    android:gravity="end"
+    android:paddingHorizontal="20dp"
+    android:layout_marginBottom="10dp"
+    />
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/green1"
+    android:layout_marginHorizontal="30dp"
+
+    />
+
+
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/image_button_search_slector"
+                    android:text="@string/titleChapterMarkedSetting"
+                    android:drawableLeft="@drawable/icon_chapter_mark"
+                    android:paddingStart="20dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="start|center_vertical"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/image_button_search_slector"
+                    android:text="@string/titleCommentHistorySetting"
+                    android:drawableLeft="@drawable/icon_comment_history"
+                    android:paddingStart="20dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="start|center_vertical"
+                    />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green1"
+            android:layout_marginHorizontal="30dp"
+
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogout_settingUserFragment"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/image_button_search_slector"
+            android:text="@string/logout"
+            android:drawableLeft="@drawable/icon_logout_24"
+
+            android:paddingStart="20dp"
+            android:drawablePadding="20dp"
+            android:gravity="start|center_vertical"
+            />
+
+    </LinearLayout>
+</ScrollView>
