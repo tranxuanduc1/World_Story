@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ActiveIndicatorStyle">
+        <item name="android:height">30dp</item>  <!-- Chiều cao của indicator -->
+        <item name="android:width">60dp</item>  <!-- Kích thước theo chiều rộng -->
+        <item name="shapeAppearance">@style/ShapeAppearanceCustom</item>
+        <item name="android:color">@color/Teal</item>  <!-- Màu của indicator -->
+
+    </style>
+
+    <style name="ShapeAppearanceCustom">
+        <item name="cornerSize">16dp</item>  <!-- Đặt kích thước bo cho các góc -->
+    </style>
+
+
+</resources>

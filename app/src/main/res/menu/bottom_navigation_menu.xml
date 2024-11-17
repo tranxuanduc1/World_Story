@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+
+        android:id="@+id/userFragment"
+        android:enabled="true"
+        android:icon="@drawable/round_group_24"
+        android:title="@string/manage_users"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/categoryFragment"
+        android:enabled="true"
+        android:icon="@drawable/baseline_menu_24"
+        android:title="@string/manage_categories"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/storyFragment"
+        android:enabled="true"
+        android:icon="@drawable/outline_book_2_24"
+        android:title="@string/manage_stories"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/commentFragment"
+        android:enabled="true"
+        android:icon="@drawable/outline_mode_comment_24"
+        android:title="@string/manage_comments"
+        app:showAsAction="ifRoom" />
+</menu>

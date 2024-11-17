@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Nền khi được chọn -->
+    <item android:state_checked="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/Teal" />
+            <size android:width="40dp" android:height="40dp" /> <!-- Kích thước nền quanh icon -->
+        </shape>
+    </item>
+
+    <!-- Nền khi không được chọn -->
+    <item android:state_checked="false">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>
