@@ -22,7 +22,7 @@
     android:layout_width="wrap_content"
     android:layout_height="50dp"
     android:text="hello"
-    android:backgroundTint="@color/skin"
+    android:backgroundTint="@color/duc_skin"
     android:textColor="@color/green3"
     android:elevation="8dp"
     android:translationZ="10dp"

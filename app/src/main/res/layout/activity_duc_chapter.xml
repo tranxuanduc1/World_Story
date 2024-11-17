@@ -229,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="@string/comment"
-                    android:textColor="@color/skin"
+                    android:textColor="@color/duc_skin"
                     android:textSize="25sp" />
             </FrameLayout>
 

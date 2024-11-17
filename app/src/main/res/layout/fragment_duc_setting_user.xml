@@ -75,6 +75,18 @@
 
             />
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_switchToAdmin_settingUserFragment"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/image_button_search_slector"
+            android:text="@string/switchToAdmin"
+            android:drawableLeft="@drawable/icon_switch_admin"
+
+            android:paddingStart="20dp"
+            android:drawablePadding="20dp"
+            android:gravity="start|center_vertical"
+            />
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnLogout_settingUserFragment"
             android:layout_width="match_parent"
             android:layout_height="70dp"

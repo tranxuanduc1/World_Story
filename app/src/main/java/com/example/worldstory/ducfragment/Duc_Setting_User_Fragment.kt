@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.myapplication.databinding.FragmentDucSettingUserBinding
+import com.example.worldstory.AdminMainActivity
 import com.example.worldstory.ducactivity.DucLoginActivity
+import com.example.worldstory.ducutils.toActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,10 +47,16 @@ class Duc_Setting_User_Fragment : Fragment() {
             startActivity(intent)
         }
 
-
+        setConfigButton()
         return view
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_setting_user, container, false)
+    }
+
+    private fun setConfigButton() {
+        binding.btnSwitchToAdminSettingUserFragment.setOnClickListener{
+            requireContext().toActivity(AdminMainActivity::class.java)
+        }
     }
 
     companion object {
