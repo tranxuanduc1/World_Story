@@ -1,13 +1,18 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.worldstory.fragments.CommentFragment">
+    android:orientation="vertical"
+    tools:context="com.example.worldstory.admin_view_navs.CommentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/filter_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Comment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

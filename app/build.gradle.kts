@@ -4,7 +4,6 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
 }
-
 android {
     namespace = "com.example.myapplication"
     compileSdk = 34
@@ -18,7 +17,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,16 +40,15 @@ android {
 
 dependencies {
 
+    implementation(libs.filament.android)
     val nav_version = "2.8.3"
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
     // Views/Fragments integration
     implementation("androidx.navigation:navigation-fragment:$nav_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
-
     // Feature module support for Fragments
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     val room_version = "2.6.1"
