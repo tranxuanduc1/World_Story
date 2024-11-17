@@ -3,10 +3,12 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
+
 }
 android {
     namespace = "com.example.myapplication"
-    compileSdk = 34
+    compileSdk = 35
     buildFeatures {
         dataBinding = true
         viewBinding = true
@@ -14,7 +16,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -36,6 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -70,4 +73,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation (libs.flexbox)
+    implementation (libs.touchimageview)
+    implementation (libs.photoview)
+    implementation(libs.androidx.core.ktx.v1150)
+    implementation(libs.androidx.fragment.ktx)
 }
