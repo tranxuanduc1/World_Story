@@ -16,7 +16,12 @@ import com.example.worldstory.admin_viewholder.StoryViewHolder
 interface OnItemClickListener {
     fun onItemClick(item: Story)
 }
-class StoryAdapter(private var storyList: List<Story>, private var color: Int,private val listener: OnItemClickListener) :
+
+class StoryAdapter(
+    private var storyList: List<Story>,
+    private var color: Int,
+    private val listener: OnItemClickListener
+) :
     RecyclerView.Adapter<StoryViewHolder>(), Filterable {
     private var filteredList: List<Story> = storyList
     private var searchQuery: String = ""
@@ -30,10 +35,10 @@ class StoryAdapter(private var storyList: List<Story>, private var color: Int,pr
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = filteredList[position]
-        holder.column1.text = highlightQuery(text = story.id , query = searchQuery)
-        holder.column2.text = highlightQuery(text = story.name   , query = searchQuery)
-        holder.column3.text = highlightQuery(text = story.tacGia , query = searchQuery)
-        holder.itemView.setOnClickListener{
+        holder.column1.text = highlightQuery(text = story.id, query = searchQuery)
+        holder.column2.text = highlightQuery(text = story.name, query = searchQuery)
+        holder.column3.text = highlightQuery(text = story.tacGia, query = searchQuery)
+        holder.itemView.setOnClickListener {
             listener.onItemClick(story)
         }
         if (position % 2 == 0) {
@@ -50,6 +55,16 @@ class StoryAdapter(private var storyList: List<Story>, private var color: Int,pr
                 var query: String = p0.toString()
                 filteredList = if (query.isEmpty()) {
                     storyList
+                } else if (filteredList.isEmpty()) {
+                    storyList.filter {
+                        it.name.contains(query, ignoreCase = true)
+                                || it.id.contains(query, ignoreCase = true) || it.tacGia.contains(
+                            query,
+                            ignoreCase = true
+                        )
+                                || it.theLoai.joinToString(separator = ",")
+                            .contains(query, ignoreCase = true)
+                    }
                 } else {
                     filteredList.filter {
                         it.name.contains(query, ignoreCase = true)
@@ -61,6 +76,7 @@ class StoryAdapter(private var storyList: List<Story>, private var color: Int,pr
                             .contains(query, ignoreCase = true)
                     }
                 }
+
                 val result = FilterResults()
                 result.values = filteredList
                 return result
