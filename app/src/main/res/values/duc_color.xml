@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="green1">#C6DABF</color>
+    <color name="green2">#1A936F</color>
+    <color name="green3">#114B5F</color>
+    <color name="green4">#88D498</color>
+    <color name="skin">#F3E9D2</color>
+    <color name="blur">#0F000000</color>
+
+    <color name="duc_red">#FF4141</color>
+    <color name="duc_yellow">#FFE500</color>
+    <color name="duc_opacity20">#27000000</color>
+<!--    <color name="gray">#656464</color>-->
+
+</resources>

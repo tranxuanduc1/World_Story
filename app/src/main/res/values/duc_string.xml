@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="line">
+
+    </string>
+    <string name="titleTab1">Comic</string>
+    <string name="titleTab2">Truyện chữ</string>
+    <string name="titleTab3">Tủ truyện</string>
+    <string name="titleTab4">Menu</string>
+    <string name="titleTab1BookStories">Đã đọc</string>
+    <string name="titleTab2BookStories">Yêu thích</string>
+    <string name="titleChapterMarkedSetting">Chương được đánh dấu</string>
+    <string name="titleCommentHistorySetting">Lịch sử bình luận</string>
+    <string name="buttonLoveStoryOverview">Yêu thích</string>
+    <string name="buttonReadFromChapter1StoryOverview">Đọc từ chương 1</string>
+    <string name="previousChapter">Chương trước</string>
+    <string name="nextChapter">Chương sau</string>
+    <string name="comment">Bình luận</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="login">Đăng nhập</string>
+    <string name="signUp">Đăng ký</string>
+    <string name="worldOfStories">Thế Giới Truyện</string>
+    <string name="welcome">Welcome</string>
+    <string name="loginName">Tên đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+    <string name="forgotPassword">Quên mật khẩu</string>
+    <string name="orLoginWith">Hoặc đăng nhập với</string>
+    <string name="dontHaveAnAcctount">Không có tài khoản ?</string>
+    <string name="createYourAccout">Tạo tài khoản của bạn</string>
+    <string name="confirmPassword">Xác nhận mật khẩu</string>
+    <string name="email">Email</string>
+    <string name="storyDataNotFound">Không tìm thấy dữ liệu của truyện</string>
+    <string name="dataNotFound">Không tìm thấy dữ liệu</string>
+    <string name="loremIpsumLong">Lorem ipsum odor amet, consectetuer adipiscing elit. Acurae conubia habitasse feugiat urna vestibulum dis. Faucibus ultricies leo fusce accumsan suscipit sapien penatibus. Nulla per ad curae erat dolor; eu nisi? Iaculis turpis efficitur ad nascetur quisque commodo justo pharetra. Finibus ultrices gravida condimentum laoreet magna eget. Phasellus inceptos fames nisl nibh nisl rhoncus. Sagittis conubia ornare leo fermentum dapibus mus. Dictum facilisis faucibus curabitur purus nec proin. Torquent dui fringilla class pretium odio tellus at! Turpis ornare gravida metus amet, molestie augue eget. Non ornare vehicula potenti mollis gravida duis nostra. Aliquet tortor semper consectetur enim faucibus tempus, turpis arcu penatibus.</string>
+    <string name="loremIpsum">Lorem ipsum odor amet</string>
+    //----------------KEY----------------
+    <string name="key_storyInfo">STORY_INFO</string>
+    <string name="key_storiesByGenre">STORIES_BY_GENRE</string>
+    <string name="key_isComic">IS_COMIC</string>
+    <string name="key_genreInfo">GENRE_INFO</string>
+    <string name="key_chapterInfo">CHAPTER_INFO</string>
+    <string name="key_previousChapterInfo">PREVIOUS_CHAPTER_INFO</string>
+    <string name="key_nextChapterInfo">NEXT_CHAPTER_INFO</string>
+    <string name="key_mainChapterInfo">MAIN_CHAPTER_INFO</string>
+    <string name="key_resultSearchInfo">RESULT_SEARCH_INFO</string>
+    <string name="key_textQuery">TEXT_QUERY</string>
+
+
+</resources>
