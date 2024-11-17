@@ -41,6 +41,9 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
         addChipFromTemplate("Kịch tính", chipGroup)
         addChipFromTemplate("Kỳ quái", chipGroup)
         addChipFromTemplate("Học đường", chipGroup)
+        addChipFromTemplate("Lãng mạn", chipGroup)
+        addChipFromTemplate("Bạo lực", chipGroup)
+        addChipFromTemplate("Viễn tưởng", chipGroup)
 
         val filterBtn = view.findViewById<Button>(R.id.filter_btn)
         filterBtn.setOnClickListener {

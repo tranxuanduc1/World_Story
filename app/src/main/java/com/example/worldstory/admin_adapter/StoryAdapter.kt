@@ -51,7 +51,7 @@ class StoryAdapter(private var storyList: List<Story>, private var color: Int,pr
                 filteredList = if (query.isEmpty()) {
                     storyList
                 } else {
-                    storyList.filter {
+                    filteredList.filter {
                         it.name.contains(query, ignoreCase = true)
                                 || it.id.contains(query, ignoreCase = true) || it.tacGia.contains(
                             query,

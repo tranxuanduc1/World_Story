@@ -82,7 +82,7 @@ class StoryFragment : Fragment() ,OnItemClickListener{
                             "T2",
                             "Conan",
                             "Unknow",
-                            listOf("Hài", "Kịch Tính", "Trinh Thám")
+                            listOf("Hài", "Trinh Thám")
                         )
                     )
                 }
@@ -152,10 +152,8 @@ class StoryFragment : Fragment() ,OnItemClickListener{
         sharedViewModel._filterBtn.observe(viewLifecycleOwner) { isClicked ->
             if (isClicked == true && sharedViewModel._selectedChips.isNotEmpty()) {
                 sharedViewModel._selectedChips.forEach { chip -> storyAdapter.filter.filter(chip) }
-                sharedViewModel.filterBtnHandled()
             } else if (isClicked == true) {
                 storyAdapter.filter.filter("")
-                sharedViewModel.filterBtnHandled()
             } else if (sharedViewModel._selectedChips.isNotEmpty()) {
                 sharedViewModel._selectedChips.forEach { chip -> storyAdapter.filter.filter(chip) }
             }

@@ -15,7 +15,8 @@ class SharedViewModel : ViewModel() {
     val _add: LiveData<Boolean?> get() = add
     val _search: LiveData<Boolean?> get() = search
     val _filterBtn: LiveData<Boolean?> get() = filterBtn
-    val _selectedChips:MutableSet<String>get() = selectedChips
+    val _selectedChips: MutableSet<String> get() = selectedChips
+
     //////////
     fun addSeclectedChip(text: String) {
         selectedChips.add(text)
