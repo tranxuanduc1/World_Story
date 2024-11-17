@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducactivity.DucStoriesByGenreActivity"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:id="@+id/btn_back_storiesByGenre"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/icon_back"
+            android:background="@drawable/image_button_search_slector"
+           android:scaleType="centerCrop"
+
+            android:layout_gravity="center_vertical"
+            android:padding="5dp"
+            />
+        <TextView
+            android:id="@+id/txt_titleGenre_storiesByGenre"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="the loai"
+            android:layout_marginHorizontal="10dp"
+
+            />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_story_storiesByGenre"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

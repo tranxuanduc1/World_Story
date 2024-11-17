@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.worldstory.ducfragment.Duc_BookStories_User_Fragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+<com.google.android.material.tabs.TabLayout
+    android:id="@+id/tabLayout_bookStoriesFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:tabIndicatorColor="@color/green2"
+    app:tabTextColor="@color/tab_color_book_stories_fragment_slector"
+    >
+    <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titleTab1BookStories"
+        />
+    <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titleTab2BookStories"
+
+        />
+</com.google.android.material.tabs.TabLayout>
+<androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/viewPaper2_bookStoriesFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />
+</LinearLayout>

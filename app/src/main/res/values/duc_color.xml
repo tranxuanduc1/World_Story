@@ -5,12 +5,12 @@
     <color name="green2">#1A936F</color>
     <color name="green3">#114B5F</color>
     <color name="green4">#88D498</color>
-    <color name="skin">#F3E9D2</color>
+    <color name="duc_skin">#F3E9D2</color>
     <color name="blur">#0F000000</color>
 
     <color name="duc_red">#FF4141</color>
     <color name="duc_yellow">#FFE500</color>
     <color name="duc_opacity20">#27000000</color>
-<!--    <color name="gray">#656464</color>-->
+    <color name="duc_gray">#656464</color>
 
 </resources>

@@ -17,6 +17,7 @@
     <string name="nextChapter">Chương sau</string>
     <string name="comment">Bình luận</string>
     <string name="logout">Đăng xuất</string>
+    <string name="switchToAdmin">Chuyển sang Quản trị viên</string>
     <string name="login">Đăng nhập</string>
     <string name="signUp">Đăng ký</string>
     <string name="worldOfStories">Thế Giới Truyện</string>

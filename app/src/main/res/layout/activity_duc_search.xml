@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducactivity.DucSearchActivity"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    >
+    <SearchView
+        android:id="@+id/searchView_Search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Nhập tên truyện"
+        android:queryBackground="@android:color/transparent"
+        android:iconifiedByDefault="false"
+        android:inputType="text"
+        />
+    <ListView
+        android:id="@+id/listView_Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        />
+</LinearLayout>

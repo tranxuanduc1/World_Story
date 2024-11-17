@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducactivity.DucUserHomeActivity"
+    android:fitsSystemWindows="true"
+    >
+
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPaper2UserHome"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/lineUserHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:id="@+id/lineUserHome"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayoutUserHome"
+        />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutUserHome"
+        android:layout_width="409dp"
+        app:tabMode="fixed"
+        android:elevation="0dp"
+        android:stateListAnimator="@null"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorGravity="top"
+        app:tabIndicator="@drawable/shape_tab_layout_user_home"
+        app:tabIconTint="@color/tab_color_user_home_slector"
+        app:tabIndicatorAnimationMode="linear"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabIndicatorColor="@color/green2"
+
+        app:tabTextColor="@color/tab_color_user_home_slector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabIndicatorFullWidth="true"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

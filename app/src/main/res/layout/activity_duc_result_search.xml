@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.worldstory.ducactivity.DucResultSearchActivity"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    >
+    <ImageButton
+        android:id="@+id/btnBack_resultSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/icon_back"
+        android:background="@drawable/image_button_search_slector"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerStories_resultSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

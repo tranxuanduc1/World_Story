@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:backgroundTint="@android:color/transparent"
+    android:layout_gravity="end"
+    >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/shape_comment_self"
+        android:padding="10dp"
+        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            >
+            <TextView
+                android:id="@+id/txt_displayName_commentSelfLayout"
+                android:layout_marginStart="40dp"
+                android:textSize="18sp"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Ten User as as a sd asd"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                />
+            <ImageView
+                android:id="@+id/img_avatarUser_commentSelfLayout"
+
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/cat"
+                android:layout_gravity="left"
+                />
+        </FrameLayout>
+        <TextView
+            android:id="@+id/txt_content_commentSelfLayout"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:minWidth="140dp"
+            android:text="binh luan ne ád d ád áda á a d á dá d d á  d  ád a á dá"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txt_dateCreated_commentSelfLayout"
+
+        android:layout_marginStart="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11/01/2011"
+        android:textColor="@color/green3"
+        android:layout_gravity="right"
+        android:layout_marginEnd="5dp"
+        />
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+<TextView
+    android:layout_marginTop="10dp"
+    android:id="@+id/txtTitleChapter_listItemStoryOverview_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:text="Chuong 1 xin choa moi ngoui"
+    android:textSize="20sp"
+android:paddingHorizontal="20dp"
+    />
+    <TextView
+        android:id="@+id/txtDateCreatedChapter_listItemStoryOverview_layout"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ngay thang"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="10dp"
+        />
+    <TextView
+        android:id="@+id/txtIDChapter_listItemStoryOverview_layout"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="id"
+        android:visibility="gone"
+        />
+        </LinearLayout>
+<LinearLayout
+    android:id="@+id/btn_listItemStoryOverview_layout"
+    android:background="@drawable/image_button_search_slector"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+/>
+</FrameLayout>
