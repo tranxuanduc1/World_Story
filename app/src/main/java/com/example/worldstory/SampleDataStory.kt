@@ -2,13 +2,13 @@ package com.example.worldstory
 
 import android.content.Context
 import com.example.myapplication.R
-import com.example.worldstory.ducdataclass.DucStoryDataClass
-import com.example.worldstory.ducdataclass.DucChapterDataClass
-import com.example.worldstory.ducdataclass.DucCommentDataClass
-import com.example.worldstory.ducdataclass.DucGenreDataClass
-import com.example.worldstory.ducdataclass.DucParagraphDataClass
-import com.example.worldstory.ducutils.getLoremIpsum
-import com.example.worldstory.ducutils.getLoremIpsumLong
+import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
+import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
+import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
+import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
+import com.example.worldstory.duc.ducutils.getLoremIpsum
+import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 
 object SampleDataStory {
     private val dataList= mutableListOf<DucStoryDataClass>()
