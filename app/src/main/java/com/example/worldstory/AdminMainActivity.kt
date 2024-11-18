@@ -8,14 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.myapplication.R
-import com.example.worldstory.adim_viewmodels.SharedViewModel
+import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import com.example.worldstory.admin_view_navs.CategoryFragment
-import com.example.worldstory.admin_view_navs.CommentFragment
-import com.example.worldstory.admin_view_navs.StoryFragment
-import com.example.worldstory.admin_view_navs.UserFragment
+
+import com.example.worldstory.dat.admin_view_navs.CategoryFragment
+import com.example.worldstory.dat.admin_view_navs.CommentFragment
+import com.example.worldstory.dat.admin_view_navs.StoryFragment
+import com.example.worldstory.dat.admin_view_navs.UserFragment
 import com.google.android.material.appbar.MaterialToolbar
 
 
