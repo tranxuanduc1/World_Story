@@ -14,25 +14,25 @@
         android:theme="@style/Theme.WorldStory"
         tools:targetApi="31">
         <activity
-            android:name="com.example.worldstory.ducactivity.DucStoriesByGenreActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucSignUpActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucSignUpActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucLoginActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucLoginActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucResultSearchActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucResultSearchActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucChapterActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucStoryOverviewActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucSearchActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucSearchActivity"
             android:exported="false" />
         <activity
             android:name="com.example.worldstory.AdminMainActivity"
@@ -42,7 +42,7 @@
             android:name="com.example.worldstory.admin_view_navs.chapter_activity.ChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.ducactivity.DucUserHomeActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucUserHomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

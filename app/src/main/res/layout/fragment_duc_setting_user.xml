@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.worldstory.ducfragment.Duc_Setting_User_Fragment"
+    tools:context="com.example.worldstory.duc.ducfragment.Duc_Setting_User_Fragment"
     android:orientation="vertical"
     android:background="@color/white"
     >
