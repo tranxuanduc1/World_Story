@@ -12,7 +12,6 @@ import com.example.worldstory.admin_dialog.EditTitleDialog
 
 class ChapterFragment : Fragment() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

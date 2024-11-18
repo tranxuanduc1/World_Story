@@ -30,6 +30,7 @@ class ChapterActivity : AppCompatActivity() {
             when(position){
                 0->tab.text="About story"
                 1->tab.text="About comments"
+                2->tab.text="About rates"
             }
         }.attach()
     }
