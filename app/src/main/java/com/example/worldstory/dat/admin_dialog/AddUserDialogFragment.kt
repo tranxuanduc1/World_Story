@@ -18,7 +18,7 @@ class AddUserDialogFragment: DialogFragment() {
             val pw=view.findViewById<AppCompatEditText>(R.id.et2)
             val nn=view.findViewById<AppCompatEditText>(R.id.nickname)
 
-            val db=DatabaseHelper(requireContext())
+
             builder.setView(view)
                 .setPositiveButton("Add", null)
                 .setNegativeButton("Cancel") { dialog, which ->
@@ -45,7 +45,7 @@ class AddUserDialogFragment: DialogFragment() {
                         isValid=false
                     }
                     if (isValid) {
-                        db.
+
                         dialog.dismiss()
                     }
                 }
