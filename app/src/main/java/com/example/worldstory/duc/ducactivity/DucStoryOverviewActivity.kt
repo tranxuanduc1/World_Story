@@ -22,6 +22,7 @@ import com.example.worldstory.duc.ducutils.getKey_chapterInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
@@ -100,8 +101,8 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         binding.txtTitleStoryStoryOverview.text = storyInfo.title
         binding.txtAuthorStoryStoryOverview.text = storyInfo.author
         binding.txtDescriptionStoryStoryOverview.text = storyInfo.description
-        binding.imgStoryStoryOverview.setImageResource(storyInfo.imgURL)
-        binding.imgBackgroundStoryStoryOverview.setImageResource(storyInfo.backgroundImageURL)
+        binding.imgStoryStoryOverview.loadImgURL(this,storyInfo.imgURL)
+        binding.imgBackgroundStoryStoryOverview.loadImgURL(this,storyInfo.backgroundImageURL)
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)

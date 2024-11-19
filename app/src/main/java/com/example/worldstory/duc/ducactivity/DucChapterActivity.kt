@@ -17,6 +17,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.myapplication.databinding.CommentOppositeLayoutBinding
 import com.example.myapplication.databinding.CommentSelfLayoutBinding
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.dpToPx
@@ -27,6 +28,7 @@ import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.scrollToBottom
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
@@ -247,7 +249,7 @@ class DucChapterActivity : AppCompatActivity() {
 
     }
 
-    fun createContentPhoToView(imgSrc: Int?): PhotoView {
+    fun createContentPhoToView(imgSrc: String?): PhotoView {
         var photoView = PhotoView(this)
         photoView.apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -255,9 +257,9 @@ class DucChapterActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             adjustViewBounds = true
-            setImageResource(imgSrc ?: R.drawable.pa1)
             scaleType = ImageView.ScaleType.CENTER_INSIDE
         }
+        photoView.loadImgURL(this,imgSrc ?: SampleDataStory.getExampleImgURLParagraph())
         return photoView
     }
 

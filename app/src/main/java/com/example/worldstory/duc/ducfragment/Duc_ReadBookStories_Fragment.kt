@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.worldstory.SampleDataStory
+import com.example.worldstory.duc.SampleDataStory
 import com.example.myapplication.databinding.FragmentDucReadBookStoriesBinding
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 
