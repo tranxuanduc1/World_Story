@@ -204,9 +204,9 @@ class DatabaseHelper(context: Context) :
         var createStoryGernTable = """
             create table ${Contract.StoryGenreEntry.TABLE_NAME}(
             ${_ID} integer primary key autoincrement,
-             ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} integer not null
-             ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} integer not null
-            foreign key (${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}) references ${Contract.StoryEntry.TABLE_NAME}(${_ID}))
+             ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} integer not null,
+             ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} integer not null,
+            foreign key (${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}) references ${Contract.StoryEntry.TABLE_NAME}(${_ID}),
             foreign key (${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}) references ${Contract.GenreEntry.TABLE_NAME}(${_ID}))
         """.trimIndent()
         //////////////////////////
