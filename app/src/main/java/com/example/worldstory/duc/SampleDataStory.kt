@@ -33,6 +33,10 @@ object SampleDataStory {
         return "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244"
 
     }
+    fun getExampleImgURLParagraph():String{
+        return "https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467623087_987608846509607_7464989657181579078_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PJhBdDIh8ngQ7kNvgFXOx3O&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=AFd7aN9gB5bxoYEwwsXIv2f&oh=00_AYD0Z_URAyRNGfnjU-LURgA-2gVde9_z-mv0bGN_9BaT5g&oe=67422259"
+
+    }
     fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass{
         return getDataList(context).filter { it.idStory==idStory }.first()
     }
@@ -130,7 +134,7 @@ object SampleDataStory {
     private fun generateListOfGenre(){
         var titleList = arrayOf(
             "Chiến đấu",
-            "Cha cha cha",
+            "Vui nhon",
             "Co don",
 
             "Tình cảm",
@@ -138,7 +142,7 @@ object SampleDataStory {
             "Nhanh nhay",
             "kịch tính",
             "U mê",
-            "Sành ăn"
+            "Tu duong"
 
         )
         var idList = arrayOf(
@@ -221,7 +225,7 @@ object SampleDataStory {
         listOfParagraph.addAll(item)
     }
     fun getOneComicParagraph(): DucParagraphDataClass{
-       return DucParagraphDataClass(3,R.drawable.pa1, null,1,2)
+       return DucParagraphDataClass(3,getExampleImgURLParagraph(), null,1,2)
     }
     fun getOneTextParagraph(context:Context): DucParagraphDataClass{
         return DucParagraphDataClass(1,null, getLoremIpsumLong(context),1,1,false)
@@ -232,18 +236,25 @@ object SampleDataStory {
         return  listOfParagraph
     }
     private fun generateListOfParagraph(){
+        val p1="https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467623087_987608846509607_7464989657181579078_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PJhBdDIh8ngQ7kNvgFXOx3O&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=AFd7aN9gB5bxoYEwwsXIv2f&oh=00_AYD0Z_URAyRNGfnjU-LURgA-2gVde9_z-mv0bGN_9BaT5g&oe=67422259"
+        val p2="https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/467723438_987608853176273_4668882966082102865_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YWlZYUbYXkwQ7kNvgE3jYCO&_nc_zt=23&_nc_ht=scontent.fhan4-3.fna&_nc_gid=AGDIEQX_cb1_fgYK36qvGVI&oh=00_AYCdk4vBlHeH8OamHhgPsh8Krue4z4n87eTw0ze93H0qkg&oe=674228AA"
+        val p3="https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467668063_987608843176274_2859379085125334494_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=yXXD9A77qecQ7kNvgF_d8YC&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=APlheJAZPnckmNTfHmSXxw1&oh=00_AYA_aNaPZsNIj4d7_m7buS-uLLEZqlrXLFmCT6tjuBpVzg&oe=6742542B"
+        val p4="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.30808-6/467593664_987608919842933_5614161165862365298_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=M890QOlTAdgQ7kNvgGjskoW&_nc_zt=23&_nc_ht=scontent.fhan3-4.fna&_nc_gid=ABNzVvhlzRKGC_pZhF3yrl4&oh=00_AYDMJu16KD0Bab_Mw-oiuajQDLnUI_f6W7WFhcMHoZt7sg&oe=67423E82"
+        val p5="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.30808-6/467600225_987608923176266_4457027657328368414_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=DVp19tJB7wYQ7kNvgEPu0iF&_nc_zt=23&_nc_ht=scontent.fhan3-4.fna&_nc_gid=Apt9d8aT9XV4egL6li5M-yW&oh=00_AYBUuZIL6k6Lrw2KoBPCGUFMf8MUXGL76a5nS48oD0pmJA&oe=67424E4A"
         var idParagraph:Int=1
         //so chapter hien tai cua truyen comic
         for(i in 1..24){
-            var item1 = DucParagraphDataClass(idParagraph,R.drawable.pa1, null,1,i)
+            var item1 = DucParagraphDataClass(idParagraph,p1, null,1,i)
             idParagraph++
-            var item2 = DucParagraphDataClass(idParagraph,R.drawable.pa2, null,2,i)
+            var item2 = DucParagraphDataClass(idParagraph,p2, null,2,i)
             idParagraph++
-            var item3 = DucParagraphDataClass(idParagraph,R.drawable.pa3, null,3,i)
+            var item3 = DucParagraphDataClass(idParagraph,p3, null,3,i)
             idParagraph++
-            var item4 = DucParagraphDataClass(idParagraph,R.drawable.pa4, null,4,i)
+            var item4 = DucParagraphDataClass(idParagraph,p4, null,4,i)
             idParagraph++
-            addParagraph(arrayOf(item1,item2,item3,item4))
+            var item5 = DucParagraphDataClass(idParagraph,p5, null,5,i)
+            idParagraph++
+            addParagraph(arrayOf(item1,item2,item3,item4,item5))
 
         }
         for(i in 25..48){

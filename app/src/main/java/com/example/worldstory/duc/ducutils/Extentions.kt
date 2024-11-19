@@ -226,14 +226,14 @@ fun getExampleGenre(context: Context): DucGenreDataClass{
 fun getExampleComicParagraph(context: Context): DucParagraphDataClass{
     return DucParagraphDataClass(
         1
-        ,R.drawable.pa1
+        , SampleDataStory.getExampleImgURLParagraph()
         , context.getString(R.string.loremIpsum),
         1,1,true)
 }
 fun getExampleTextParagraph(context: Context): DucParagraphDataClass{
     return DucParagraphDataClass(
         1
-        ,R.drawable.pa1
+        ,SampleDataStory.getExampleImgURLParagraph()
         , context.getString(R.string.loremIpsum),
         1,1,false)
 }
