@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.CommentViewHolder
-import com.example.worldstory.dat.model_for_test.Comment
+import com.example.worldstory.model_for_test.Comment
 
 
 class CommentAdapter(private val commentList: List<Comment>) :

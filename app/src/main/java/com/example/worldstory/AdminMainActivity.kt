@@ -17,6 +17,7 @@ import com.example.worldstory.dat.admin_view_navs.CategoryFragment
 import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.StoryFragment
 import com.example.worldstory.dat.admin_view_navs.UserFragment
+import com.example.worldstory.dbhelper.DatabaseHelper
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -35,6 +36,7 @@ class AdminMainActivity : AppCompatActivity() {
             insets
         }
 
+        val db=DatabaseHelper(this)
 
         //Thiết lập sự kiện thông báo nhấn nút add
         val topAppBar: MaterialToolbar = findViewById(R.id.topAppBar)

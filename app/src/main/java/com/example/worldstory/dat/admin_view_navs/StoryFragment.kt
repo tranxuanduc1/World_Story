@@ -20,7 +20,7 @@ import com.example.worldstory.dat.admin_sheet.MyBottomSheetFragment
 import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity
 import com.example.worldstory.dat.admin_viewmodels.RecyclerViewState
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.dat.model_for_test.Story
+import com.example.worldstory.model_for_test.Story
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

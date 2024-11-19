@@ -6,7 +6,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.dat.model_for_test.User
+import com.example.worldstory.model_for_test.User
 import com.example.worldstory.dat.admin_viewholder.UserViewHolder
 
 class UserAdapter(private var userList: List<User>, private var color:Int) :

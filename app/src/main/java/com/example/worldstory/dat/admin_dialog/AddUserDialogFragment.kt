@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import com.example.myapplication.R
+import com.example.worldstory.dbhelper.DatabaseHelper
 
 class AddUserDialogFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -15,8 +16,11 @@ class AddUserDialogFragment: DialogFragment() {
             val view = inflater.inflate(R.layout.add_user_dialog, null)
             val userName=view.findViewById<AppCompatEditText>(R.id.et1)
             val pw=view.findViewById<AppCompatEditText>(R.id.et2)
+            val nn=view.findViewById<AppCompatEditText>(R.id.nickname)
+
+            val db=DatabaseHelper(requireContext())
             builder.setView(view)
-                .setPositiveButton("Add", null) // Hành động sẽ được xử lý trong setOnShowListener
+                .setPositiveButton("Add", null)
                 .setNegativeButton("Cancel") { dialog, which ->
                     dialog.cancel()
                 }
@@ -36,8 +40,12 @@ class AddUserDialogFragment: DialogFragment() {
                         pw.error = "Password không được để trống"
                         isValid = false
                     }
+                    if(nn.text.isNullOrEmpty( )){
+                        nn.error="Vui lòng không bỏ trống nickname"
+                        isValid=false
+                    }
                     if (isValid) {
-
+                        db.
                         dialog.dismiss()
                     }
                 }

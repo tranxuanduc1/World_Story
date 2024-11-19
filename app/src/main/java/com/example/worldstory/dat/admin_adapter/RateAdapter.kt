@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.RateViewHolder
-import com.example.worldstory.dat.model_for_test.Rate
+import com.example.worldstory.model_for_test.Rate
 
 
 class RateAdapter(private val rateList: List<Rate>) :

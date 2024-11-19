@@ -1,4 +1,4 @@
-package com.example.worldstory.dat.model_for_test
+package com.example.worldstory.model_for_test
 
 data class Comment (
     val content: String,

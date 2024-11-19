@@ -13,7 +13,7 @@ import com.example.myapplication.R
 import com.example.worldstory.dat.admin_adapter.CategoryAdapter
 import com.example.worldstory.dat.admin_dialog.AddCategoryDialog
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.dat.model_for_test.Category
+import com.example.worldstory.model_for_test.Category
 
 
 class CategoryFragment : Fragment() {

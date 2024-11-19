@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.StoryViewHolder
-import com.example.worldstory.dat.model_for_test.Story
+import com.example.worldstory.model_for_test.Story
 
 interface OnItemClickListener {
     fun onItemClick(item: Story)

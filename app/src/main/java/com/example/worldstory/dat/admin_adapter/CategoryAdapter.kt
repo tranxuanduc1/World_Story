@@ -7,7 +7,7 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.CategoryViewHolder
-import com.example.worldstory.dat.model_for_test.Category
+import com.example.worldstory.model_for_test.Category
 
 class CategoryAdapter(private val categoryList: List<Category>, private var color:Int) :
     RecyclerView.Adapter<CategoryViewHolder>(), Filterable {

@@ -1,7 +1,5 @@
 package com.example.worldstory.dat.admin_view_navs
 
-import android.app.Activity
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -13,11 +11,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.SearchView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -30,8 +26,8 @@ import com.example.worldstory.dat.admin_adapter.UserAdapter
 import com.example.worldstory.dat.admin_dialog.AddUserDialogFragment
 import com.example.worldstory.dat.admin_viewmodels.RecyclerViewState
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.dat.model_for_test.Role
-import com.example.worldstory.dat.model_for_test.User
+import com.example.worldstory.model_for_test.Role
+import com.example.worldstory.model_for_test.User
 import java.util.ArrayList
 
 
