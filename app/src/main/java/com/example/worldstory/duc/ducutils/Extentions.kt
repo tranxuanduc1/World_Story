@@ -30,12 +30,17 @@ import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.loadImgURL
 
 import java.io.Serializable
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 //-------------------------------------
 
 
 fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
+var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
 fun getKeyStoryInfo(context: Context): String = context.getString(R.string.key_storyInfo)

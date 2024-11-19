@@ -2,6 +2,7 @@ package com.example.worldstory.duc
 
 import android.content.Context
 import com.example.myapplication.R
+import com.example.worldstory.duc.ducdatabase.DucDatabaseHelper
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
@@ -9,6 +10,8 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object SampleDataStory {
     private val dataList= mutableListOf<DucStoryDataClass>()
@@ -19,8 +22,10 @@ object SampleDataStory {
     private var sumIdComment:Int=0
     var idUser:Int get()=4
         private set(value) {}
-    var date: String get() ="11/11/2004"
-        private set(value) {}
+//    var date: String get() ="11/11/2004"
+//        private set(value) {}
+    var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
     //-----------------------------------------------------
     init {
         generateData()
@@ -41,6 +46,7 @@ object SampleDataStory {
         return getDataList(context).filter { it.idStory==idStory }.first()
     }
     fun addData(data : DucStoryDataClass){
+
         dataList.add(data)
     }
     fun getDataList(context: Context): List<DucStoryDataClass>{

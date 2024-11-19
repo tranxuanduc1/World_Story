@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
+import com.example.worldstory.duc.ducdatabase.DucDatabaseHelper
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.getKeyIsComic
 import com.example.worldstory.duc.ducutils.loadImgURL
@@ -110,6 +112,9 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
                 ducStoryViewModel.getComicStoriesByGenre(genre)
             )
         }
+       // testDatabase()
+
+
 //        genreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
 //
 //
@@ -134,6 +139,13 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
 //       ---------------------------------------------------------------------------------
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun testDatabase() {
+        var ducDataHelper: DucDatabaseHelper= DucDatabaseHelper(requireContext())
+        ducDataHelper.insertStory(ducStoryViewModel.getOneExampleStory())
+
+        binding.txtTestComicUserstory.text=ducDataHelper.getAllStory().toString()
     }
 
     fun toSearchActivity() {

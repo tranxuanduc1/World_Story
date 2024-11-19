@@ -9,6 +9,11 @@ import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.myapplication.R
+import com.example.worldstory.duc.ducutils.dateTimeNow
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 class DucStoryViewModel(var context: Context): ViewModel() {
     private val _stories= MutableLiveData<List<DucStoryDataClass>>()
 
@@ -38,8 +43,10 @@ class DucStoryViewModel(var context: Context): ViewModel() {
         return comicStoryList
     }
     fun getOneExampleStory(): DucStoryDataClass{
+
         return DucStoryDataClass(1, getLoremIpsum(context),getLoremIpsum(context),
-            getLoremIpsumLong(context),SampleDataStory.getExampleImgURL(),SampleDataStory.getExampleImgURL(), SampleDataStory.date,4f,true)
+            getLoremIpsumLong(context),SampleDataStory.getExampleImgURL(),SampleDataStory.getExampleImgURL(),
+            dateTimeNow,4f,true)
 
     }
 }
