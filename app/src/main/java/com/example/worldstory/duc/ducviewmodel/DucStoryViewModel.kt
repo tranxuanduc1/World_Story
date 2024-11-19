@@ -3,7 +3,7 @@ package com.example.worldstory.duc.ducviewmodel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.worldstory.SampleDataStory
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
@@ -39,7 +39,7 @@ class DucStoryViewModel(var context: Context): ViewModel() {
     }
     fun getOneExampleStory(): DucStoryDataClass{
         return DucStoryDataClass(1, getLoremIpsum(context),getLoremIpsum(context),
-            getLoremIpsumLong(context),R.drawable.a1,R.drawable.a4, SampleDataStory.date,4f,true)
+            getLoremIpsumLong(context),SampleDataStory.getExampleImgURL(),SampleDataStory.getExampleImgURL(), SampleDataStory.date,4f,true)
 
     }
 }

@@ -3,7 +3,7 @@ package com.example.worldstory.duc.ducviewmodel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.worldstory.SampleDataStory
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 

@@ -34,6 +34,10 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/green1"/>
+        <ImageView
+            android:id="@+id/img_test_comicUserstory"
+            android:layout_width="300dp"
+            android:layout_height="100dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_buttonGenre_ComicStoriesUser"
             android:layout_width="match_parent"

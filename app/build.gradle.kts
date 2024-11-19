@@ -79,4 +79,7 @@ dependencies {
     implementation (libs.photoview)
     implementation(libs.androidx.core.ktx.v1150)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.coil)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 }

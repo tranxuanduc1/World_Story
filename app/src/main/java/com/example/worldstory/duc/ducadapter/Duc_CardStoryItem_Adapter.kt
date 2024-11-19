@@ -15,6 +15,7 @@ import com.example.myapplication.R
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducutils.changeShapeBackgroundColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 
 
@@ -45,7 +46,7 @@ class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: Arra
 
         holder.title.text=currentItem.title
         holder.author.text=currentItem.author
-        holder.imgURL.setImageResource(currentItem.imgURL)
+        holder.imgURL.loadImgURL(context,currentItem.imgURL)
 
         holder.score.text= (currentItem.score).toString()
         holder.constraintLayout.changeShapeBackgroundColorByScore(currentItem.score)

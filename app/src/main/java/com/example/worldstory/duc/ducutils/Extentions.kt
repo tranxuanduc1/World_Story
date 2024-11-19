@@ -15,15 +15,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.CardStoryItemLayoutBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
+import com.example.worldstory.duc.ducutils.loadImgURL
+
 import java.io.Serializable
 //-------------------------------------
 
@@ -57,7 +62,10 @@ fun getTextDataNotFound(context: Context): String{
 //--------------------------------------
 
 
+fun ImageView.loadImgURL(context: Context,imageURL:String){
+    Glide.with(context).load(imageURL).centerCrop().into(this)
 
+}
 
 fun Int.dpToPx(): Int {
     return (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -174,7 +182,7 @@ fun createGridCardViewStory(
         var constraintLayout =bCardView.constraintLayoutCardStoryLayout
         title.text=i.title
         author.text=i.author
-        imgURL.setImageResource(i.imgURL)
+        imgURL.loadImgURL(context,i.imgURL)
 
         score.text= (i.score).toString()
         idStory.text=i.idStory.toString()
@@ -234,8 +242,8 @@ fun getExampleComicStory(context: Context): DucStoryDataClass{
        context.getString(R.string.dataNotFound),
        context.getString(R.string.dataNotFound),
         context.getString(R.string.loremIpsum),
-        R.drawable.a1,
-        R.drawable.a2,
+        SampleDataStory.getExampleImgURL(),
+        SampleDataStory.getExampleImgURL(),
         context.getString(R.string.loremIpsum),
         4f,
         true
@@ -246,8 +254,8 @@ fun getExampleTextStory(context: Context): DucStoryDataClass{
         context.getString(R.string.dataNotFound),
        context.getString(R.string.dataNotFound),
         context.getString(R.string.loremIpsum),
-        R.drawable.a1,
-        R.drawable.a2,
+        SampleDataStory.getExampleImgURL(),
+        SampleDataStory.getExampleImgURL(),
      context.getString(R.string.loremIpsum),
         4f,
         false
