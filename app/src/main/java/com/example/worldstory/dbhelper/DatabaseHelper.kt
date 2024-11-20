@@ -22,7 +22,9 @@ import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
 
 
 object Contract {
@@ -443,6 +445,29 @@ class DatabaseHelper(context: Context) :
     }
 
 
+    fun deleteChapter(chapterID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ChapterEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(chapterID.toString())
+        )
+    }
+
+    fun updateChapter(chapter: Chapter): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
+        }
+        return db.update(
+            Contract.ChapterEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(chapter.chapterID.toString())
+        )
+    }
+
+
     //////////////////////////
     ///---- PARAGRAPH-----////
     //////////////////////////
@@ -457,5 +482,102 @@ class DatabaseHelper(context: Context) :
         return db.insert(Contract.ParagraphEntry.TABLE_NAME, null, values)
     }
 
+    fun deleteParagraph(paragraphID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ParagraphEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(paragraphID.toString())
+        )
+    }
+
+    fun updateParagraph(paragraph: Paragraph): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ParagraphEntry.COLUMN_CONTENT_FILE, paragraph.content)
+        }
+        return db.update(
+            Contract.ParagraphEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(paragraph.paragraphID.toString())
+        )
+    }
+    //////////////////////////
+    ///----   USER   -----////
+    //////////////////////////
+
+    fun insertUser(user: User): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
+            put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+            put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+            put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
+        }
+        return db.insert(Contract.UserEntry.TABLE_NAME, null, values)
+    }
+    fun deleteUser(userID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.UserEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(userID.toString())
+        )
+    }
+    fun updateUser(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+            put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
+
+
+
+    //////////////////////////
+    ///----   GENRE   -----////
+    //////////////////////////
+
+    //////////////////////////
+    ///----   ROLE   -----////
+    //////////////////////////
+    fun insertRole(role: Role): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RoleEntry.COLUMN_NAME, role.roleName)
+        }
+        return db.insert(Contract.RoleEntry.TABLE_NAME, null, values)
+    }
+
+    fun deleteRole(roleID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.RoleEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(roleID.toString())
+        )
+    }
+
+    fun updateRoleName(role: Role): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RoleEntry.COLUMN_NAME, role.roleName)
+        }
+        return db.update(
+            Contract.RoleEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(role.roleID.toString())
+        )
+    }
 
 }
