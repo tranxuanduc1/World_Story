@@ -1,15 +1,18 @@
 package com.example.worldstory.dat.admin_adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.model_for_test.User
+import com.example.worldstory.model.User
 import com.example.worldstory.dat.admin_viewholder.UserViewHolder
+import com.example.worldstory.duc.SampleDataStory
+import com.squareup.picasso.Picasso
 
-class UserAdapter(private var userList: List<User>, private var color:Int) :
+class UserAdapter(private var userList: List<User>, private var color: Int) :
     RecyclerView.Adapter<UserViewHolder>(), Filterable {
     private var filteredList: List<User> = userList
 
@@ -23,40 +26,54 @@ class UserAdapter(private var userList: List<User>, private var color:Int) :
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = filteredList[position]
-        holder.column1.text = user.name
-        holder.column2.text = user.id
-        holder.column3.text = user.role.toString()
+        Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.avt_user_col)
+        holder.column2.text = user.userID.toString()
+        holder.column1.text = user.nickName
+        holder.column3.text = user.createdDate
+        holder.column4.text = user.userName
         if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(color)}
-        else
+            holder.itemView.setBackgroundColor(color)
+        } else
             holder.itemView.setBackgroundColor(android.graphics.Color.WHITE)
     }
-    fun filterByRole(role:String){
-        filteredList=userList.filter { it.role.toString().contains(role,ignoreCase = true) }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun filterByRole(role: Int) {
+        filteredList = userList.filter { it.roleID == role }
         notifyDataSetChanged()
     }
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(p0: CharSequence): FilterResults {
-                var query:String=p0.toString()
-                filteredList=if(query.isEmpty()){
-                    userList}
-                else{
-                    userList.filter { it.name.contains(query, ignoreCase = true)
-                            ||it.id.contains(query, ignoreCase = true)||it.role.toString().contains(query, ignoreCase = true) }
+                var query: String = p0.toString()
+                filteredList = if (query.isEmpty()) {
+                    userList
+                } else {
+                    userList.filter {
+                        it.nickName.contains(query, ignoreCase = true)
+                                || it.userID.toString().contains(query, ignoreCase = true)
+                    }
                 }
-                val result=FilterResults()
-                result.values=filteredList
+                val result = FilterResults()
+                result.values = filteredList
                 return result
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun publishResults(p0: CharSequence, p1: FilterResults) {
-                filteredList= p1.values as List<User>
+                filteredList = p1.values as List<User>
                 notifyDataSetChanged()
             }
 
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(users: List<User>) {
+        userList = users
+        notifyDataSetChanged()
     }
 
 }

@@ -12,11 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,46 +25,53 @@ import com.example.myapplication.databinding.FragmentUserBinding
 import com.example.worldstory.dat.admin_adapter.UserAdapter
 import com.example.worldstory.dat.admin_dialog.AddUserDialogFragment
 import com.example.worldstory.dat.admin_viewmodels.RecyclerViewState
+import com.example.worldstory.dat.admin_viewmodels.RoleViewModel
+import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.model_for_test.Role
-import com.example.worldstory.model_for_test.User
+import com.example.worldstory.dat.admin_viewmodels.UserViewModel
+import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
+import com.example.worldstory.dbhelper.DatabaseHelper
 import java.util.ArrayList
 
 
 class UserFragment : Fragment() {
     private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var recyclerView: RecyclerView
+
     private lateinit var userAdapter: UserAdapter
-    private lateinit var autoCompleteTextView: AutoCompleteTextView
-    private val userList = mutableListOf<User>()
-    private var searchView: SearchView? = null
     private var searchQuery: String? = null
     private var isSearchViewOpen = false
-    private val items = listOf("Admin", "User", "Manager", "Guest")
+    private lateinit var items: List<String>
+    private lateinit var binding: FragmentUserBinding
+    private val roleViewModel: RoleViewModel by viewModels {
+        RoleViewModelFactory(DatabaseHelper(requireActivity()))
+    }
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(DatabaseHelper(requireActivity()))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentUserBinding.inflate(inflater, container, false)
-        searchView = binding.searchViewUser
-        recyclerView = binding.userList
-        autoCompleteTextView = binding.autoCompleteTextF
+    ): View {
+        binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //spinner
-        val items =  savedInstanceState?.getStringArrayList("items") ?: listOf("ADMIN", "USER", "POOR", "BOSS")
+        items = roleViewModel.roles.map { it.roleName }
         val adapter = ArrayAdapter(requireContext(), R.layout.user_spinner_item, items)
-        autoCompleteTextView.setText(savedInstanceState?.getString("selected")?:items[0],true)
-        autoCompleteTextView.setAdapter(adapter)
+        binding.autoCompleteTextF.setText(
+            savedInstanceState?.getString("selected") ?: items[0],
+            true
+        )
+        binding.autoCompleteTextF.setAdapter(adapter)
 
         //thiết lập onselected spinner
-        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
-            val selectedItem = parent.getItemAtPosition(position).toString()
-            userAdapter.filterByRole(selectedItem)
+        binding.autoCompleteTextF.setOnItemClickListener { _, _, position, _ ->
+            userAdapter.filterByRole(position)
         }
         //thiết lập quan sát sự kiện nút add
         sharedViewModel._add.observe(viewLifecycleOwner) { isAddButtonClicked ->
@@ -75,20 +82,19 @@ class UserFragment : Fragment() {
         }
 
         //searchview
-        searchView = view.findViewById(R.id.search_view_user)
         //khôi phục
         savedInstanceState?.let {
             searchQuery = it.getString("search_query")
             isSearchViewOpen = it.getBoolean("is_search_view_open", false)
 
             // Gán lại giá trị tìm kiếm
-            searchView?.setQuery(searchQuery, false)
+            binding.searchViewUser.setQuery(searchQuery, false)
 
         }
         if (isSearchViewOpen) {
-            searchView?.visibility = View.VISIBLE
+            binding.searchViewUser.visibility = View.VISIBLE
         }
-        searchView?.setOnQueryTextListener(object :
+        binding.searchViewUser.setOnQueryTextListener(object :
             SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
                 userAdapter.filter.filter(p0)
@@ -106,35 +112,25 @@ class UserFragment : Fragment() {
                 sharedViewModel.searchHandle()
             }
         }
-        searchView?.findViewById<View>(androidx.appcompat.R.id.search_close_btn)
+        binding.searchViewUser.findViewById<View>(androidx.appcompat.R.id.search_close_btn)
             ?.setOnClickListener() {
                 hideSearchView()
             }
-        //tạo list
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        //thêm item
-        var i = 1
-        while (i <= 100) {
-            userList.add(
-                User(
-                    "USER1",
-                    "Hứa Quang Đạt",
-                    Role.USER
-                )
-            )
-            userList.add(
-                User(
-                    "USER2",
-                    "Trần Xuân Đức",
-                    Role.ADMIN
-                )
-            )
-            i++
-        }
+        //recycleview
+        binding.userList.layoutManager = LinearLayoutManager(requireContext())
+
+        ////////
         val color1 = ContextCompat.getColor(requireContext(), R.color.pastel)
-        userAdapter = UserAdapter(userList, color1)
-        userAdapter.filterByRole(autoCompleteTextView.text.toString())
-        recyclerView.adapter = userAdapter
+        userAdapter = userViewModel._users.value?.let { UserAdapter(it,color1) }?:
+        UserAdapter(emptyList(), color1)
+        userAdapter.filterByRole(0)
+        binding.userList.adapter = userAdapter
+        userViewModel._users.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(),"${userViewModel._users.value!!.size}",Toast.LENGTH_LONG).show()
+            userAdapter.update(userViewModel._users.value?: emptyList())
+
+        }
+
         //swipe
         val simpleItemTouchCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -237,7 +233,7 @@ class UserFragment : Fragment() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.userList)
     }
 
     private fun onAddButtonClicked() {
@@ -246,43 +242,50 @@ class UserFragment : Fragment() {
     }
 
     private fun showSearchView() {
-        searchView?.visibility = View.VISIBLE
-        searchView?.isIconified = false    // Mở rộng SearchView
+        binding.searchViewUser.visibility = View.VISIBLE
+        binding.searchViewUser.isIconified = false    // Mở rộng SearchView
         isSearchViewOpen = true
     }
 
     private fun hideSearchView() {
-        searchView?.setQuery("", false)  // Xóa nội dung tìm kiếm
-        searchView?.visibility = View.GONE
+        binding.searchViewUser.setQuery("", false)  // Xóa nội dung tìm kiếm
+        binding.searchViewUser.visibility = View.GONE
         isSearchViewOpen = false
     }
+
     override fun onPause() {
         super.onPause()
 
         // Lưu trạng thái của RecyclerView
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                val offset = recyclerView.getChildAt(0)?.top ?: 0
+        val layoutManager = binding.userList.layoutManager as LinearLayoutManager
+        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+        val offset = binding.userList.getChildAt(0)?.top ?: 0
 
-                // Cập nhật ViewModel với trạng thái cuộn
-                sharedViewModel.recycleViewStateUser.value =
-                    RecyclerViewState(firstVisibleItemPosition, offset)
+        // Cập nhật ViewModel với trạng thái cuộn
+        sharedViewModel.recycleViewStateUser.value =
+            RecyclerViewState(firstVisibleItemPosition, offset)
     }
+
     override fun onResume() {
         super.onResume()
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, items)
-        autoCompleteTextView.setAdapter(adapter)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, items)
+        binding.autoCompleteTextF.setAdapter(adapter)
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString("search_query", searchView?.query.toString()) // Lưu giá trị tìm kiếm
+        outState.putString(
+            "search_query",
+            binding.searchViewUser.query.toString()
+        ) // Lưu giá trị tìm kiếm
         outState.putBoolean(
             "is_search_view_open",
             isSearchViewOpen
         )
-        outState.putString("default",items[0])
-        outState.putString("selected",autoCompleteTextView.text.toString())
+        outState.putString("default", items[0])
+        outState.putString("selected", binding.autoCompleteTextF.text.toString())
         outState.putStringArrayList("items", ArrayList(items))
     }
 }

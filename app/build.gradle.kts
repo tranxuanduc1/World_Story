@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation ("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.filament.android)
     val nav_version = "2.8.3"

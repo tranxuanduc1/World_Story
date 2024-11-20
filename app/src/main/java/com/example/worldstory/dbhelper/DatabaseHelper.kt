@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.provider.ContactsContract
+import android.util.Log
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
 import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
@@ -24,6 +25,7 @@ import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
@@ -70,10 +72,12 @@ object Contract {
 
     //User table
     object UserEntry : BaseColumns {
+
         const val TABLE_NAME = "user_table"
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_NICKNAME = "nickname"
+        const val COLUMN_IMAGE_AVATAR= "imgAvatar"
         const val COLUMN_CREATED_DATE = "created_date"
 
         //Foreign key
@@ -551,6 +555,7 @@ class DatabaseHelper(context: Context) :
     //////////////////////////
 
     fun insertUser(user: User): Long {
+
         val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
@@ -585,7 +590,10 @@ class DatabaseHelper(context: Context) :
             arrayOf(user.userID.toString())
         )
     }
-
+    fun deleteAllUser(){
+        val db=writableDatabase
+        db.execSQL("DELETE FROM ${Contract.UserEntry.TABLE_NAME}")
+    }
     fun getAllUsers(): List<User> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${Contract.UserEntry.TABLE_NAME}", null)
@@ -676,7 +684,10 @@ class DatabaseHelper(context: Context) :
             arrayOf(roleID.toString())
         )
     }
-
+    fun deleteAllRole(){
+        val db = writableDatabase
+        db.execSQL("DELETE FROM ${Contract.RoleEntry.TABLE_NAME}")
+    }
     fun updateRoleName(role: Role): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -923,8 +934,57 @@ class DatabaseHelper(context: Context) :
     }
 
     //////////////////////////
-    ///----      -----////
+    ///---- Image     -----////
     //////////////////////////
+
+    fun insertImage(img: Image): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ImageEntry.COLUMN_CONTENT_FILE, img.imgFilePath)
+            put(Contract.ImageEntry.COLUMN_NUMBER_ORDER, img.order)
+            put(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK, img.chapterID)
+        }
+        return db.insert(Contract.ImageEntry.TABLE_NAME, null, values)
+    }
+
+    fun deleteImage(ImageID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ImageEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(ImageID.toString())
+        )
+    }
+
+    fun updateImage(img: Image): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ParagraphEntry.COLUMN_CONTENT_FILE, img.imgFilePath)
+        }
+        return db.update(
+            Contract.ImageEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(img.imgID.toString())
+        )
+    }
+    fun getAllImage(): List<Image> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.ImageEntry.TABLE_NAME}", null)
+        val imgs = mutableListOf<Image>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CONTENT_FILE))
+                val order = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_NUMBER_ORDER))
+                val chapterID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK))
+                imgs.add(Image(id, content, order,chapterID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return imgs
+    }
 
 
     //////////////////////////

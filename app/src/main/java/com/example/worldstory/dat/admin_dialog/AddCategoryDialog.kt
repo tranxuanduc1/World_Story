@@ -6,9 +6,16 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.example.myapplication.R
+import com.example.worldstory.dat.admin_viewmodels.UserViewModel
+import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
+import com.example.worldstory.dbhelper.DatabaseHelper
 
 class AddCategoryDialog : DialogFragment() {
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(DatabaseHelper(requireContext()))
+    }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = Builder(it)

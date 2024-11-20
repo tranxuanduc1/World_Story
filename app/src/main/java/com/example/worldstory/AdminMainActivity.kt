@@ -12,12 +12,18 @@ import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 
 import com.example.worldstory.dat.admin_view_navs.CategoryFragment
 import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.StoryFragment
 import com.example.worldstory.dat.admin_view_navs.UserFragment
+import com.example.worldstory.dat.admin_viewmodels.RoleViewModel
+import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
+import com.example.worldstory.dat.admin_viewmodels.UserViewModel
+import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Role
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -25,6 +31,13 @@ class AdminMainActivity : AppCompatActivity() {
     private val sharedViewModel: SharedViewModel by viewModels()
     private var backPressedTime: Long = 0
     private lateinit var toast: Toast
+    private val roleViewModel: RoleViewModel by viewModels {
+        RoleViewModelFactory(DatabaseHelper(this))
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(DatabaseHelper(this))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,7 +49,6 @@ class AdminMainActivity : AppCompatActivity() {
             insets
         }
 
-        val db=DatabaseHelper(this)
 
         //Thiết lập sự kiện thông báo nhấn nút add
         val topAppBar: MaterialToolbar = findViewById(R.id.topAppBar)
@@ -52,6 +64,7 @@ class AdminMainActivity : AppCompatActivity() {
                     sharedViewModel.onSearch()
                     true
                 }
+
                 else -> false
             }
         }
@@ -103,7 +116,11 @@ class AdminMainActivity : AppCompatActivity() {
             } else {
                 backPressedTime = currentTime
                 toast =
-                    Toast.makeText(this@AdminMainActivity, "Bấm lần nữa để thoát", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@AdminMainActivity,
+                        "Bấm lần nữa để thoát",
+                        Toast.LENGTH_SHORT
+                    )
                 toast.show()
             }
         }
@@ -116,7 +133,7 @@ class AdminMainActivity : AppCompatActivity() {
         if (existingFragment == null) {
             // Chỉ thêm nếu chưa tồn tại
             fragmentManager.beginTransaction().apply {
-                    replace(R.id.host_fragment, fragment, tag)
+                replace(R.id.host_fragment, fragment, tag)
                 addToBackStack(tag) // Sử dụng tag để quản lý BackStack
                 commit()
             }
@@ -126,4 +143,9 @@ class AdminMainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+
+        DatabaseHelper(this).close()
+        super.onDestroy()
+    }
 }
