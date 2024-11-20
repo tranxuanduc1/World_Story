@@ -2,12 +2,23 @@ package com.example.worldstory.dbhelper
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
+import com.example.worldstory.duc.ducdatabase.COL_BG_IMAGE_URL
+import com.example.worldstory.duc.ducdatabase.COL_DATECREATED
+import com.example.worldstory.duc.ducdatabase.COL_DESCRIPTION
+import com.example.worldstory.duc.ducdatabase.COL_ID
+import com.example.worldstory.duc.ducdatabase.COL_IMAGE_URL
+import com.example.worldstory.duc.ducdatabase.COL_IS_COMIC
+import com.example.worldstory.duc.ducdatabase.COL_SCORE
+import com.example.worldstory.duc.ducdatabase.COL_TITLE
 import com.example.worldstory.duc.ducdatabase.TABLE_NAME
+import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Paragraph
@@ -348,6 +359,11 @@ class DatabaseHelper(context: Context) :
         TODO("Not yet implemented")
     }
 
+
+    //////////////////////////
+    ///----   STORY  -----////
+    //////////////////////////
+
     fun insertStory(
        story: Story
     ): Long {
@@ -367,6 +383,56 @@ class DatabaseHelper(context: Context) :
 
         return db.insert(Contract.StoryEntry.TABLE_NAME, null, values)
     }
+    fun getAllStories(): List<Story> {
+        val db = readableDatabase
+        val cursor: Cursor=db.rawQuery("select * from ${Contract.StoryEntry.TABLE_NAME}",null)
+
+        val stories = mutableListOf<Story>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+                val author = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+                val imgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+                val bgImgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+                val score = cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+                val isTextStory = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+                val dateCreated = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+                val userID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+
+                stories.add(Story(id,title,author,description,imgURL,bgImgURL,isTextStory,dateCreated,score,userID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return stories
+    }
+
+    fun updateStory(story: Story): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryEntry.COLUMN_TITLE, story.title)
+            put(Contract.StoryEntry.COLUMN_AUTHOR,  story.author)
+            put(Contract.StoryEntry.COLUMN_DESCRIPTION,  story.description)
+            put(Contract.StoryEntry.COLUMN_IMAGE_URL,  story.imgUrl)
+            put(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL, story.bgImgUrl)
+            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY,story.isTextStory)
+        }
+        return db.update(
+            Contract.StoryEntry.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(story.storyID.toString())
+        )
+    }
+    fun deleteStory(storyId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.StoryEntry.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(storyId.toString())
+        )
+    }
+
+    //////////////////////////
+    ///----  CHAPTER -----////
+    //////////////////////////
+
     fun insertChapter(chapter: Chapter): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -375,6 +441,12 @@ class DatabaseHelper(context: Context) :
         }
         return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
     }
+
+
+    //////////////////////////
+    ///---- PARAGRAPH-----////
+    //////////////////////////
+
     fun insertParagraph(paragraph: Paragraph): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -384,5 +456,6 @@ class DatabaseHelper(context: Context) :
         }
         return db.insert(Contract.ParagraphEntry.TABLE_NAME, null, values)
     }
+
 
 }
