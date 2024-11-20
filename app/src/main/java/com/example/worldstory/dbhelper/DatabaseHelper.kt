@@ -1,10 +1,14 @@
 package com.example.worldstory.dbhelper
 
+import android.content.ContentProviderOperation
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.model.Role
+import com.example.worldstory.model.User
 
 
 object Contract {
@@ -337,5 +341,25 @@ class DatabaseHelper(context: Context) :
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         TODO("Not yet implemented")
+    }
+//Thao tác với bảng User
+    fun insertUser(user: User): Long {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
+            put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+            put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
+            put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+        }
+        return db.insert(Contract.UserEntry.TABLE_NAME, null, values)
+    }
+
+    fun insertRole(role: Role): Long {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RoleEntry.COLUMN_NAME, role.roleName)
+        }
+        return db.insert(Contract.RoleEntry.TABLE_NAME, null, values)
     }
 }

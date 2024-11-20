@@ -1,19 +1,12 @@
 package com.example.worldstory.dat.admin_viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.User
 
-class UserViewModel(application: Application):AndroidViewModel(application) {
-    var userName=MutableLiveData<String>()
-    var hashedpw=MutableLiveData<String>()
-
-    init {
-        val dbHelper = DatabaseHelper(application)
-    }
-    fun getAllUser(){
-        return
-    }
+class UserViewModel(db: DatabaseHelper):ViewModel() {
+    val users=MutableLiveData<List<User>>()
+//
+//    fun insert
 }
