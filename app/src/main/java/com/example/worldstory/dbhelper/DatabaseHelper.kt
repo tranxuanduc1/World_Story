@@ -1,10 +1,17 @@
 package com.example.worldstory.dbhelper
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.duc.ducdatabase.TABLE_NAME
+import com.example.worldstory.duc.ducutils.showTestToast
+import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Story
 
 
 object Contract {
@@ -173,7 +180,8 @@ class DatabaseHelper(context: Context) :
             ${Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL} text not null ,            
             ${Contract.StoryEntry.COLUMN_CREATED_DATE} text not null ,            
             ${Contract.StoryEntry.COLUMN_SCORE} text not null ,            
-            ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} integer not null ,            
+            ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} integer not null , 
+            ${Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK} integer not null ,    
             foreign key (${Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK}) references ${Contract.UserEntry.TABLE_NAME}(${_ID})  
             )
         """.trimIndent()
@@ -320,22 +328,61 @@ class DatabaseHelper(context: Context) :
 """.trimIndent()
         //////////////////////////
         //////////////////////////
+        p0?.execSQL(createRoleTable)
+        p0?.execSQL(createUserTable)
+        p0?.execSQL(createStoryTable)
+        p0?.execSQL(createGenreTable)
+        p0?.execSQL(createChapterTable)
+        p0?.execSQL(createParagraphTable)
         p0?.execSQL(createReadHistoryTable)
         p0?.execSQL(createImageTable)
         p0?.execSQL(createChapterHistoryTable)
         p0?.execSQL(createChapterMarkTable)
-        p0?.execSQL(createChapterTable)
         p0?.execSQL(createCommentTable)
         p0?.execSQL(createRateTable)
         p0?.execSQL(createUserLoveStoryTable)
-        p0?.execSQL(createRoleTable)
-        p0?.execSQL(createGenreTable)
-        p0?.execSQL(createUserTable)
-        p0?.execSQL(createStoryTable)
         p0?.execSQL(createStoryGernTable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         TODO("Not yet implemented")
     }
+
+    fun insertStory(
+       story: Story
+    ): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryEntry.COLUMN_TITLE, story.title)
+            put(Contract.StoryEntry.COLUMN_AUTHOR,  story.author)
+            put(Contract.StoryEntry.COLUMN_DESCRIPTION,  story.description)
+            put(Contract.StoryEntry.COLUMN_IMAGE_URL,  story.imgUrl)
+            put(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL, story.bgImgUrl)
+            put(Contract.StoryEntry.COLUMN_CREATED_DATE, story.createdDate)
+            put(Contract.StoryEntry.COLUMN_SCORE, story.score)
+            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY,story.isTextStory)
+            put(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK, story.userID)
+
+        }
+
+        return db.insert(Contract.StoryEntry.TABLE_NAME, null, values)
+    }
+    fun insertChapter(chapter: Chapter): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
+            put(Contract.ChapterEntry.COLUMN_STORY_ID_FK, chapter.storyID)
+        }
+        return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
+    }
+    fun insertParagraph(paragraph: Paragraph): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ParagraphEntry.COLUMN_CONTENT_FILE, paragraph.content)
+            put(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER, paragraph.order)
+            put(Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK, paragraph.chapterID)
+        }
+        return db.insert(Contract.ParagraphEntry.TABLE_NAME, null, values)
+    }
+
 }
