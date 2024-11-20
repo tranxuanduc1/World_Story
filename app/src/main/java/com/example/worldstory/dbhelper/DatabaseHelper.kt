@@ -6,10 +6,26 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import android.provider.ContactsContract
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
+import com.example.worldstory.duc.ducdatabase.COL_BG_IMAGE_URL
+import com.example.worldstory.duc.ducdatabase.COL_DATECREATED
+import com.example.worldstory.duc.ducdatabase.COL_DESCRIPTION
+import com.example.worldstory.duc.ducdatabase.COL_ID
+import com.example.worldstory.duc.ducdatabase.COL_IMAGE_URL
+import com.example.worldstory.duc.ducdatabase.COL_IS_COMIC
+import com.example.worldstory.duc.ducdatabase.COL_SCORE
+import com.example.worldstory.duc.ducdatabase.COL_TITLE
+import com.example.worldstory.duc.ducdatabase.TABLE_NAME
+import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
+import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Comment
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
@@ -181,7 +197,8 @@ class DatabaseHelper(context: Context) :
             ${Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL} text not null ,            
             ${Contract.StoryEntry.COLUMN_CREATED_DATE} text not null ,            
             ${Contract.StoryEntry.COLUMN_SCORE} text not null ,            
-            ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} integer not null ,            
+            ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} integer not null , 
+            ${Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK} integer not null ,    
             foreign key (${Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK}) references ${Contract.UserEntry.TABLE_NAME}(${_ID})  
             )
         """.trimIndent()
@@ -193,6 +210,7 @@ class DatabaseHelper(context: Context) :
             ${Contract.UserEntry.COLUMN_USERNAME} text not null,
             ${Contract.UserEntry.COLUMN_PASSWORD} text not null,
             ${Contract.UserEntry.COLUMN_NICKNAME} text not null,
+            ${Contract.UserEntry.COLUMN_IMAGE_AVATAR} text not null,
             ${Contract.UserEntry.COLUMN_CREATED_DATE} text not null,
             ${Contract.UserEntry.COLUMN_ROLE_ID_FK} integer not null,
             foreign key (${Contract.UserEntry.COLUMN_ROLE_ID_FK}) references ${Contract.UserEntry.TABLE_NAME}(${_ID}))
@@ -338,14 +356,9 @@ class DatabaseHelper(context: Context) :
         p0?.execSQL(createImageTable)
         p0?.execSQL(createChapterHistoryTable)
         p0?.execSQL(createChapterMarkTable)
-        p0?.execSQL(createChapterTable)
         p0?.execSQL(createCommentTable)
         p0?.execSQL(createRateTable)
         p0?.execSQL(createUserLoveStoryTable)
-        p0?.execSQL(createRoleTable)
-        p0?.execSQL(createGenreTable)
-        p0?.execSQL(createUserTable)
-        p0?.execSQL(createStoryTable)
         p0?.execSQL(createStoryGernTable)
     }
 
@@ -459,6 +472,22 @@ class DatabaseHelper(context: Context) :
         )
     }
 
+    fun getAllChapters(): List<Chapter> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.ChapterEntry.TABLE_NAME}", null)
+        val chapters = mutableListOf<Chapter>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
+                val storyID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                chapters.add(Chapter(id, title, storyID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapters
+    }
 
     //////////////////////////
     ///---- PARAGRAPH-----////
@@ -495,6 +524,28 @@ class DatabaseHelper(context: Context) :
             arrayOf(paragraph.paragraphID.toString())
         )
     }
+    fun getAllParagraphs(): List<Paragraph> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.ParagraphEntry.TABLE_NAME}", null)
+        val paragraphs = mutableListOf<Paragraph>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CONTENT_FILE))
+                val order = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER))
+                val chapterID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK))
+                paragraphs.add(Paragraph(id, content, order, chapterID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return paragraphs
+    }
+
+
+
+
+
     //////////////////////////
     ///----   USER   -----////
     //////////////////////////
@@ -505,6 +556,7 @@ class DatabaseHelper(context: Context) :
             put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_IMAGE_AVATAR,user.imgAvatar)
             put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
             put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
         }
@@ -523,6 +575,7 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues().apply {
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_IMAGE_AVATAR,user.imgAvatar)
             put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
         }
         return db.update(
@@ -533,11 +586,76 @@ class DatabaseHelper(context: Context) :
         )
     }
 
+    fun getAllUsers(): List<User> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.UserEntry.TABLE_NAME}", null)
+        val users = mutableListOf<User>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+                val hashedPw = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val nickName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+                val imgAvatar = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+                val roleID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+                val createdDate = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+                users.add(User(id, userName, hashedPw,  imgAvatar,nickName,roleID, createdDate))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return users
+    }
 
 
     //////////////////////////
     ///----   GENRE   -----////
     //////////////////////////
+    fun insertGenre(genre: Genre): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.GenreEntry.COLUMN_NAME, genre.genreName)
+            put(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK, genre.userID)
+        }
+        return db.insert(Contract.GenreEntry.TABLE_NAME, null, values)
+    }
+    fun deleteGenre(genreId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.GenreEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(genreId.toString())
+        )
+    }
+    fun updateGenre(genre: Genre): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.GenreEntry.COLUMN_NAME, genre.genreName)
+        }
+        return db.update(
+            Contract.GenreEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(genre.genreID.toString())
+        )
+    }
+
+    fun getAllGenres(): List<Genre> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.GenreEntry.TABLE_NAME}", null)
+        val genres = mutableListOf<Genre>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_NAME))
+                val userID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK))
+                genres.add(Genre(id, name, userID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return genres
+    }
 
     //////////////////////////
     ///----   ROLE   -----////
@@ -571,5 +689,251 @@ class DatabaseHelper(context: Context) :
             arrayOf(role.roleID.toString())
         )
     }
+    fun getAllRoles(): List<Role> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.RoleEntry.TABLE_NAME}", null)
+        val roles = mutableListOf<Role>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RoleEntry.COLUMN_NAME))
+                roles.add(Role(id, name))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return roles
+    }
+
+
+    //////////////////////////
+    ///---UserLoveStory---////
+    //////////////////////////
+    fun insertUserLoveStory(userId: Int, storyId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserLoveStory.COLUMN_USER_ID_FK, userId)
+            put(Contract.UserLoveStory.COLUMN_STORY_ID_FK, storyId)
+        }
+        return db.insert(Contract.UserLoveStory.TABLE_NAME, null, values)
+    }
+    fun deleteUserLoveStory(userId: Int, storyId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.UserLoveStory.TABLE_NAME,
+            "${Contract.UserLoveStory.COLUMN_USER_ID_FK} = ? AND ${Contract.UserLoveStory.COLUMN_STORY_ID_FK} = ?",
+            arrayOf(userId.toString(), storyId.toString())
+        )
+    }
+    fun getAllUserLoveStories(): List<Pair<Int, Int>> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.UserLoveStory.TABLE_NAME}", null)
+        val userLoveStories = mutableListOf<Pair<Int, Int>>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_USER_ID_FK))
+                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_STORY_ID_FK))
+                userLoveStories.add(Pair(userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return userLoveStories
+    }
+
+
+    //////////////////////////
+    ///----  Rate    -----////
+    //////////////////////////
+
+    fun insertRate(rate: Rate): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RateEntry.COLUMN_USER_ID_FK, rate.userID)
+            put(Contract.RateEntry.COLUMN_STORY_ID_FK, rate.storyID)
+            put(Contract.RateEntry.COLUMN_RATE, rate.score)
+        }
+        return db.insert(Contract.RateEntry.TABLE_NAME, null, values)
+    }
+    fun deleteRate(rate: Rate): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.RateEntry.TABLE_NAME,
+            "${Contract.RateEntry.COLUMN_USER_ID_FK} = ? AND ${Contract.RateEntry.COLUMN_STORY_ID_FK} = ?",
+            arrayOf(rate.userID.toString(), rate.storyID.toString())
+        )
+    }
+    fun updateRate(rate: Rate): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RateEntry.COLUMN_RATE, rate.score)
+        }
+        return db.update(
+            Contract.RateEntry.TABLE_NAME,
+            values,
+            "${Contract.RateEntry.COLUMN_USER_ID_FK} = ? AND ${Contract.RateEntry.COLUMN_STORY_ID_FK} = ?",
+            arrayOf(rate.userID.toString(), rate.storyID.toString())
+        )
+    }
+    fun getAllRates(): List<Rate> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.RateEntry.TABLE_NAME}", null)
+        val rates = mutableListOf<Rate>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val rateId = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_USER_ID_FK))
+                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_STORY_ID_FK))
+                val score = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_RATE))
+                rates.add(Rate(rateId,score,userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return rates
+    }
+
+
+    //////////////////////////
+    ///----  Comment -----////
+    //////////////////////////
+
+    fun insertComment(comment:Comment): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.CommentEntry.COLUMN_USER_ID_FK, comment.userId)
+            put(Contract.CommentEntry.COLUMN_STORY_ID_FK, comment.storyId)
+            put(Contract.CommentEntry.COLUMN_CONTENT, comment.content)
+            put(Contract.CommentEntry.COLUMN_TIME, comment.time)
+        }
+        return db.insert(Contract.CommentEntry.TABLE_NAME, null, values)
+    }
+    fun deleteComment(commentId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.CommentEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(commentId.toString())
+        )
+    }
+    fun updateComment(comment: Comment): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.CommentEntry.COLUMN_CONTENT, comment.content)
+        }
+        return db.update(
+            Contract.CommentEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(comment.commentId.toString())
+        )
+    }
+    fun getAllComments(): List<Comment> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.CommentEntry.TABLE_NAME}", null)
+        val comments = mutableListOf<Comment>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_CONTENT))
+                val time = cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_TIME))
+                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
+                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
+                comments.add(Comment(id,content, time,userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return comments
+    }
+
+
+
+
+    //////////////////////////
+    ///----ChapterMark-----////
+    //////////////////////////
+    fun insertChapterMark(userId: Int, chapterId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterMarkEntry.COLUMN_USER_ID_FK, userId)
+            put(Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK, chapterId)
+        }
+        return db.insert(Contract.ChapterMarkEntry.TABLE_NAME, null, values)
+    }
+    fun deleteChapterMark(userId: Int, chapterId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ChapterMarkEntry.TABLE_NAME,
+            "${Contract.ChapterMarkEntry.COLUMN_USER_ID_FK} = ? AND ${Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK} = ?",
+            arrayOf(userId.toString(), chapterId.toString())
+        )
+    }
+    fun getAllChapterMarks(): List<Pair<Int, Int>> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.ChapterMarkEntry.TABLE_NAME}", null)
+        val chapterMarks = mutableListOf<Pair<Int, Int>>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_USER_ID_FK))
+                val chapterId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK))
+                chapterMarks.add(Pair(userId, chapterId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapterMarks
+    }
+
+
+    //////////////////////////
+    ///----ChapterHistory-----////
+    //////////////////////////
+
+    fun insertChapterHistory(userId: Int, chapterId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK, userId)
+            put(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK, chapterId)
+        }
+        return db.insert(Contract.ChapterHistoryEntry.TABLE_NAME, null, values)
+    }
+    fun deleteChapterHistory(userId: Int, chapterId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ChapterHistoryEntry.TABLE_NAME,
+            "${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK} = ? AND ${Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK} = ?",
+            arrayOf(userId.toString(), chapterId.toString())
+        )
+    }
+    fun getAllChapterHistories(): List<Pair<Int, Int>> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.ChapterHistoryEntry.TABLE_NAME}", null)
+        val chapterHistories = mutableListOf<Pair<Int, Int>>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK))
+                val chapterId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK))
+                chapterHistories.add(Pair(userId, chapterId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapterHistories
+    }
+
+    //////////////////////////
+    ///----      -----////
+    //////////////////////////
+
+
+    //////////////////////////
+    ///----      -----////
+    //////////////////////////
+
+
+    //////////////////////////
+    ///----      -----////
+    //////////////////////////
 
 }
