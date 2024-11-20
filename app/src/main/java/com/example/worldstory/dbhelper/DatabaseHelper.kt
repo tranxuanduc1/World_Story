@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Role
+import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
 
