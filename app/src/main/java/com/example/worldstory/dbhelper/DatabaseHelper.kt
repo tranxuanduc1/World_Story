@@ -1,11 +1,12 @@
 package com.example.worldstory.dbhelper
 
-import android.content.ContentProviderOperation
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+
 import com.example.worldstory.dbhelper.Contract.CommentEntry
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.User
@@ -324,6 +325,12 @@ class DatabaseHelper(context: Context) :
 """.trimIndent()
         //////////////////////////
         //////////////////////////
+        p0?.execSQL(createRoleTable)
+        p0?.execSQL(createUserTable)
+        p0?.execSQL(createStoryTable)
+        p0?.execSQL(createGenreTable)
+        p0?.execSQL(createChapterTable)
+        p0?.execSQL(createParagraphTable)
         p0?.execSQL(createReadHistoryTable)
         p0?.execSQL(createImageTable)
         p0?.execSQL(createChapterHistoryTable)
@@ -342,24 +349,224 @@ class DatabaseHelper(context: Context) :
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         TODO("Not yet implemented")
     }
-//Thao tác với bảng User
+
+
+    //////////////////////////
+    ///----   STORY  -----////
+    //////////////////////////
+
+    fun insertStory(
+       story: Story
+    ): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryEntry.COLUMN_TITLE, story.title)
+            put(Contract.StoryEntry.COLUMN_AUTHOR,  story.author)
+            put(Contract.StoryEntry.COLUMN_DESCRIPTION,  story.description)
+            put(Contract.StoryEntry.COLUMN_IMAGE_URL,  story.imgUrl)
+            put(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL, story.bgImgUrl)
+            put(Contract.StoryEntry.COLUMN_CREATED_DATE, story.createdDate)
+            put(Contract.StoryEntry.COLUMN_SCORE, story.score)
+            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY,story.isTextStory)
+            put(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK, story.userID)
+
+        }
+
+        return db.insert(Contract.StoryEntry.TABLE_NAME, null, values)
+    }
+    fun getAllStories(): List<Story> {
+        val db = readableDatabase
+        val cursor: Cursor=db.rawQuery("select * from ${Contract.StoryEntry.TABLE_NAME}",null)
+
+        val stories = mutableListOf<Story>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+                val author = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+                val imgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+                val bgImgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+                val score = cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+                val isTextStory = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+                val dateCreated = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+                val userID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+
+                stories.add(Story(id,title,author,description,imgURL,bgImgURL,isTextStory,dateCreated,score,userID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return stories
+    }
+
+    fun updateStory(story: Story): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryEntry.COLUMN_TITLE, story.title)
+            put(Contract.StoryEntry.COLUMN_AUTHOR,  story.author)
+            put(Contract.StoryEntry.COLUMN_DESCRIPTION,  story.description)
+            put(Contract.StoryEntry.COLUMN_IMAGE_URL,  story.imgUrl)
+            put(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL, story.bgImgUrl)
+            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY,story.isTextStory)
+        }
+        return db.update(
+            Contract.StoryEntry.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(story.storyID.toString())
+        )
+    }
+    fun deleteStory(storyId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.StoryEntry.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(storyId.toString())
+        )
+    }
+
+    //////////////////////////
+    ///----  CHAPTER -----////
+    //////////////////////////
+
+    fun insertChapter(chapter: Chapter): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
+            put(Contract.ChapterEntry.COLUMN_STORY_ID_FK, chapter.storyID)
+        }
+        return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
+    }
+
+
+    fun deleteChapter(chapterID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ChapterEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(chapterID.toString())
+        )
+    }
+
+    fun updateChapter(chapter: Chapter): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
+        }
+        return db.update(
+            Contract.ChapterEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(chapter.chapterID.toString())
+        )
+    }
+
+
+    //////////////////////////
+    ///---- PARAGRAPH-----////
+    //////////////////////////
+
+    fun insertParagraph(paragraph: Paragraph): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ParagraphEntry.COLUMN_CONTENT_FILE, paragraph.content)
+            put(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER, paragraph.order)
+            put(Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK, paragraph.chapterID)
+        }
+        return db.insert(Contract.ParagraphEntry.TABLE_NAME, null, values)
+    }
+
+    fun deleteParagraph(paragraphID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.ParagraphEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(paragraphID.toString())
+        )
+    }
+
+    fun updateParagraph(paragraph: Paragraph): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.ParagraphEntry.COLUMN_CONTENT_FILE, paragraph.content)
+        }
+        return db.update(
+            Contract.ParagraphEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(paragraph.paragraphID.toString())
+        )
+    }
+    //////////////////////////
+    ///----   USER   -----////
+    //////////////////////////
+
     fun insertUser(user: User): Long {
-        val db = this.writableDatabase
+        val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
-            put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
             put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+            put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
         }
         return db.insert(Contract.UserEntry.TABLE_NAME, null, values)
     }
+    fun deleteUser(userID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.UserEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(userID.toString())
+        )
+    }
+    fun updateUser(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+            put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+            put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
 
+
+
+    //////////////////////////
+    ///----   GENRE   -----////
+    //////////////////////////
+
+    //////////////////////////
+    ///----   ROLE   -----////
+    //////////////////////////
     fun insertRole(role: Role): Long {
-        val db = this.writableDatabase
+        val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.RoleEntry.COLUMN_NAME, role.roleName)
         }
         return db.insert(Contract.RoleEntry.TABLE_NAME, null, values)
     }
+
+    fun deleteRole(roleID: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.RoleEntry.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(roleID.toString())
+        )
+    }
+
+    fun updateRoleName(role: Role): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.RoleEntry.COLUMN_NAME, role.roleName)
+        }
+        return db.update(
+            Contract.RoleEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(role.roleID.toString())
+        )
+    }
+
 }

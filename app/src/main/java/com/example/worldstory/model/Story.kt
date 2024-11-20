@@ -1,14 +1,14 @@
 package com.example.worldstory.model
 
 data class Story(
+    val storyID: Int?,
     val title: String,
-    val tacGia: String,
-    val img:String,
-    val imgbg:String,
-    val isTextStory: Int,
+    val author: String,
     val description:String,
+    val imgUrl:String,
+    val bgImgUrl:String,
+    val isTextStory: Int,
     val createdDate:String,
-    val score:String,
-    val genreID:Int,
+    val score: Float,
     val userID:Int
 )
