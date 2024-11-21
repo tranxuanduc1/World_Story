@@ -2,6 +2,7 @@ package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
@@ -21,6 +23,7 @@ import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -62,7 +65,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     private fun setGenreButton() {
-        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID?:1)
+        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID ?: 1)
         for (genre in listGenres) {
             var genreButton = AppCompatButton(this)
             genreButton.apply {
@@ -84,7 +87,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             }
 
             genreButton.setOnClickListener {
-                this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(),genre)
+                this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(), genre)
             }
 
 
@@ -102,8 +105,8 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         binding.txtTitleStoryStoryOverview.text = storyInfo.title
         binding.txtAuthorStoryStoryOverview.text = storyInfo.author
         binding.txtDescriptionStoryStoryOverview.text = storyInfo.description
-        binding.imgStoryStoryOverview.loadImgURL(this,storyInfo.imgUrl)
-        binding.imgBackgroundStoryStoryOverview.loadImgURL(this,storyInfo.bgImgUrl)
+        binding.imgStoryStoryOverview.loadImgURL(this, storyInfo.imgUrl)
+        binding.imgBackgroundStoryStoryOverview.loadImgURL(this, storyInfo.bgImgUrl)
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)
@@ -111,33 +114,41 @@ class DucStoryOverviewActivity : AppCompatActivity() {
 
     fun generateChapter(story: Story) {
 
-        for (item in ducChapterViewModel.getAllChaptersByStory(story)) {
-            // Inflate each item view
-            val itemView = LayoutInflater.from(this)
-                .inflate(
-                    R.layout.list_item_chapter_story_overview_layout,
-                    binding.lineaerlistChapterStoryOverview,
-                    false
-                )
+        ducChapterViewModel.chapters.observe(this, Observer { chapters ->
+            showTestToast(this,chapters[1].dateCreated)
+            for (item in ducChapterViewModel.getAllChaptersByStory(story)) {
+                // Inflate each item view
+                val itemView = LayoutInflater.from(this)
+                    .inflate(
+                        R.layout.list_item_chapter_story_overview_layout,
+                        binding.lineaerlistChapterStoryOverview,
+                        false
+                    )
 
-            // Set up itemView data if needed
-            val titleTextView =
-                itemView.findViewById<TextView>(R.id.txtTitleChapter_listItemStoryOverview_layout)
-            val idChapterTextView =
-                itemView.findViewById<TextView>(R.id.txtIDChapter_listItemStoryOverview_layout)
-            val dateCreatedTextView =
-                itemView.findViewById<TextView>(R.id.txtDateCreatedChapter_listItemStoryOverview_layout)
-            val btn = itemView.findViewById<LinearLayout>(R.id.btn_listItemStoryOverview_layout)
-            titleTextView.text = item.title
-            idChapterTextView.text = item.chapterID.toString()
-            dateCreatedTextView.text = item.dateCreated.toString()
-            btn.setOnClickListener {
-                // tao key de chuyen cac chuong truoc, sau ,hien tai cho chapter activity
-                toChapterActivity(item)
-
+                // Set up itemView data if needed
+                setItemViewChpater(itemView, item)
+                // Add itemView to the container
+                binding.lineaerlistChapterStoryOverview.addView(itemView)
             }
-            // Add itemView to the container
-            binding.lineaerlistChapterStoryOverview.addView(itemView)
+        })
+
+    }
+
+    private fun setItemViewChpater(itemView: View, chapter: Chapter) {
+        val titleTextView =
+            itemView.findViewById<TextView>(R.id.txtTitleChapter_listItemStoryOverview_layout)
+        val idChapterTextView =
+            itemView.findViewById<TextView>(R.id.txtIDChapter_listItemStoryOverview_layout)
+        val dateCreatedTextView =
+            itemView.findViewById<TextView>(R.id.txtDateCreatedChapter_listItemStoryOverview_layout)
+        val btn = itemView.findViewById<LinearLayout>(R.id.btn_listItemStoryOverview_layout)
+        titleTextView.text = chapter.title
+        idChapterTextView.text = chapter.chapterID.toString()
+        dateCreatedTextView.text = chapter.dateCreated.toString()
+        btn.setOnClickListener {
+            // tao key de chuyen cac chuong truoc, sau ,hien tai cho chapter activity
+            toChapterActivity(chapter)
+
         }
     }
 

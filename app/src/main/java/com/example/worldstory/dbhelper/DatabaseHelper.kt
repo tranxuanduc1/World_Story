@@ -504,7 +504,7 @@ class DatabaseHelper(context: Context) :
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
                 val dateCreate =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
 
                 chapters.add(Chapter(id, title, dateCreate,storyID))
             } while (cursor.moveToNext())
@@ -532,7 +532,7 @@ class DatabaseHelper(context: Context) :
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
                 val dateCreate =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
 
                 chapters.add(Chapter(id, title, dateCreate,storyID))
             } while (cursor.moveToNext())

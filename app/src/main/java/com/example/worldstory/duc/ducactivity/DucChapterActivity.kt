@@ -244,9 +244,7 @@ class DucChapterActivity : AppCompatActivity() {
 //            }
 //        }
 
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa2))
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa3))
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa4))
+
 
     }
 
