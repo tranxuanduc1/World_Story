@@ -29,7 +29,7 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return list
     }
     fun getChaptersByStory(storyId: Int): List<Chapter>{
-        var list=dbHelper.getAllChapters()
+        var list=dbHelper.getChaptersByStory(storyId)
         return list
     }
 }

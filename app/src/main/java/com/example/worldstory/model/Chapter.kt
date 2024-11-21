@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class Chapter(
     val chapterID: Int?,
     val title:String,
+    val dateCreated: String,
     val storyID:Int
 ): Parcelable

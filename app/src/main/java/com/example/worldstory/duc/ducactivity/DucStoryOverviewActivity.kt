@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
-import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -29,6 +28,7 @@ import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
+import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
 
 class DucStoryOverviewActivity : AppCompatActivity() {
@@ -129,7 +129,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
                 itemView.findViewById<TextView>(R.id.txtDateCreatedChapter_listItemStoryOverview_layout)
             val btn = itemView.findViewById<LinearLayout>(R.id.btn_listItemStoryOverview_layout)
             titleTextView.text = item.title
-            idChapterTextView.text = item.idChapter.toString()
+            idChapterTextView.text = item.chapterID.toString()
             dateCreatedTextView.text = item.dateCreated.toString()
             btn.setOnClickListener {
                 // tao key de chuyen cac chuong truoc, sau ,hien tai cho chapter activity
@@ -141,7 +141,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun toChapterActivity(chapter: DucChapterDataClass) {
+    private fun toChapterActivity(chapter: Chapter) {
         var key = getKey_chapterInfo(this)
 
         var key_mainChapter = getKey_mainChapter(this)

@@ -251,7 +251,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         if (storyId != -1L) {
             // Add 4 chapters for the story
             for (i in 1..4) {
-                val chapter = Chapter(null, "Chapter $i of ${story.title}", storyId.toInt())
+                val chapter = Chapter(null, "Chapter $i of ${story.title}",dateTimeNow, storyId.toInt())
                 val chapterId = dbHelper.insertChapter(chapter)
 
                 if (chapterId != -1L) {

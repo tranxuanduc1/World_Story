@@ -36,6 +36,7 @@ import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucParagraphViewModelFactory
+import com.example.worldstory.model.Chapter
 import com.github.chrisbanes.photoview.PhotoView
 
 class DucChapterActivity : AppCompatActivity() {
@@ -46,9 +47,9 @@ class DucChapterActivity : AppCompatActivity() {
 //    private lateinit var btnOpenCommentDialog: ImageButton
 //    private lateinit var btnOpenCommentDialog: ImageButton
 //    private lateinit var btnOpenCommentDialog: ImageButton
-    private var mainChapter: DucChapterDataClass? = null
-    private var nextChapter: DucChapterDataClass? = null
-    private var previousChapter: DucChapterDataClass? = null
+    private var mainChapter: Chapter? = null
+    private var nextChapter: Chapter? = null
+    private var previousChapter: Chapter? = null
 
     private val ducParagraphViewModel: DucParagraphViewModel by viewModels {
         DucParagraphViewModelFactory(this)
@@ -88,7 +89,7 @@ class DucChapterActivity : AppCompatActivity() {
             }
         }
         setData()
-        loadParagraph()
+        //loadParagraph()
         loadComment()
         setConfigButtonComment()
         setConfigButtonChapter()
@@ -109,7 +110,7 @@ class DucChapterActivity : AppCompatActivity() {
             }
 
             ducCommentViewModel.createUserCommnet(
-                mainChapter?.idStory ?: ducChapterViewModel.getOneExampleChapter().idStory, content
+                mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID, content
             )
 
             //xoa trang editText de nhap comment moi
@@ -124,7 +125,7 @@ class DucChapterActivity : AppCompatActivity() {
         binding.linearContainerCommentChapter.removeAllViews()
 
         var listComments = ducCommentViewModel.getCommentsByStory(
-            mainChapter?.idStory ?: ducChapterViewModel.getOneExampleChapter().idStory
+            mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID
         )
 
         for (comment in listComments) {
@@ -223,25 +224,25 @@ class DucChapterActivity : AppCompatActivity() {
 
     private fun loadParagraph() {
 
-        var linearContainer = binding.linearContainerContentChapter
-        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
-        linearContainer.removeAllViews()
-        binding.scrollParagraphChapter.scrollTo(0, 0)
-
-        var paragraphsList = ducParagraphViewModel.getAllParagraphsByChapter(mainChapter)
-        if (paragraphsList.isEmpty()) {
-            return
-        }
-        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
-        for (item in paragraphsList) {
-            if (item.isComic) {
-                linearContainer.addView(createContentPhoToView(item.imgContent))
-
-            } else {
-                linearContainer.addView(createContentTextView(item.textContent))
-
-            }
-        }
+//        var linearContainer = binding.linearContainerContentChapter
+//        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
+//        linearContainer.removeAllViews()
+//        binding.scrollParagraphChapter.scrollTo(0, 0)
+//
+//        var paragraphsList = ducParagraphViewModel.getAllParagraphsByChapter(mainChapter)
+//        if (paragraphsList.isEmpty()) {
+//            return
+//        }
+//        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
+//        for (item in paragraphsList) {
+//            if (item.isComic) {
+//                linearContainer.addView(createContentPhoToView(item.imgContent))
+//
+//            } else {
+//                linearContainer.addView(createContentTextView(item.textContent))
+//
+//            }
+//        }
 
 //        linearContainer.addView(createContentPhoToView(R.drawable.pa2))
 //        linearContainer.addView(createContentPhoToView(R.drawable.pa3))

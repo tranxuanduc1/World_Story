@@ -6,22 +6,8 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.provider.ContactsContract
-import android.util.Log
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
-import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
-import com.example.worldstory.duc.ducdatabase.COL_BG_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_DATECREATED
-import com.example.worldstory.duc.ducdatabase.COL_DESCRIPTION
-import com.example.worldstory.duc.ducdatabase.COL_ID
-import com.example.worldstory.duc.ducdatabase.COL_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_IS_COMIC
-import com.example.worldstory.duc.ducdatabase.COL_SCORE
-import com.example.worldstory.duc.ducdatabase.COL_TITLE
-import com.example.worldstory.duc.ducdatabase.TABLE_NAME
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -124,7 +110,7 @@ object Contract {
     object ChapterEntry : BaseColumns {
         const val TABLE_NAME = "chapter_table"
         const val COLUMN_TITLE = "title"
-
+        const val COLUMN_DATE_CREATED="date_created"
         //Foreign key
         //const val COLUMN_USER_ID_FK = "user_id"
         const val COLUMN_STORY_ID_FK = "story_id"
@@ -288,6 +274,7 @@ class DatabaseHelper(context: Context) :
     CREATE TABLE ${Contract.ChapterEntry.TABLE_NAME} (
         ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
+        ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
         ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
         FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
     )
@@ -476,6 +463,7 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues().apply {
             put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
             put(Contract.ChapterEntry.COLUMN_STORY_ID_FK, chapter.storyID)
+            put(Contract.ChapterEntry.COLUMN_DATE_CREATED,chapter.dateCreated)
         }
         return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
     }
@@ -515,7 +503,10 @@ class DatabaseHelper(context: Context) :
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
-                chapters.add(Chapter(id, title, storyID))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+
+                chapters.add(Chapter(id, title, dateCreate,storyID))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -540,7 +531,10 @@ class DatabaseHelper(context: Context) :
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
-                chapters.add(Chapter(id, title, storyID))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+
+                chapters.add(Chapter(id, title, dateCreate,storyID))
             } while (cursor.moveToNext())
         }
         cursor.close()
