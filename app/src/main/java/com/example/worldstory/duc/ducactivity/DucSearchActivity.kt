@@ -7,6 +7,7 @@ import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucSearchBinding
 import com.example.worldstory.duc.ducadapter.Duc_ListSearch_ArrayAdapter
@@ -14,6 +15,7 @@ import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyResultSearchInfo
 import com.example.worldstory.duc.ducutils.getKeyTextQuery
+import com.example.worldstory.duc.ducutils.showTestToast
 
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
@@ -26,7 +28,7 @@ class DucSearchActivity : AppCompatActivity() {
     private lateinit var listViewSearchResults: ListView
     private lateinit var searchAdapter: Duc_ListSearch_ArrayAdapter
     private lateinit var dataList: ArrayList<Story>
-    private val ducStoryViewModel: DucStoryViewModel by viewModels{
+    private val ducStoryViewModel: DucStoryViewModel by viewModels {
         DucStoryViewModelFactory(this)
     }
     private var isText: Boolean = false
@@ -44,17 +46,27 @@ class DucSearchActivity : AppCompatActivity() {
         }
         isText = intent.getBooleanExtra(key, false)
 
-        dataList = if (isText) ArrayList(ducStoryViewModel.getTextStories())
-        else ArrayList(ducStoryViewModel.getComicStories())
-
-
-
         searchView = binding.searchViewSearch
         listViewSearchResults = binding.listViewSearch
-        searchAdapter = Duc_ListSearch_ArrayAdapter(
-            view.context, R.layout.list_item_search_layout, dataList
-        )
-        listViewSearchResults.adapter = searchAdapter
+
+        ducStoryViewModel.stories.observe(this, Observer { stories ->
+            dataList = ArrayList(ducStoryViewModel.getStoriesByIsText(isText))
+            searchAdapter = Duc_ListSearch_ArrayAdapter(
+                view.context, R.layout.list_item_search_layout, dataList
+            )
+            listViewSearchResults.adapter = searchAdapter
+            setSearchViewListener()
+        })
+        searchView.setOnCloseListener {
+            searchView.clearFocus()
+            listViewSearchResults.visibility = View.GONE
+            true
+        }
+
+    }
+
+    private fun setSearchViewListener() {
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
@@ -80,12 +92,6 @@ class DucSearchActivity : AppCompatActivity() {
                 return true;
             }
         })
-        searchView.setOnCloseListener {
-            searchView.clearFocus()
-            listViewSearchResults.visibility = View.GONE
-            true
-        }
-
     }
 
     private fun checkLoadData(key: String): Boolean {

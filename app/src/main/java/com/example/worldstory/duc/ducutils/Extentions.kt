@@ -28,6 +28,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.model.Story
 
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -176,7 +177,7 @@ fun createGridCardViewStory(
     context: Context,
     inflater:LayoutInflater,
     viewGroup: ViewGroup, genre: DucGenreDataClass,
-    dataList: List<DucStoryDataClass> ){
+    dataList: List<Story> ){
     var blistCardStoriesLayout= ListCardStoriesLayoutBinding.inflate(inflater)
     val listCardStoriesLayout = blistCardStoriesLayout.root
     var gridLayout=blistCardStoriesLayout.gridLayoutListCardStory
@@ -195,10 +196,10 @@ fun createGridCardViewStory(
         var constraintLayout =bCardView.constraintLayoutCardStoryLayout
         title.text=i.title
         author.text=i.author
-        imgURL.loadImgURL(context,i.imgURL)
+        imgURL.loadImgURL(context,i.imgUrl)
 
         score.text= (i.score).toString()
-        idStory.text=i.idStory.toString()
+        idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({
             // truyen mot dataclass den activity moi

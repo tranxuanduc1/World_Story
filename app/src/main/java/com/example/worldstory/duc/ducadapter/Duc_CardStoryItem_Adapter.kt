@@ -20,15 +20,16 @@ import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.Story
 
 
-class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: ArrayList<Story>)
-    : RecyclerView.Adapter<Duc_CardStoryItem_Adapter.ViewHolderClass>(){
+class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: ArrayList<Story>) :
+    RecyclerView.Adapter<Duc_CardStoryItem_Adapter.ViewHolderClass>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolderClass {
         var itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.card_story_item_layout,
-            parent,false)
+            parent, false
+        )
         return ViewHolderClass(itemView)
     }
 
@@ -38,27 +39,31 @@ class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: Arra
     ) {
         var currentItem = dataList[position]
         holder.itemView.apply {
-            layoutParams= GridLayout.LayoutParams().apply {
+            layoutParams = GridLayout.LayoutParams().apply {
                 setGravity(Gravity.CENTER)
-                columnSpec= GridLayout.spec(GridLayout.UNDEFINED,1f)
-                setMargins(5.dpToPx(),5.dpToPx(),5.dpToPx(),10.dpToPx())
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                setMargins(5.dpToPx(), 5.dpToPx(), 5.dpToPx(), 10.dpToPx())
             }
         }
 
-        holder.title.text=currentItem.title
-        holder.author.text=currentItem.author
-        holder.imgURL.loadImgURL(context,currentItem.imgUrl)
+        holder.title.text = currentItem.title
+        holder.author.text = currentItem.author
+        holder.imgURL.loadImgURL(context, currentItem.imgUrl)
 
-        holder.score.text= (currentItem.score).toString()
+        holder.score.text = (currentItem.score).toString()
         holder.constraintLayout.changeShapeBackgroundColorByScore(currentItem.score)
 //        holder.constraintLayout.setBackgroundResource(R.drawable.shape_yellow_card_story_item_layout)
 //        setColorScore(currentItem.score,holder)
-        holder.idStory.text=currentItem.storyID.toString()
-        holder.itemView.setOnClickListener{
+        holder.idStory.text = currentItem.storyID.toString()
+        holder.itemView.setOnClickListener {
 
 
             // truyen mot dataclass den activity moi
-            context.toActivity(DucStoryOverviewActivity::class.java, R.string.key_storyInfo,currentItem)
+            context.toActivity(
+                DucStoryOverviewActivity::class.java,
+                R.string.key_storyInfo,
+                currentItem
+            )
         }
     }
 
@@ -66,22 +71,22 @@ class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: Arra
         return dataList.size
     }
 
-    class ViewHolderClass(itemView : View): RecyclerView.ViewHolder(itemView){
-        var title=itemView.findViewById<TextView>(R.id.txtTitleCardStoryItemLayout)
-        var author =itemView.findViewById<TextView>(R.id.txtAuthorCardStoryItemLayout)
-        var imgURL=itemView.findViewById<ImageView>(R.id.imgCardStoryItemLayout)
-        var score =itemView.findViewById<TextView>(R.id.txtRankCardStoryItemLayout)
-        var constraintLayout=itemView.findViewById<ConstraintLayout>(R.id.constraintLayoutCardStoryLayout)
-        var idStory=itemView.findViewById<TextView>(R.id.idStory_CardStoryItem)
+    class ViewHolderClass(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var title = itemView.findViewById<TextView>(R.id.txtTitleCardStoryItemLayout)
+        var author = itemView.findViewById<TextView>(R.id.txtAuthorCardStoryItemLayout)
+        var imgURL = itemView.findViewById<ImageView>(R.id.imgCardStoryItemLayout)
+        var score = itemView.findViewById<TextView>(R.id.txtRankCardStoryItemLayout)
+        var constraintLayout =
+            itemView.findViewById<ConstraintLayout>(R.id.constraintLayoutCardStoryLayout)
+        var idStory = itemView.findViewById<TextView>(R.id.idStory_CardStoryItem)
     }
-    fun setColorScore(score: Float,holder: ViewHolderClass){
-        if(score>=4f){
+
+    fun setColorScore(score: Float, holder: ViewHolderClass) {
+        if (score >= 4f) {
             holder.constraintLayout.setBackgroundResource(R.drawable.shape_green_story_item_layout)
-
-        }else if(score>=2.5f && score<4f ){
+        } else if (score >= 2.5f && score < 4f) {
             holder.constraintLayout.setBackgroundResource(R.drawable.shape_yellow_card_story_item_layout)
-
-        }else{
+        } else {
             holder.constraintLayout.setBackgroundResource(R.drawable.shape_red_card_story_item_layout)
 
         }

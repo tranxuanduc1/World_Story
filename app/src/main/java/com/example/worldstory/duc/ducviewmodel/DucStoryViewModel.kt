@@ -14,6 +14,7 @@ import com.example.myapplication.R
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
@@ -38,19 +39,22 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
                 repository.getAllStories()
             }
             _stories.value = result
+
         }
+
     }
 
-    fun getComicStoriesByGenre(genreId: Int): List<Story> {
 
-        var comicStoryList = _stories.value ?: listOf<Story>()
-        var filter = comicStoryList.filter { it.isTextStory == 0 }
-        return filter
-    }
 
-    fun getTextStoriesByGenre(genreId: Int): List<Story> {
+    fun getStoriesByGenre(genreId: Int, isText: Boolean?): List<Story> {
+
         var textStoryList = _stories.value ?: listOf<Story>()
-        var filter = textStoryList.filter { it.isTextStory == 1 }
+        // xu ly loc genreId
+        var filter = textStoryList
+
+        if(isText==null) return filter
+
+        filter=filter.filter {  it.isTextStory.toBoolean() == isText}
         return filter
     }
 
@@ -69,11 +73,19 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
     fun getStoriesByQuery(query: String, isText: Boolean?): List<Story> {
 
         var storyList = _stories.value ?: listOf<Story>()
-        // if dont use isText
-        if (isText == null) return storyList
-
-        var filter = storyList.filter { it.isTextStory.toBoolean() == isText }
+        var filter = storyList
             .filter { it.title.lowercase().contains(query.lowercase(), true) }
+
+        // if dont use isText
+        if (isText == null) return filter
+
+        filter = filter.filter { it.isTextStory.toBoolean() == isText }
+        return filter
+    }
+
+    fun getStoriesByIsText(isText: Boolean): List<Story> {
+        var storyList = _stories.value ?: listOf<Story>()
+        var filter = storyList.filter { it.isTextStory.toBoolean() == isText }
         return filter
     }
 

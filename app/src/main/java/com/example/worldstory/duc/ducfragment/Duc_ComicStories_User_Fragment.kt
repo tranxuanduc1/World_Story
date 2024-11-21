@@ -7,22 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import coil3.load
-import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
-import com.example.worldstory.duc.ducdatabase.DucDatabaseHelper
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
-import com.example.worldstory.duc.ducutils.getKeyIsComic
+import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
@@ -54,7 +51,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
     private lateinit var binding: FragmentDucComicStoriesUserBinding
     private lateinit var recyclerViewGenreButton: RecyclerView
     private lateinit var linearLayout: LinearLayout
-    private var isComic = true
+    private var isText = false
 
 
     private val ducStoryViewModel: DucStoryViewModel by viewModels {
@@ -84,92 +81,108 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         recyclerViewGenreButton = binding.rvButtonGenreComicStoriesUser
 
         ///////////////////////
-        var imgURL:String= "https://storage-ct.lrclib.net/file/cuutruyen/uploads/manga/2478/cover/processed-4079ee6ed3b108490e33fca63589c35e.jpg"
-        var imgURL2:String="https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467618820_987540786516413_9022671729236654001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=wcRr4uG_frQQ7kNvgG7AO3Q&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=ACWt9Nxlog48s7vciMKLvlm&oh=00_AYCFt2WZkt3Qy8rXYq0fnq2KdcuMdRdl7Qr9prRr8E71gw&oe=67420403"
+        //set image banner
+        setImageBanner()
 
-       // var imgURL2:String="https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244"
-
-
-//        binding.imgTestComicUserstory.load(imgURL)
-//        Glide.with(this){
-//            .load(imgURL)
-//            .into(binding.imgTestComicUserstory)
-//        }
-        //Glide.with(requireContext()).load(imgURL).centerCrop().into(binding.imgTestComicUserstory)
-binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
+        //button
         recyclerViewGenreButton.layoutManager = GridLayoutManager(
             view.context, 1, GridLayoutManager.HORIZONTAL, false
         )
         recyclerViewGenreButton.adapter = Duc_Button_Adapter(
-            //requireContext(), ArrayList(genreViewModel.genres.value), isComic
-            requireContext(), ArrayList(ducGenreViewModel.getAllGenres()), isComic
+            requireContext(), ArrayList(ducGenreViewModel.getAllGenres()), isText
         )
 
-        var searchImgBtn = binding.searchButtonComicStoriesUser
+        //button search
+        setConfigButton()
 
-        searchImgBtn.setOnClickListener {
-            toSearchActivity()
-        }
+        //card view stories
+        ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+            for (genre in ducGenreViewModel.getAllGenres()) {
+                createGridCardViewStory(
+                    requireContext(),
+                    inflater,
+                    linearLayout,
+                    genre,
+                    ducStoryViewModel.getStoriesByGenre(genre.idGenre, isText)
+                )
 
+            }
 
-        for (genre in ducGenreViewModel.getAllGenres()) {
-
-            createGridCardViewStory(
-                requireContext(),
-                inflater,
-                linearLayout,
-                genre,
-                ducStoryViewModel.getComicStoriesByGenre(genre)
-            )
-        }
+        })
 
 
         //testDatabase()
 
-
-//        genreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
-//
-//
-//            for (i in genres.indices) {
-//                if(requireContext() != null && inflater != null && genres[i] != null && storiesViewModel.getComicStoriesByGenre(genres[i]) != null)
-//                {
-//                    createGridCardViewStory(
-//                        requireContext(),
-//                        inflater,
-//                        linearLayout,
-//                        genres[i],
-//                        storiesViewModel.getComicStoriesByGenre(genres[i])
-//                    )
-//                }
-//
-//
-//            }
-//
-//        })
-        ///////////////////////
 
 //       ---------------------------------------------------------------------------------
         // Inflate the layout for this fragment
         return view
     }
 
+    private fun setImageBanner() {
+        var imgURL: String =
+            "https://storage-ct.lrclib.net/file/cuutruyen/uploads/manga/2478/cover/processed-4079ee6ed3b108490e33fca63589c35e.jpg"
+        var imgURL2: String =
+            "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467618820_987540786516413_9022671729236654001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=wcRr4uG_frQQ7kNvgG7AO3Q&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=ACWt9Nxlog48s7vciMKLvlm&oh=00_AYCFt2WZkt3Qy8rXYq0fnq2KdcuMdRdl7Qr9prRr8E71gw&oe=67420403"
+        binding.imgTestComicUserstory.loadImgURL(requireContext(), imgURL2)
+    }
+
     private fun testDatabase() {
-        var dataHelper: DatabaseHelper= DatabaseHelper(requireContext() )
+        var dataHelper: DatabaseHelper = DatabaseHelper(requireContext())
         dataHelper.insertRole(Role(null, "Admin"))
         dataHelper.insertRole(Role(null, "Moderator"))
         dataHelper.insertRole(Role(null, "Member"))
         dataHelper.insertRole(Role(null, "Guest"))
 
-        dataHelper.insertUser(User(null, "user1", "hashedPassword1", SampleDataStory.getExampleImgURL(), "nickname1",1, dateTimeNow))
-        dataHelper.insertUser(User(null, "user2", "hashedPassword2",SampleDataStory.getExampleImgURL(), "nickname2", 2,dateTimeNow))
-        dataHelper.insertUser(User(null, "user3", "hashedPassword3",SampleDataStory.getExampleImgURL(), "nickname3", 3, dateTimeNow))
-        dataHelper.insertUser(User(null, "user4", "hashedPassword4", SampleDataStory.getExampleImgURL(),"nickname4", 4, dateTimeNow))
+        dataHelper.insertUser(
+            User(
+                null,
+                "user1",
+                "hashedPassword1",
+                SampleDataStory.getExampleImgURL(),
+                "nickname1",
+                1,
+                dateTimeNow
+            )
+        )
+        dataHelper.insertUser(
+            User(
+                null,
+                "user2",
+                "hashedPassword2",
+                SampleDataStory.getExampleImgURL(),
+                "nickname2",
+                2,
+                dateTimeNow
+            )
+        )
+        dataHelper.insertUser(
+            User(
+                null,
+                "user3",
+                "hashedPassword3",
+                SampleDataStory.getExampleImgURL(),
+                "nickname3",
+                3,
+                dateTimeNow
+            )
+        )
+        dataHelper.insertUser(
+            User(
+                null,
+                "user4",
+                "hashedPassword4",
+                SampleDataStory.getExampleImgURL(),
+                "nickname4",
+                4,
+                dateTimeNow
+            )
+        )
 
         dataHelper.insertGenre(Genre(null, "Action", 1))
         dataHelper.insertGenre(Genre(null, "Romance", 1))
         dataHelper.insertGenre(Genre(null, "Horror", 1))
         dataHelper.insertGenre(Genre(null, "Fantasy", 1))
-
 
 
         // Add 4 stories with details
@@ -183,10 +196,10 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
                 author = "Author $i",
                 createdDate = dateTimeNow,
                 isTextStory = 1,
-                score = 4.0f ,
+                score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
             )
-            addStoryWithDetails(story,dataHelper)
+            addStoryWithDetails(story, dataHelper)
         }
         for (i in 3..4) {
             val story = Story(
@@ -198,10 +211,10 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
                 author = "Author $i",
                 createdDate = dateTimeNow,
                 isTextStory = 0,
-                score = 4.0f ,
+                score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
             )
-            addStoryWithDetails(story,dataHelper)
+            addStoryWithDetails(story, dataHelper)
         }
         dataHelper.insertStoryGenre(storyId = 1, genreId = 1)
         dataHelper.insertStoryGenre(storyId = 1, genreId = 2)
@@ -227,7 +240,7 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
         dataHelper.insertChapterHistory(4, 4)
     }
 
-    fun addStoryWithDetails(story: Story,dbHelper: DatabaseHelper) {
+    fun addStoryWithDetails(story: Story, dbHelper: DatabaseHelper) {
         // Insert the story
         val storyId = dbHelper.insertStory(story)
 
@@ -241,16 +254,16 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
                     // Add 4 paragraphs for each chapter
                     for (j in 1..4) {
                         var paragraph: Paragraph
-                        if(story.isTextStory==0){
+                        if (story.isTextStory == 0) {
 
-                             paragraph = Paragraph(
+                            paragraph = Paragraph(
                                 null,
                                 SampleDataStory.getExampleImgURLParagraph(),
                                 j,
                                 chapterId.toInt()
                             )
-                        }else{
-                             paragraph = Paragraph(
+                        } else {
+                            paragraph = Paragraph(
                                 null,
                                 getLoremIpsumLong(),
                                 j,
@@ -280,10 +293,16 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
 
     fun toSearchActivity() {
         var intent = Intent(context, DucSearchActivity::class.java)
-        intent.putExtra(getKeyIsComic(requireContext()), isComic)
+        intent.putExtra(getKeyIsText(requireContext()), isText)
         startActivity(intent)
     }
 
+    fun setConfigButton() {
+        var searchImgBtn = binding.searchButtonComicStoriesUser
+        searchImgBtn.setOnClickListener {
+            toSearchActivity()
+        }
+    }
 
     companion object {
         /**
