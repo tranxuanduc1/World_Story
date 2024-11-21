@@ -6,6 +6,7 @@ import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
+import com.example.worldstory.model.Story
 
 class DucChapterViewModel (var context: Context): ViewModel() {
     var isFirstLoadChapter: Boolean = true
@@ -18,8 +19,8 @@ class DucChapterViewModel (var context: Context): ViewModel() {
         previousChapter=pChapter
         nextChapter=nChapter
     }
-    fun getAllChaptersByStory(story: DucStoryDataClass): List<DucChapterDataClass> {
-        return SampleDataStory.getListOfChapter(context).filter { it.idStory==story.idStory }
+    fun getAllChaptersByStory(story: Story): List<DucChapterDataClass> {
+        return SampleDataStory.getListOfChapter(context).filter { it.idStory==story.storyID }
     }
     fun getAllChaptersByStory(idStory: Int): List<DucChapterDataClass> {
         return SampleDataStory.getListOfChapter(context).filter { it.idStory==idStory }

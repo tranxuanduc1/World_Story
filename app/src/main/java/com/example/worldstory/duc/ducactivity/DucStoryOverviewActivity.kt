@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -25,14 +24,16 @@ import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
+import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
+import com.example.worldstory.model.Story
 
 class DucStoryOverviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDucStoryOverviewBinding
-    private lateinit var storyInfo: DucStoryDataClass
+    private lateinit var storyInfo: Story
     private val ducChapterViewModel: DucChapterViewModel by viewModels {
         DucChapterViewModelFactory(this)
     }
@@ -61,7 +62,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     private fun setGenreButton() {
-        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.idStory)
+        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID?:1)
         for (genre in listGenres) {
             var genreButton = AppCompatButton(this)
             genreButton.apply {
@@ -83,7 +84,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             }
 
             genreButton.setOnClickListener {
-                this.toActivityStoriesByGenre(storyInfo.isComic,genre)
+                this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(),genre)
             }
 
 
@@ -97,18 +98,18 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     fun loadInfoStory(key: String) {
-        storyInfo = intent.getParcelableExtra<DucStoryDataClass>(key) as DucStoryDataClass
+        storyInfo = intent.getParcelableExtra<Story>(key) as Story
         binding.txtTitleStoryStoryOverview.text = storyInfo.title
         binding.txtAuthorStoryStoryOverview.text = storyInfo.author
         binding.txtDescriptionStoryStoryOverview.text = storyInfo.description
-        binding.imgStoryStoryOverview.loadImgURL(this,storyInfo.imgURL)
-        binding.imgBackgroundStoryStoryOverview.loadImgURL(this,storyInfo.backgroundImageURL)
+        binding.imgStoryStoryOverview.loadImgURL(this,storyInfo.imgUrl)
+        binding.imgBackgroundStoryStoryOverview.loadImgURL(this,storyInfo.bgImgUrl)
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)
     }
 
-    fun generateChapter(story: DucStoryDataClass) {
+    fun generateChapter(story: Story) {
 
         for (item in ducChapterViewModel.getAllChaptersByStory(story)) {
             // Inflate each item view
