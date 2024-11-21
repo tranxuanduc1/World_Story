@@ -988,8 +988,29 @@ class DatabaseHelper(context: Context) :
 
 
     //////////////////////////
-    ///----      -----////
+    ///----StoryGenre-----////
     //////////////////////////
+// Hàm thêm dữ liệu vào StoryGenreEntry
+    fun insertStoryGenre(storyId: Int, genreId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryGenreEntry.COLUMN_STORY_ID_FK, storyId)
+            put(Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK, genreId)
+        }
+        return db.insert(Contract.StoryGenreEntry.TABLE_NAME, null, values)
+    }
+
+    // Hàm xóa dữ liệu trong StoryGenreEntry
+    fun deleteStoryGenre(storyId: Int, genreId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.StoryGenreEntry.TABLE_NAME,
+            "${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} = ? AND ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} = ?",
+            arrayOf(storyId.toString(), genreId.toString())
+        )
+    }
+
+
 
 
     //////////////////////////

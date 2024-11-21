@@ -15,17 +15,27 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
+import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducdatabase.DucDatabaseHelper
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
+import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getKeyIsComic
+import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
+import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Comment
+import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Role
+import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,7 +122,9 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
                 ducStoryViewModel.getComicStoriesByGenre(genre)
             )
         }
-       // testDatabase()
+
+
+        //testDatabase()
 
 
 //        genreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
@@ -142,11 +154,129 @@ binding.imgTestComicUserstory.loadImgURL(requireContext(),imgURL2)
     }
 
     private fun testDatabase() {
-        var ducDataHelper: DucDatabaseHelper= DucDatabaseHelper(requireContext())
-        ducDataHelper.insertStory(ducStoryViewModel.getOneExampleStory())
+        var dataHelper: DatabaseHelper= DatabaseHelper(requireContext() )
+        dataHelper.insertRole(Role(null, "Admin"))
+        dataHelper.insertRole(Role(null, "Moderator"))
+        dataHelper.insertRole(Role(null, "Member"))
+        dataHelper.insertRole(Role(null, "Guest"))
 
-        binding.txtTestComicUserstory.text=ducDataHelper.getAllStory().toString()
+        dataHelper.insertUser(User(null, "user1", "hashedPassword1", SampleDataStory.getExampleImgURL(), "nickname1",1, dateTimeNow))
+        dataHelper.insertUser(User(null, "user2", "hashedPassword2",SampleDataStory.getExampleImgURL(), "nickname2", 2,dateTimeNow))
+        dataHelper.insertUser(User(null, "user3", "hashedPassword3",SampleDataStory.getExampleImgURL(), "nickname3", 3, dateTimeNow))
+        dataHelper.insertUser(User(null, "user4", "hashedPassword4", SampleDataStory.getExampleImgURL(),"nickname4", 4, dateTimeNow))
+
+        dataHelper.insertGenre(Genre(null, "Action", 1))
+        dataHelper.insertGenre(Genre(null, "Romance", 1))
+        dataHelper.insertGenre(Genre(null, "Horror", 1))
+        dataHelper.insertGenre(Genre(null, "Fantasy", 1))
+
+
+
+        // Add 4 stories with details
+        for (i in 1..2) {
+            val story = Story(
+                storyID = null,
+                title = "Story $i",
+                description = "Description of Story $i",
+                imgUrl = SampleDataStory.getExampleImgURL(),
+                bgImgUrl = SampleDataStory.getExampleImgURL(),
+                author = "Author $i",
+                createdDate = dateTimeNow,
+                isTextStory = 1,
+                score = 4.0f ,
+                userID = 1 // Assuming user ID 1 created the stories
+            )
+            addStoryWithDetails(story,dataHelper)
+        }
+        for (i in 3..4) {
+            val story = Story(
+                storyID = null,
+                title = "Story $i",
+                description = "Description of Story $i",
+                imgUrl = SampleDataStory.getExampleImgURL(),
+                bgImgUrl = SampleDataStory.getExampleImgURL(),
+                author = "Author $i",
+                createdDate = dateTimeNow,
+                isTextStory = 0,
+                score = 4.0f ,
+                userID = 1 // Assuming user ID 1 created the stories
+            )
+            addStoryWithDetails(story,dataHelper)
+        }
+        dataHelper.insertStoryGenre(storyId = 1, genreId = 1)
+        dataHelper.insertStoryGenre(storyId = 1, genreId = 2)
+        dataHelper.insertStoryGenre(storyId = 2, genreId = 3)
+        dataHelper.insertStoryGenre(storyId = 2, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 3, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 4, genreId = 2)
+
+        // Insert 4 rows for the UserLoveStory table
+        dataHelper.insertUserLoveStory(1, 1)
+        dataHelper.insertUserLoveStory(2, 2)
+        dataHelper.insertUserLoveStory(3, 3)
+        dataHelper.insertUserLoveStory(4, 4)
+
+        dataHelper.insertChapterMark(1, 1)
+        dataHelper.insertChapterMark(2, 2)
+        dataHelper.insertChapterMark(3, 3)
+        dataHelper.insertChapterMark(4, 4)
+
+        dataHelper.insertChapterHistory(1, 1)
+        dataHelper.insertChapterHistory(2, 2)
+        dataHelper.insertChapterHistory(3, 3)
+        dataHelper.insertChapterHistory(4, 4)
     }
+
+    fun addStoryWithDetails(story: Story,dbHelper: DatabaseHelper) {
+        // Insert the story
+        val storyId = dbHelper.insertStory(story)
+
+        if (storyId != -1L) {
+            // Add 4 chapters for the story
+            for (i in 1..4) {
+                val chapter = Chapter(null, "Chapter $i of ${story.title}", storyId.toInt())
+                val chapterId = dbHelper.insertChapter(chapter)
+
+                if (chapterId != -1L) {
+                    // Add 4 paragraphs for each chapter
+                    for (j in 1..4) {
+                        var paragraph: Paragraph
+                        if(story.isTextStory==0){
+
+                             paragraph = Paragraph(
+                                null,
+                                SampleDataStory.getExampleImgURLParagraph(),
+                                j,
+                                chapterId.toInt()
+                            )
+                        }else{
+                             paragraph = Paragraph(
+                                null,
+                                getLoremIpsumLong(),
+                                j,
+                                chapterId.toInt()
+                            )
+                        }
+
+                        dbHelper.insertParagraph(paragraph)
+                    }
+                }
+            }
+
+            // Add 2 comments for the story
+            for (i in 1..2) {
+                val comment = Comment(
+                    null,
+                    "Comment $i on ${story.title}",
+                    dateTimeNow,
+                    userId = 1, // Assuming user ID 1 for simplicity
+                    storyId = storyId.toInt()
+                )
+                dbHelper.insertComment(comment)
+            }
+        }
+    }
+
 
     fun toSearchActivity() {
         var intent = Intent(context, DucSearchActivity::class.java)

@@ -11,7 +11,7 @@ import com.example.myapplication.databinding.ActivityDucResultSearchBinding
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.getDataNotFound
-import com.example.worldstory.duc.ducutils.getKeyIsComic
+import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyResultSearchInfo
 import com.example.worldstory.duc.ducutils.getKeyTextQuery
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
@@ -21,7 +21,7 @@ class DucResultSearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDucResultSearchBinding
     private lateinit var dataList: ArrayList< DucStoryDataClass>
     private lateinit var textQuery: String
-    private var isComic : Boolean=true
+    private var isText : Boolean=false
     private val ducStoryViewModel: DucStoryViewModel by viewModels{
         DucStoryViewModelFactory(this)
     }
@@ -44,7 +44,7 @@ class DucResultSearchActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        var cardStoryAdapter= Duc_CardStoryItem_Adapter(this,ArrayList(ducStoryViewModel.getStoriesByQuery(textQuery,isComic)))
+        var cardStoryAdapter= Duc_CardStoryItem_Adapter(this,ArrayList(ducStoryViewModel.getStoriesByQuery(textQuery,isText)))
         var recyclerView: RecyclerView=binding.recyclerStoriesResultSearch
         recyclerView.adapter=cardStoryAdapter
         recyclerView.layoutManager= GridLayoutManager(this,3, LinearLayoutManager.VERTICAL,false)
@@ -64,7 +64,7 @@ class DucResultSearchActivity : AppCompatActivity() {
         var bundle=intent.getBundleExtra(getKeyResultSearchInfo(this))
         if(bundle!=null)
         {
-            isComic=bundle.getBoolean(getKeyIsComic(this))
+            isText=bundle.getBoolean(getKeyIsText(this))
             textQuery=bundle.getString(getKeyTextQuery(this))?: getDataNotFound(this)
 
         }

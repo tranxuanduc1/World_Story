@@ -10,17 +10,18 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.myapplication.R
+import com.example.worldstory.model.Story
 
 class Duc_ListSearch_ArrayAdapter(
-    var appContext: Context,private val resource: Int,private val dataList: List<DucStoryDataClass>) :
-    ArrayAdapter<DucStoryDataClass>(appContext,resource,dataList) {
-    public var filteredDataList: List<DucStoryDataClass> = dataList.toList()
+    var appContext: Context,private val resource: Int,private val dataList: List<Story>) :
+    ArrayAdapter<Story>(appContext,resource,dataList) {
+    public var filteredDataList: List<Story> = dataList.toList()
 
     override fun getCount(): Int {
         return filteredDataList.size
     }
 
-    override fun getItem(position: Int): DucStoryDataClass? {
+    override fun getItem(position: Int): Story? {
         return filteredDataList[position]
     }
 
@@ -36,9 +37,9 @@ class Duc_ListSearch_ArrayAdapter(
 
         // Thiết lập dữ liệu
         title.text=item.title
-        idStory.text = item.idStory.toString()
+        idStory.text = item.storyID.toString()
         view.setOnClickListener{
-            Toast.makeText(context,"idstory: ${item.idStory.toString()} ,${item.title}  ", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"idstory: ${item.storyID.toString()} ,${item.title}  ", Toast.LENGTH_SHORT).show()
         }
 
         return view
@@ -64,7 +65,7 @@ class Duc_ListSearch_ArrayAdapter(
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredDataList = results?.values as List<DucStoryDataClass>? ?: listOf()
+                filteredDataList = results?.values as List<Story>? ?: listOf()
                 notifyDataSetChanged()
             }
         }

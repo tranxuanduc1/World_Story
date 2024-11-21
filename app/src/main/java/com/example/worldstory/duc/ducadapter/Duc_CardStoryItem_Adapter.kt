@@ -17,9 +17,10 @@ import com.example.worldstory.duc.ducutils.changeShapeBackgroundColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
+import com.example.worldstory.model.Story
 
 
-class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: ArrayList<DucStoryDataClass>)
+class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: ArrayList<Story>)
     : RecyclerView.Adapter<Duc_CardStoryItem_Adapter.ViewHolderClass>(){
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -46,13 +47,13 @@ class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: Arra
 
         holder.title.text=currentItem.title
         holder.author.text=currentItem.author
-        holder.imgURL.loadImgURL(context,currentItem.imgURL)
+        holder.imgURL.loadImgURL(context,currentItem.imgUrl)
 
         holder.score.text= (currentItem.score).toString()
         holder.constraintLayout.changeShapeBackgroundColorByScore(currentItem.score)
 //        holder.constraintLayout.setBackgroundResource(R.drawable.shape_yellow_card_story_item_layout)
 //        setColorScore(currentItem.score,holder)
-        holder.idStory.text=currentItem.idStory.toString()
+        holder.idStory.text=currentItem.storyID.toString()
         holder.itemView.setOnClickListener{
 
 

@@ -40,12 +40,14 @@ fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
 var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+var dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+var timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
 fun getKeyStoryInfo(context: Context): String = context.getString(R.string.key_storyInfo)
 fun getKeyStoriesByGenre(context: Context): String = context.getString(R.string.key_storiesByGenre)
-fun getKeyIsComic(context: Context): String = context.getString(R.string.key_isComic)
+fun getKeyIsText(context: Context): String = context.getString(R.string.key_isText)
 fun getKeyGenreInfo(context: Context): String = context.getString(R.string.key_genreInfo)
 fun getKeyChapterInfo(context: Context): String = context.getString(R.string.key_chapterInfo)
 fun getKeyPreviousChapterInfo(context: Context): String = context.getString(R.string.key_previousChapterInfo)
@@ -65,7 +67,13 @@ fun getTextDataNotFound(context: Context): String{
 }
 
 //--------------------------------------
-
+fun Int.toBoolean(): Boolean = this == 1
+fun Boolean.toInt(): Int {
+    return when(this){
+        true-> 1
+        else ->0
+    }
+}
 
 fun ImageView.loadImgURL(context: Context,imageURL:String){
     Glide.with(context).load(imageURL).centerCrop().into(this)
@@ -216,11 +224,11 @@ fun createGridCardViewStory(
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }
-fun Context.toActivityStoriesByGenre(isComic: Boolean,genre: DucGenreDataClass){
-    var keyIsComic = getKeyIsComic(this)
+fun Context.toActivityStoriesByGenre(isText: Boolean,genre: DucGenreDataClass){
+    var keyIsText = getKeyIsText(this)
     var keyGenreInfo = getKeyGenreInfo(this)
     var bundle = Bundle()
-    bundle.putBoolean(keyIsComic, isComic)
+    bundle.putBoolean(keyIsText, isText)
     bundle.putParcelable(keyGenreInfo, genre)
         toActivity(DucStoriesByGenreActivity::class.java, getKeyStoriesByGenre(this), bundle)
 }

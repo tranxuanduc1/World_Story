@@ -1,5 +1,8 @@
 package com.example.worldstory.model
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class User(
     val userID: Int?,
     val userName:String,
@@ -8,4 +11,4 @@ data class User(
     val nickName:String,
     val roleID: Int,
     val createdDate:String,
-)
+): Parcelable

@@ -10,6 +10,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.model.Story
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -124,6 +125,10 @@ object SampleDataStory {
             )
             addData(item)
         }
+    }
+    fun getExampleListOfStories(): List<Story>{
+        var list=listOf<Story>()
+        return list
     }
     //-----------------------------------------------------
     fun getOneGenreByID(context: Context,idGenre:Int): DucGenreDataClass{
