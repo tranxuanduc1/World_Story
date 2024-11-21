@@ -71,25 +71,29 @@ class Duc_TextStories_User_Fragment : Fragment() {
 
         ///////////////////////
         //button genre
-        recyclerViewGenreButton.layoutManager = GridLayoutManager(
-            view.context,
-            1,
-            GridLayoutManager.HORIZONTAL, false
-        )
-        recyclerViewGenreButton.adapter = Duc_Button_Adapter(
-            requireContext(), ArrayList(ducGenreViewModel.getAllGenres()),
-            isText
-        )
+        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
+            recyclerViewGenreButton.layoutManager = GridLayoutManager(
+                view.context,
+                1,
+                GridLayoutManager.HORIZONTAL, false
+            )
+            recyclerViewGenreButton.adapter = Duc_Button_Adapter(
+                requireContext(), ArrayList(genres),
+                isText
+            )
+            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+                for (i in genres) {
+                    createGridCardViewStory(
+                        requireContext(), inflater, linearLayout, i,
+                        ducStoryViewModel.getStoriesByGenre(i?.genreID?:1, isText)
+                    )
+                }
+            })
+        })
+
 
         //card view stories
-        ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
-            for (i in ducGenreViewModel.getAllGenres()) {
-                createGridCardViewStory(
-                    requireContext(), inflater, linearLayout, i,
-                    ducStoryViewModel.getStoriesByGenre(i.idGenre, isText)
-                )
-            }
-        })
+
 
         setConfigButton()
 

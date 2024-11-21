@@ -84,31 +84,35 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         //set image banner
         setImageBanner()
 
-        //button
-        recyclerViewGenreButton.layoutManager = GridLayoutManager(
-            view.context, 1, GridLayoutManager.HORIZONTAL, false
-        )
-        recyclerViewGenreButton.adapter = Duc_Button_Adapter(
-            requireContext(), ArrayList(ducGenreViewModel.getAllGenres()), isText
-        )
+        //button genre
+        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
+            recyclerViewGenreButton.layoutManager = GridLayoutManager(
+                view.context, 1, GridLayoutManager.HORIZONTAL, false
+            )
+            recyclerViewGenreButton.adapter = Duc_Button_Adapter(
+                requireContext(), ArrayList(genres), isText
+            )
+            //card view stories
+            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+                for (genre in genres) {
+                    createGridCardViewStory(
+                        requireContext(),
+                        inflater,
+                        linearLayout,
+                        genre,
+                        ducStoryViewModel.getStoriesByGenre(genre?.genreID?:1, isText)
+                    )
+
+                }
+
+            })
+        })
+
 
         //button search
         setConfigButton()
 
-        //card view stories
-        ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
-            for (genre in ducGenreViewModel.getAllGenres()) {
-                createGridCardViewStory(
-                    requireContext(),
-                    inflater,
-                    linearLayout,
-                    genre,
-                    ducStoryViewModel.getStoriesByGenre(genre.idGenre, isText)
-                )
 
-            }
-
-        })
 
 
         //testDatabase()

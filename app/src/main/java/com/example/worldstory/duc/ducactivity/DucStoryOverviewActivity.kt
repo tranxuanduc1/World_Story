@@ -61,7 +61,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     private fun setGenreButton() {
-        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo)
+        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.idStory)
         for (genre in listGenres) {
             var genreButton = AppCompatButton(this)
             genreButton.apply {
@@ -79,7 +79,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
                     )
                 )
                 background = ContextCompat.getDrawable(context, R.drawable.shape_button_primary)
-                text = genre.title
+                text = genre.genreName
             }
 
             genreButton.setOnClickListener {

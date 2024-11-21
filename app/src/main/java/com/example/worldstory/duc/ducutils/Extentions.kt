@@ -28,6 +28,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 
 import java.io.Serializable
@@ -176,7 +177,7 @@ fun getKey_chapterInfo(context: Context):String{
 fun createGridCardViewStory(
     context: Context,
     inflater:LayoutInflater,
-    viewGroup: ViewGroup, genre: DucGenreDataClass,
+    viewGroup: ViewGroup, genre: Genre,
     dataList: List<Story> ){
     var blistCardStoriesLayout= ListCardStoriesLayoutBinding.inflate(inflater)
     val listCardStoriesLayout = blistCardStoriesLayout.root
@@ -216,7 +217,7 @@ fun createGridCardViewStory(
             }
         }
 
-        txtGenre.text=genre.title
+        txtGenre.text=genre.genreName
         gridLayout.addView(cardView)
 
     }
@@ -225,7 +226,7 @@ fun createGridCardViewStory(
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }
-fun Context.toActivityStoriesByGenre(isText: Boolean,genre: DucGenreDataClass){
+fun Context.toActivityStoriesByGenre(isText: Boolean,genre: Genre){
     var keyIsText = getKeyIsText(this)
     var keyGenreInfo = getKeyGenreInfo(this)
     var bundle = Bundle()
