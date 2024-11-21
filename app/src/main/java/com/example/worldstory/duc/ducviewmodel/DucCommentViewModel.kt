@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.getImageAvatar
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 
-class DucCommentViewModel(var context: Context): ViewModel() {
+class DucCommentViewModel(var repository: DucDataRepository,var context: Context): ViewModel() {
     fun checkCommentFromUser(comment: DucCommentDataClass): Boolean{
         return (comment.idUser== SampleDataStory.idUser)
     }

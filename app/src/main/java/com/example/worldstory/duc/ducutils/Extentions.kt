@@ -28,6 +28,8 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Story
 
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -40,12 +42,14 @@ fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
 var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+var dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+var timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
 fun getKeyStoryInfo(context: Context): String = context.getString(R.string.key_storyInfo)
 fun getKeyStoriesByGenre(context: Context): String = context.getString(R.string.key_storiesByGenre)
-fun getKeyIsComic(context: Context): String = context.getString(R.string.key_isComic)
+fun getKeyIsText(context: Context): String = context.getString(R.string.key_isText)
 fun getKeyGenreInfo(context: Context): String = context.getString(R.string.key_genreInfo)
 fun getKeyChapterInfo(context: Context): String = context.getString(R.string.key_chapterInfo)
 fun getKeyPreviousChapterInfo(context: Context): String = context.getString(R.string.key_previousChapterInfo)
@@ -65,7 +69,13 @@ fun getTextDataNotFound(context: Context): String{
 }
 
 //--------------------------------------
-
+fun Int.toBoolean(): Boolean = this == 1
+fun Boolean.toInt(): Int {
+    return when(this){
+        true-> 1
+        else ->0
+    }
+}
 
 fun ImageView.loadImgURL(context: Context,imageURL:String){
     Glide.with(context).load(imageURL).centerCrop().into(this)
@@ -167,8 +177,8 @@ fun getKey_chapterInfo(context: Context):String{
 fun createGridCardViewStory(
     context: Context,
     inflater:LayoutInflater,
-    viewGroup: ViewGroup, genre: DucGenreDataClass,
-    dataList: List<DucStoryDataClass> ){
+    viewGroup: ViewGroup, genre: Genre,
+    dataList: List<Story> ){
     var blistCardStoriesLayout= ListCardStoriesLayoutBinding.inflate(inflater)
     val listCardStoriesLayout = blistCardStoriesLayout.root
     var gridLayout=blistCardStoriesLayout.gridLayoutListCardStory
@@ -187,10 +197,10 @@ fun createGridCardViewStory(
         var constraintLayout =bCardView.constraintLayoutCardStoryLayout
         title.text=i.title
         author.text=i.author
-        imgURL.loadImgURL(context,i.imgURL)
+        imgURL.loadImgURL(context,i.imgUrl)
 
         score.text= (i.score).toString()
-        idStory.text=i.idStory.toString()
+        idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({
             // truyen mot dataclass den activity moi
@@ -207,7 +217,7 @@ fun createGridCardViewStory(
             }
         }
 
-        txtGenre.text=genre.title
+        txtGenre.text=genre.genreName
         gridLayout.addView(cardView)
 
     }
@@ -216,11 +226,11 @@ fun createGridCardViewStory(
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }
-fun Context.toActivityStoriesByGenre(isComic: Boolean,genre: DucGenreDataClass){
-    var keyIsComic = getKeyIsComic(this)
+fun Context.toActivityStoriesByGenre(isText: Boolean,genre: Genre){
+    var keyIsText = getKeyIsText(this)
     var keyGenreInfo = getKeyGenreInfo(this)
     var bundle = Bundle()
-    bundle.putBoolean(keyIsComic, isComic)
+    bundle.putBoolean(keyIsText, isText)
     bundle.putParcelable(keyGenreInfo, genre)
         toActivity(DucStoriesByGenreActivity::class.java, getKeyStoriesByGenre(this), bundle)
 }

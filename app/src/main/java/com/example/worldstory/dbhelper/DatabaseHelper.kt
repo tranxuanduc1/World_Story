@@ -77,7 +77,7 @@ object Contract {
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_NICKNAME = "nickname"
-        const val COLUMN_IMAGE_AVATAR= "imgAvatar"
+        const val COLUMN_IMAGE_AVATAR = "imgAvatar"
         const val COLUMN_CREATED_DATE = "created_date"
 
         //Foreign key
@@ -124,7 +124,7 @@ object Contract {
     object ChapterEntry : BaseColumns {
         const val TABLE_NAME = "chapter_table"
         const val COLUMN_TITLE = "title"
-
+        const val COLUMN_DATE_CREATED="date_created"
         //Foreign key
         //const val COLUMN_USER_ID_FK = "user_id"
         const val COLUMN_STORY_ID_FK = "story_id"
@@ -288,6 +288,7 @@ class DatabaseHelper(context: Context) :
     CREATE TABLE ${Contract.ChapterEntry.TABLE_NAME} (
         ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
+        ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
         ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
         FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
     )
@@ -402,17 +403,39 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
-                val author = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
-                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
-                val imgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
-                val bgImgURL = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
-                val score = cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
-                val isTextStory = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
-                val dateCreated = cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
-                val userID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+                val author =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+                val description =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+                val imgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+                val bgImgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+                val score =
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+                val isTextStory =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+                val dateCreated =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+                val userID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
 
-                stories.add(Story(id,title,author,description,imgURL,bgImgURL,isTextStory,dateCreated,score,userID))
+                stories.add(
+                    Story(
+                        id,
+                        title,
+                        author,
+                        description,
+                        imgURL,
+                        bgImgURL,
+                        isTextStory,
+                        dateCreated,
+                        score,
+                        userID
+                    )
+                )
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -423,14 +446,17 @@ class DatabaseHelper(context: Context) :
         val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.StoryEntry.COLUMN_TITLE, story.title)
-            put(Contract.StoryEntry.COLUMN_AUTHOR,  story.author)
-            put(Contract.StoryEntry.COLUMN_DESCRIPTION,  story.description)
-            put(Contract.StoryEntry.COLUMN_IMAGE_URL,  story.imgUrl)
+            put(Contract.StoryEntry.COLUMN_AUTHOR, story.author)
+            put(Contract.StoryEntry.COLUMN_DESCRIPTION, story.description)
+            put(Contract.StoryEntry.COLUMN_IMAGE_URL, story.imgUrl)
             put(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL, story.bgImgUrl)
-            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY,story.isTextStory)
+            put(Contract.StoryEntry.COLUMN_IS_TEXT_STORY, story.isTextStory)
         }
         return db.update(
-            Contract.StoryEntry.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(story.storyID.toString())
+            Contract.StoryEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(story.storyID.toString())
         )
     }
     fun deleteStory(storyId: Int?): Int {
@@ -449,6 +475,7 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues().apply {
             put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
             put(Contract.ChapterEntry.COLUMN_STORY_ID_FK, chapter.storyID)
+            put(Contract.ChapterEntry.COLUMN_DATE_CREATED,chapter.dateCreated)
         }
         return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
     }
@@ -484,9 +511,42 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
-                val storyID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
-                chapters.add(Chapter(id, title, storyID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
+                val storyID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+
+                chapters.add(Chapter(id, title, dateCreate,storyID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapters
+    }
+
+    fun getChaptersByStory(storyId: Int): List<Chapter> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.ChapterEntry.TABLE_NAME}
+            WHERE ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} = ?
+            """.trimIndent(),
+            arrayOf(storyId.toString())
+        )
+        val chapters = mutableListOf<Chapter>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
+                val storyID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+
+                chapters.add(Chapter(id, title, dateCreate,storyID))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -528,6 +588,7 @@ class DatabaseHelper(context: Context) :
             arrayOf(paragraph.paragraphID.toString())
         )
     }
+
     fun getAllParagraphs(): List<Paragraph> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${Contract.ParagraphEntry.TABLE_NAME}", null)
@@ -536,9 +597,12 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CONTENT_FILE))
-                val order = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER))
-                val chapterID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CONTENT_FILE))
+                val order =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER))
+                val chapterID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK))
                 paragraphs.add(Paragraph(id, content, order, chapterID))
             } while (cursor.moveToNext())
         }
@@ -561,7 +625,7 @@ class DatabaseHelper(context: Context) :
             put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
-            put(Contract.UserEntry.COLUMN_IMAGE_AVATAR,user.imgAvatar)
+            put(Contract.UserEntry.COLUMN_IMAGE_AVATAR, user.imgAvatar)
             put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
             put(Contract.UserEntry.COLUMN_CREATED_DATE, user.createdDate)
         }
@@ -602,13 +666,19 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val userName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
-                val hashedPw = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
-                val nickName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
-                val imgAvatar = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
-                val roleID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
-                val createdDate = cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
-                users.add(User(id, userName, hashedPw,  imgAvatar,nickName,roleID, createdDate))
+                val userName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+                val hashedPw =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val nickName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+                val imgAvatar =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+                val roleID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+                val createdDate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+                users.add(User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -656,8 +726,10 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_NAME))
-                val userID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK))
+                val name =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_NAME))
+                val userID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK))
                 genres.add(Genre(id, name, userID))
             } while (cursor.moveToNext())
         }
@@ -743,8 +815,10 @@ class DatabaseHelper(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
-                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_USER_ID_FK))
-                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_STORY_ID_FK))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_STORY_ID_FK))
                 userLoveStories.add(Pair(userId, storyId))
             } while (cursor.moveToNext())
         }
@@ -794,10 +868,13 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val rateId = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_USER_ID_FK))
-                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_STORY_ID_FK))
-                val score = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_RATE))
-                rates.add(Rate(rateId,score,userId, storyId))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_STORY_ID_FK))
+                val score =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_RATE))
+                rates.add(Rate(rateId, score, userId, storyId))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -809,7 +886,7 @@ class DatabaseHelper(context: Context) :
     ///----  Comment -----////
     //////////////////////////
 
-    fun insertComment(comment:Comment): Long {
+    fun insertComment(comment: Comment): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.CommentEntry.COLUMN_USER_ID_FK, comment.userId)
@@ -847,11 +924,15 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_CONTENT))
-                val time = cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_TIME))
-                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
-                val storyId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
-                comments.add(Comment(id,content, time,userId, storyId))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_CONTENT))
+                val time =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_TIME))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
+                comments.add(Comment(id, content, time, userId, storyId))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -887,8 +968,10 @@ class DatabaseHelper(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
-                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_USER_ID_FK))
-                val chapterId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_USER_ID_FK))
+                val chapterId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK))
                 chapterMarks.add(Pair(userId, chapterId))
             } while (cursor.moveToNext())
         }
@@ -909,6 +992,7 @@ class DatabaseHelper(context: Context) :
         }
         return db.insert(Contract.ChapterHistoryEntry.TABLE_NAME, null, values)
     }
+
     fun deleteChapterHistory(userId: Int, chapterId: Int): Int {
         val db = writableDatabase
         return db.delete(
@@ -917,6 +1001,7 @@ class DatabaseHelper(context: Context) :
             arrayOf(userId.toString(), chapterId.toString())
         )
     }
+
     fun getAllChapterHistories(): List<Pair<Int, Int>> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${Contract.ChapterHistoryEntry.TABLE_NAME}", null)
@@ -924,8 +1009,10 @@ class DatabaseHelper(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
-                val userId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK))
-                val chapterId = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK))
+                val chapterId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK))
                 chapterHistories.add(Pair(userId, chapterId))
             } while (cursor.moveToNext())
         }
@@ -976,10 +1063,13 @@ class DatabaseHelper(context: Context) :
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val content = cursor.getString(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CONTENT_FILE))
-                val order = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_NUMBER_ORDER))
-                val chapterID = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK))
-                imgs.add(Image(id, content, order,chapterID))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CONTENT_FILE))
+                val order =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_NUMBER_ORDER))
+                val chapterID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK))
+                imgs.add(Image(id, content, order, chapterID))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -990,6 +1080,25 @@ class DatabaseHelper(context: Context) :
     //////////////////////////
     ///----      -----////
     //////////////////////////
+// Hàm thêm dữ liệu vào StoryGenreEntry
+    fun insertStoryGenre(storyId: Int, genreId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.StoryGenreEntry.COLUMN_STORY_ID_FK, storyId)
+            put(Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK, genreId)
+        }
+        return db.insert(Contract.StoryGenreEntry.TABLE_NAME, null, values)
+    }
+
+    // Hàm xóa dữ liệu trong StoryGenreEntry
+    fun deleteStoryGenre(storyId: Int, genreId: Int): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.StoryGenreEntry.TABLE_NAME,
+            "${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} = ? AND ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} = ?",
+            arrayOf(storyId.toString(), genreId.toString())
+        )
+    }
 
 
     //////////////////////////

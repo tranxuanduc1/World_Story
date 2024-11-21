@@ -10,6 +10,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.model.Story
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -125,6 +126,10 @@ object SampleDataStory {
             addData(item)
         }
     }
+    fun getExampleListOfStories(): List<Story>{
+        var list=listOf<Story>()
+        return list
+    }
     //-----------------------------------------------------
     fun getOneGenreByID(context: Context,idGenre:Int): DucGenreDataClass{
         return getListOfGenre(context).filter { it.idGenre==idGenre }.first()
@@ -152,7 +157,7 @@ object SampleDataStory {
 
         )
         var idList = arrayOf(
-            1,2,3,4,5,6,7,8,9
+            1,2,3,4
 
         )
         for(i in idList.indices){

@@ -1,40 +1,97 @@
 package com.example.worldstory.duc.ducviewmodel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
+import com.example.worldstory.duc.ducrepository.DucDataRepository
+import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsum
+import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Story
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class DucChapterViewModel (var context: Context): ViewModel() {
+class DucChapterViewModel(var repository: DucDataRepository, var context: Context) : ViewModel() {
     var isFirstLoadChapter: Boolean = true
-    var mainChapter: DucChapterDataClass? = null
-    var nextChapter: DucChapterDataClass? = null
-    var previousChapter: DucChapterDataClass? = null
-    fun setPreMainNextChapter(mChapter: DucChapterDataClass?, pChapter: DucChapterDataClass?,
-                              nChapter: DucChapterDataClass?){
-        mainChapter=mChapter
-        previousChapter=pChapter
-        nextChapter=nChapter
+    var mainChapter: Chapter? = null
+    var nextChapter: Chapter? = null
+    var previousChapter: Chapter? = null
+    private val _chapters = MutableLiveData<List<Chapter>>()
+    val chapters: LiveData<List<Chapter>> get() = _chapters
+    private val _chaptersByStory = MutableLiveData<List<Chapter>>()
+    val chaptersByStory: LiveData<List<Chapter>> get() = _chaptersByStory
+    init {
+        fetchChapters()
     }
-    fun getAllChaptersByStory(story: DucStoryDataClass): List<DucChapterDataClass> {
-        return SampleDataStory.getListOfChapter(context).filter { it.idStory==story.idStory }
+
+    private fun fetchChapters() {
+        viewModelScope.launch {
+            val resultChapters = withContext(Dispatchers.IO) {
+                repository.getAllChapter()
+            }
+            _chapters.value = resultChapters
+
+
+        }
     }
-    fun getAllChaptersByStory(idStory: Int): List<DucChapterDataClass> {
-        return SampleDataStory.getListOfChapter(context).filter { it.idStory==idStory }
+
+
+    fun setPreMainNextChapter(
+        mChapter: Chapter?, pChapter: Chapter?,
+        nChapter: Chapter?
+    ) {
+        mainChapter = mChapter
+        previousChapter = pChapter
+        nextChapter = nChapter
+
+        // set data chaptersByStory
+        if(mainChapter!=null){
+            viewModelScope.launch{
+                val result=withContext(Dispatchers.IO)
+                {
+                    repository.getChaptersByStory(mainChapter?.storyID?:1)
+                }
+                _chaptersByStory.value=result
+
+            }
+        }
     }
-    fun getOneChapter(story: DucStoryDataClass, idxChapter: Int): DucChapterDataClass {
-        return SampleDataStory.getListOfChapter(context).get(idxChapter)
+
+    fun getAllChaptersByStory(story: Story): List<Chapter> {
+        var list = _chapters.value?:listOf<Chapter>()
+        var filter =list.filter { it.storyID == story.storyID }
+        return filter
+    //return SampleDataStory.getListOfChapter(context).filter { it.idStory == story.storyID }
+    }
+
+    fun getAllChaptersByStory(storyId: Int): List<Chapter> {
+        var list = _chapters.value?:listOf<Chapter>()
+        var filter =list.filter { it.storyID == storyId }
+        return filter
+       // return _chaptersByStory.value?:listOf<Chapter>()
+        //return SampleDataStory.getListOfChapter(context).filter { it.idStory == idStory }
+    }
+
+//    fun getOneChapter(story: DucStoryDataClass, idxChapter: Int): Chapter {
+//        return SampleDataStory.getListOfChapter(context).get(idxChapter)
+//
+//    }
+
+    fun getOneExampleChapter(): Chapter {
+        return Chapter(1, getLoremIpsum(context), dateTimeNow,1)
 
     }
-    fun getOneExampleChapter(): DucChapterDataClass {
-        return DucChapterDataClass(1,1, getLoremIpsum(context), SampleDataStory.date)
 
-    }
-    fun getNextChapterByCurrentChapter(currentChapter: DucChapterDataClass?): DucChapterDataClass? {
-        var tempChapter=getOneExampleChapter()
-        var listAllChaptersByStory=getAllChaptersByStory(currentChapter?.idStory?:tempChapter.idStory)
+    fun getNextChapterByCurrentChapter(currentChapter: Chapter?): Chapter? {
+        var tempChapter = getOneExampleChapter()
+        var listAllChaptersByStory =
+            getAllChaptersByStory(currentChapter?.storyID ?: tempChapter.storyID)
         var idxCurrentChapter = listAllChaptersByStory.indexOf(currentChapter)
         if (listAllChaptersByStory.size > idxCurrentChapter + 1) {
             return listAllChaptersByStory.get(idxCurrentChapter + 1)
@@ -43,11 +100,12 @@ class DucChapterViewModel (var context: Context): ViewModel() {
         }
     }
 
-    fun getPreviousChapterByCurrentChapter(currentChapter: DucChapterDataClass?): DucChapterDataClass? {
-        var tempChapter=getOneExampleChapter()
-        var listAllChaptersByStory=getAllChaptersByStory(currentChapter?.idStory?:tempChapter.idStory)
+    fun getPreviousChapterByCurrentChapter(currentChapter: Chapter?): Chapter? {
+        var tempChapter = getOneExampleChapter()
+        var listAllChaptersByStory =
+            getAllChaptersByStory(currentChapter?.storyID ?: tempChapter.storyID)
 
-        var idxCurrentChapter =listAllChaptersByStory.indexOf(currentChapter)
+        var idxCurrentChapter = listAllChaptersByStory.indexOf(currentChapter)
         if (0 <= idxCurrentChapter - 1) {
             return listAllChaptersByStory.get(idxCurrentChapter - 1)
         } else {

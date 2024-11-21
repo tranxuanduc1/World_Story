@@ -12,7 +12,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducutils.getDataNotFound
 import com.example.worldstory.duc.ducutils.getExampleGenre
 import com.example.worldstory.duc.ducutils.getKeyGenreInfo
-import com.example.worldstory.duc.ducutils.getKeyIsComic
+import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoriesByGenre
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
@@ -46,12 +46,12 @@ class DucStoriesByGenreActivity : AppCompatActivity() {
     private fun loadData(key: String) {
         var bundle= intent.getBundleExtra(key)
         if(bundle is Bundle){
-            var isComic =bundle.getBoolean(getKeyIsComic(this))
+            var isText =bundle.getBoolean(getKeyIsText(this))
             var genreInfo: DucGenreDataClass? = bundle.getParcelable(
                 getKeyGenreInfo(this)
             )
             binding.txtTitleGenreStoriesByGenre.text=genreInfo?.title ?: getTextDataNotFound(this)
-            setCardStories(isComic,genreInfo?: getExampleGenre(this))
+            setCardStories(isText,genreInfo?: getExampleGenre(this))
         }
     }
 
@@ -59,9 +59,8 @@ class DucStoriesByGenreActivity : AppCompatActivity() {
 
         return intent.hasExtra(key)
     }
-    private fun setCardStories(isComic: Boolean,genre: DucGenreDataClass) {
-        var dataList=if( isComic)ArrayList( ducStoryViewModel.getComicStoriesByGenre(genre))
-        else ArrayList( ducStoryViewModel.getTextStoriesByGenre(genre))
+    private fun setCardStories(isText: Boolean, genre: DucGenreDataClass) {
+        var dataList=ArrayList( ducStoryViewModel.getStoriesByGenre(genre.idGenre,isText))
         var adapter = Duc_CardStoryItem_Adapter(this, dataList)
         binding.recyclerStoryStoriesByGenre.adapter=adapter
         binding.recyclerStoryStoriesByGenre.layoutManager= GridLayoutManager(this,3,

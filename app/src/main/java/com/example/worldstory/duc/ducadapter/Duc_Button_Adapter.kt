@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
+import com.example.worldstory.model.Genre
 
 class Duc_Button_Adapter(
     var context: Context,
-    private val dataList: ArrayList<DucGenreDataClass>,
-    private var isComic: Boolean = true
+    private val dataList: ArrayList<Genre>,
+    private var isText: Boolean = false
 ) :
     RecyclerView.Adapter<Duc_Button_Adapter.ViewHolderClass>() {
     override fun onCreateViewHolder(
@@ -32,11 +33,11 @@ class Duc_Button_Adapter(
         holder: ViewHolderClass,
         position: Int
     ) {
-        holder.btnGenre.setText(dataList[position].title)
-        holder.txtIDGenre.setText(dataList[position].idGenre.toString())
+        holder.btnGenre.setText(dataList[position].genreName)
+        holder.txtIDGenre.setText(dataList[position].genreID.toString())
         holder.btnGenre.setOnClickListener {
 
-            context.toActivityStoriesByGenre(isComic,dataList[position])
+            context.toActivityStoriesByGenre(isText,dataList[position])
 
 //            var keyIsComic = context.resources.getString(R.string.key_isComic)
 //            var keyGenreInfo = context.resources.getString(R.string.key_genreInfo)

@@ -3,13 +3,17 @@ package com.example.worldstory.duc.ducviewmodelfactory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 
 class DucGenreViewModelFactory (private var context :Context): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DucGenreViewModel::class.java))
         {
-            return DucGenreViewModel(context) as T
+            var dbDatabaseHelper= DatabaseHelper(context)
+            var repository= DucDataRepository(dbDatabaseHelper)
+            return DucGenreViewModel(repository,context) as T
         }
         throw IllegalArgumentException("unknown view model class")
     }

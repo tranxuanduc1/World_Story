@@ -5,12 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.worldstory.duc.SampleDataStory
 import com.example.myapplication.databinding.FragmentDucLoveBookStoriesBinding
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
+import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,8 +31,10 @@ class Duc_LoveBookStories_Fragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private  lateinit var binding : FragmentDucLoveBookStoriesBinding
-
+    private lateinit var binding: FragmentDucLoveBookStoriesBinding
+    private val storyViewModel: DucStoryViewModel by viewModels {
+        DucStoryViewModelFactory(requireContext())
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +50,21 @@ class Duc_LoveBookStories_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding= FragmentDucLoveBookStoriesBinding.inflate(layoutInflater)
+        binding = FragmentDucLoveBookStoriesBinding.inflate(layoutInflater)
         val view = binding.root
+        storyViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
 
-        var cardStoryAdapter= Duc_CardStoryItem_Adapter(view.context,ArrayList(SampleDataStory.getDataList(requireContext())))
-        var recyclerView: RecyclerView=binding.recyclerCardStoryLoveBookFragment
-        recyclerView.adapter=cardStoryAdapter
-        recyclerView.layoutManager= GridLayoutManager(view.context,3, LinearLayoutManager.VERTICAL,false)
-        recyclerView.setHasFixedSize(true)
+            var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
+            binding.recyclerCardStoryLoveBookFragment.apply {
+                adapter = cardStoryAdapter
+                layoutManager =
+                    GridLayoutManager(view.context, 3, LinearLayoutManager.VERTICAL, false)
+                setHasFixedSize(true)
+            }
+
+
+        })
+
 
         // Inflate the layout for this fragment
         return view

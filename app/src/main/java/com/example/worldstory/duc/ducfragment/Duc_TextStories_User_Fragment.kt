@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.myapplication.databinding.FragmentDucTextStoriesBinding
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
-import com.example.worldstory.duc.ducutils.getKeyIsComic
+import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
@@ -35,13 +36,13 @@ class Duc_TextStories_User_Fragment : Fragment() {
     private lateinit var binding: FragmentDucTextStoriesBinding
     private lateinit var recyclerViewGenreButton: RecyclerView
     private lateinit var linearLayout: LinearLayout
-    private val ducStoryViewModel: DucStoryViewModel by viewModels{
+    private val ducStoryViewModel: DucStoryViewModel by viewModels {
         DucStoryViewModelFactory(requireContext())
     }
-    private val ducGenreViewModel: DucGenreViewModel by viewModels{
+    private val ducGenreViewModel: DucGenreViewModel by viewModels {
         DucGenreViewModelFactory(requireContext())
     }
-    private var isComic=false
+    private var isText = true
 
 
     // TODO: Rename and change types of parameters
@@ -61,59 +62,59 @@ class Duc_TextStories_User_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //val view=inflater.inflate(R.layout.fragment_text_stories, container, false)
-        binding= FragmentDucTextStoriesBinding.inflate(layoutInflater)
-        val view=binding.root
+        binding = FragmentDucTextStoriesBinding.inflate(layoutInflater)
+        val view = binding.root
 //--------------------------------------
-
-        linearLayout=binding.linearLayoutFragmentTextStoryUser
-
-        recyclerViewGenreButton =binding.rvButtonGenreTextStoriesUser
-
-
-
-
+        linearLayout = binding.linearLayoutFragmentTextStoryUser
+        recyclerViewGenreButton = binding.rvButtonGenreTextStoriesUser
 
 
         ///////////////////////
-        recyclerViewGenreButton.layoutManager= GridLayoutManager(view.context,
-            1,
-            GridLayoutManager.HORIZONTAL,false)
-        recyclerViewGenreButton.adapter= Duc_Button_Adapter(
-            requireContext(),ArrayList( ducGenreViewModel.getAllGenres()),
-            isComic)
-
-            for(i in ducGenreViewModel.getAllGenres() )
-            {
-                createGridCardViewStory(requireContext()
-                    ,inflater
-                    ,linearLayout
-                    ,i,
-                    ducStoryViewModel.getTextStoriesByGenre(i))
-
-                //creatGridCardViewStory(i,inflater,container,linearLayout)
-
-            }
-
-
-
-
-        var searchImgBtn=binding.searchButtonTextStoriesUser
+        //button genre
+        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
+            recyclerViewGenreButton.layoutManager = GridLayoutManager(
+                view.context,
+                1,
+                GridLayoutManager.HORIZONTAL, false
+            )
+            recyclerViewGenreButton.adapter = Duc_Button_Adapter(
+                requireContext(), ArrayList(genres),
+                isText
+            )
+            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+                for (i in genres) {
+                    createGridCardViewStory(
+                        requireContext(), inflater, linearLayout, i,
+                        ducStoryViewModel.getStoriesByGenre(i?.genreID?:1, isText)
+                    )
+                }
+            })
+        })
 
 
-        searchImgBtn.setOnClickListener{
-            toSearchActivity()
-        }
+        //card view stories
 
+
+        setConfigButton()
 
 
         // Inflate the layout for this fragment
         return view
     }
-    fun toSearchActivity(){
+
+    private fun setConfigButton() {
+        var searchImgBtn = binding.searchButtonTextStoriesUser
+        searchImgBtn.setOnClickListener {
+            toSearchActivity()
+        }
+    }
+
+    fun toSearchActivity() {
         var intent = Intent(context, DucSearchActivity::class.java)
-        intent.putExtra(getKeyIsComic(requireContext()),isComic)
+        intent.putExtra(getKeyIsText(requireContext()), isText)
         startActivity(intent)
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

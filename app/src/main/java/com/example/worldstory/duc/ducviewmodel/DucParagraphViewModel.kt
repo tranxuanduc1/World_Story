@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
+import com.example.worldstory.duc.ducrepository.DucDataRepository
 
-class DucParagraphViewModel(var context: Context): ViewModel() {
+class DucParagraphViewModel(var repository: DucDataRepository,var context: Context): ViewModel() {
 
     fun getOneParagraphByChapter(chapter: DucChapterDataClass, pos:Int): DucParagraphDataClass?{
         var paragraph= SampleDataStory.getListOfParagraph(context).filter{ it.idChapter==chapter.idChapter  }
