@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 
 class DucDataRepository(private var dbHelper: DatabaseHelper) {
@@ -32,4 +33,11 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var list=dbHelper.getChaptersByStory(storyId)
         return list
     }
+
+    //paragraph
+    fun getAllParagraph(): List<Paragraph>{
+        var list=dbHelper.getAllParagraphs()
+        return list
+    }
+
 }

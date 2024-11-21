@@ -85,13 +85,16 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         setImageBanner()
 
         //button genre
-        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
-            recyclerViewGenreButton.layoutManager = GridLayoutManager(
-                view.context, 1, GridLayoutManager.HORIZONTAL, false
-            )
-            recyclerViewGenreButton.adapter = Duc_Button_Adapter(
-                requireContext(), ArrayList(genres), isText
-            )
+        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
+            recyclerViewGenreButton.apply {
+                layoutManager = GridLayoutManager(
+                    view.context, 1, GridLayoutManager.HORIZONTAL, false
+                )
+                adapter = Duc_Button_Adapter(
+                    requireContext(), ArrayList(genres), isText
+                )
+            }
+
             //card view stories
             ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
                 for (genre in genres) {
@@ -100,7 +103,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                         inflater,
                         linearLayout,
                         genre,
-                        ducStoryViewModel.getStoriesByGenre(genre?.genreID?:1, isText)
+                        ducStoryViewModel.getStoriesByGenre(genre?.genreID ?: 1, isText)
                     )
 
                 }
@@ -111,8 +114,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
         //button search
         setConfigButton()
-
-
 
 
         //testDatabase()
@@ -251,7 +252,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         if (storyId != -1L) {
             // Add 4 chapters for the story
             for (i in 1..4) {
-                val chapter = Chapter(null, "Chapter $i of ${story.title}",dateTimeNow, storyId.toInt())
+                val chapter =
+                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow, storyId.toInt())
                 val chapterId = dbHelper.insertChapter(chapter)
 
                 if (chapterId != -1L) {

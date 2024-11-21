@@ -18,7 +18,6 @@ import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.myapplication.databinding.CommentOppositeLayoutBinding
 import com.example.myapplication.databinding.CommentSelfLayoutBinding
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
@@ -42,11 +41,7 @@ import com.github.chrisbanes.photoview.PhotoView
 class DucChapterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDucChapterBinding
 
-    //    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnBackActivity: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
+
     private var mainChapter: Chapter? = null
     private var nextChapter: Chapter? = null
     private var previousChapter: Chapter? = null
@@ -72,10 +67,6 @@ class DucChapterActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(view)
 
-
-        var scrollView = binding.scrollParagraphChapter
-        var frameTop = binding.frameTopChapter
-        var frameBottom = binding.frameBottomChapter
         var key: String = getKey_chapterInfo(this)
 //        mainChapter=chapterViewModel.mainChapter
 //        previousChapter=chapterViewModel.previousChapter
@@ -224,17 +215,17 @@ class DucChapterActivity : AppCompatActivity() {
 
     private fun loadParagraph() {
 
-//        var linearContainer = binding.linearContainerContentChapter
-//        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
-//        linearContainer.removeAllViews()
-//        binding.scrollParagraphChapter.scrollTo(0, 0)
-//
-//        var paragraphsList = ducParagraphViewModel.getAllParagraphsByChapter(mainChapter)
-//        if (paragraphsList.isEmpty()) {
-//            return
-//        }
-//        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
-//        for (item in paragraphsList) {
+        var linearContainer = binding.linearContainerContentChapter
+        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
+        linearContainer.removeAllViews()
+        binding.scrollParagraphChapter.scrollTo(0, 0)
+
+        var paragraphsList = ducParagraphViewModel.getParagraphsByChapter(mainChapter?:ducChapterViewModel.getOneExampleChapter())
+        if (paragraphsList.isEmpty()) {
+            return
+        }
+        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
+        for (item in paragraphsList) {
 //            if (item.isComic) {
 //                linearContainer.addView(createContentPhoToView(item.imgContent))
 //
@@ -242,7 +233,9 @@ class DucChapterActivity : AppCompatActivity() {
 //                linearContainer.addView(createContentTextView(item.textContent))
 //
 //            }
-//        }
+            linearContainer.addView(createContentPhoToView(item.content))
+
+        }
 
 
 

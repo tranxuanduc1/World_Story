@@ -44,7 +44,7 @@ fun getDataNotFound(context: Context): String {
 var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 var dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 var timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-
+var numDef=1
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
 fun getKeyStoryInfo(context: Context): String = context.getString(R.string.key_storyInfo)
@@ -234,9 +234,9 @@ fun Context.toActivityStoriesByGenre(isText: Boolean,genre: Genre){
     bundle.putParcelable(keyGenreInfo, genre)
         toActivity(DucStoriesByGenreActivity::class.java, getKeyStoriesByGenre(this), bundle)
 }
-fun getExampleGenre(context: Context): DucGenreDataClass{
+fun getExampleGenre(context: Context): Genre{
     var title= context.getString(R.string.dataNotFound)
-    return DucGenreDataClass(1, title)
+    return Genre(1, title,1)
 }
 fun getExampleComicParagraph(context: Context): DucParagraphDataClass{
     return DucParagraphDataClass(

@@ -62,7 +62,16 @@ class DucChapterViewModel(var repository: DucDataRepository, var context: Contex
             }
         }
     }
+    fun setChaptersByStory(storyId: Int){
+        viewModelScope.launch{
+            val result=withContext(Dispatchers.IO)
+            {
+                repository.getChaptersByStory(storyId)
+            }
+            _chaptersByStory.value=result
 
+        }
+    }
     fun getAllChaptersByStory(story: Story): List<Chapter> {
         var list = _chapters.value?:listOf<Chapter>()
         var filter =list.filter { it.storyID == story.storyID }

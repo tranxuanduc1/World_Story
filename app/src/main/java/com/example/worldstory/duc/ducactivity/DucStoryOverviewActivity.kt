@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
+import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -32,6 +33,7 @@ import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 
 class DucStoryOverviewActivity : AppCompatActivity() {
@@ -65,34 +67,42 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     private fun setGenreButton() {
-        var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID ?: 1)
-        for (genre in listGenres) {
-            var genreButton = AppCompatButton(this)
-            genreButton.apply {
-                layoutParams = ViewGroup.MarginLayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+        ducGenreViewModel.genres.observe(this, Observer{
+            genres ->
+            var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID ?: 1)
+            for (genre in listGenres) {
+                var genreButton = AppCompatButton(this)
+                setStyleGenreButton(genreButton,genre)
+
+                genreButton.setOnClickListener {
+                    this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(), genre)
                 }
-                setPadding(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
-                setTextColor(
-                    ContextCompat.getColorStateList(
-                        context,
-                        R.color.selector_button_text_color_primary
-                    )
+
+
+                binding.flexboxContainerGenreButtonStoryOverview.addView(genreButton)
+
+            }
+        })
+
+    }
+
+    private fun setStyleGenreButton(genreButton: AppCompatButton,genre: Genre) {
+        genreButton.apply {
+            layoutParams = ViewGroup.MarginLayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+            }
+            setPadding(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+            setTextColor(
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.selector_button_text_color_primary
                 )
-                background = ContextCompat.getDrawable(context, R.drawable.shape_button_primary)
-                text = genre.genreName
-            }
-
-            genreButton.setOnClickListener {
-                this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(), genre)
-            }
-
-
-            binding.flexboxContainerGenreButtonStoryOverview.addView(genreButton)
-
+            )
+            background = ContextCompat.getDrawable(context, R.drawable.shape_button_primary)
+            text = genre.genreName
         }
     }
 
@@ -110,13 +120,14 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)
+        ducChapterViewModel.setChaptersByStory(storyInfo.storyID?:1)
     }
 
     fun generateChapter(story: Story) {
 
-        ducChapterViewModel.chapters.observe(this, Observer { chapters ->
-            showTestToast(this,chapters[1].dateCreated)
-            for (item in ducChapterViewModel.getAllChaptersByStory(story)) {
+        ducChapterViewModel.chaptersByStory.observe(this, Observer { chapters ->
+
+            for (item in chapters) {
                 // Inflate each item view
                 val itemView = LayoutInflater.from(this)
                     .inflate(

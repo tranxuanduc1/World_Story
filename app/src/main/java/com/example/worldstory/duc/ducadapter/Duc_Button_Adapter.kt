@@ -1,6 +1,8 @@
 package com.example.worldstory.duc.ducadapter
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +10,11 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
+import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
+import com.example.worldstory.duc.ducutils.getKeyGenreInfo
+import com.example.worldstory.duc.ducutils.getKeyIsText
+import com.example.worldstory.duc.ducutils.getKeyStoriesByGenre
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.model.Genre
 
@@ -39,20 +45,6 @@ class Duc_Button_Adapter(
 
             context.toActivityStoriesByGenre(isText,dataList[position])
 
-//            var keyIsComic = context.resources.getString(R.string.key_isComic)
-//            var keyGenreInfo = context.resources.getString(R.string.key_genreInfo)
-//            var bundle = Bundle()
-//            bundle.putBoolean(keyIsComic, isComic)
-//            bundle.putParcelable(keyGenreInfo, dataList[position])
-//            context.toActivity(
-//                StoriesByGenreActivity::class.java,
-//                R.string.key_storiesByGenre,
-//                bundle
-//            )
-//            var intent= Intent(context, StoriesByGenreActivity::class.java)
-//
-//            intent.putExtra(context.resources.getString( R.string.key_storyInfo),currentItem)
-//            context.startActivity(intent)
         }
     }
 

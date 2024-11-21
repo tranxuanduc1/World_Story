@@ -3,20 +3,18 @@ package com.example.worldstory.duc.ducviewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducrepository.DucDataRepository
+import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Paragraph
 
 class DucParagraphViewModel(var repository: DucDataRepository,var context: Context): ViewModel() {
 
-    fun getOneParagraphByChapter(chapter: DucChapterDataClass, pos:Int): DucParagraphDataClass?{
-        var paragraph= SampleDataStory.getListOfParagraph(context).filter{ it.idChapter==chapter.idChapter  }
-            .filter { it.position==pos  }.get(0)?:null
-        return paragraph
+    fun getExampleParagraph(): Paragraph{
+        return Paragraph(1, SampleDataStory.getExampleImgURLParagraph(),1,1)
     }
-    fun getAllParagraphsByChapter(chapter: DucChapterDataClass?): List<DucParagraphDataClass>{
-        var clone=chapter?: SampleDataStory.getOneChapter()
-        var paragraphs= SampleDataStory.getListOfParagraph(context).filter { it.idChapter==clone.idChapter }
+    fun getParagraphsByChapter(chapter: Chapter): List<Paragraph>{
+        var paragraphs= repository.getAllParagraph().filter { it.chapterID==chapter.chapterID }
         return paragraphs
     }
     fun getNextParagraphsByChapter(currentParagraph: DucParagraphDataClass): DucParagraphDataClass?{
