@@ -7,7 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentMyBottomSheetBinding
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
+import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Genre
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -19,11 +24,19 @@ import android.view.LayoutInflater as LayoutInflater1
 class MyBottomSheetFragment : BottomSheetDialogFragment() {
     var i = 1
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var binding: FragmentMyBottomSheetBinding
+    private val genreViewModel: GenreViewModel by activityViewModels {
+        GenreViewModelFactory(DatabaseHelper(requireActivity()))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater1,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_my_bottom_sheet, container, false)
+    ): View? {
+        binding = FragmentMyBottomSheetBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -35,16 +48,7 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
         //Chip
 
         val chipGroup = view.findViewById<ChipGroup>(R.id.chip_group)
-        addChipFromTemplate("Kinh dị", chipGroup)
-        addChipFromTemplate("Hài hước", chipGroup)
-        addChipFromTemplate("Trinh thám", chipGroup)
-        addChipFromTemplate("Phiêu lưu", chipGroup)
-        addChipFromTemplate("Kịch tính", chipGroup)
-        addChipFromTemplate("Kỳ quái", chipGroup)
-        addChipFromTemplate("Học đường", chipGroup)
-        addChipFromTemplate("Lãng mạn", chipGroup)
-        addChipFromTemplate("Bạo lực", chipGroup)
-        addChipFromTemplate("Viễn tưởng", chipGroup)
+        addChipFromTemplate(genreViewModel.genres.value ?: emptyList(), chipGroup)
 
         val filterBtn = view.findViewById<Button>(R.id.filter_btn)
         filterBtn.setOnClickListener {
@@ -70,23 +74,28 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
         super.onDismiss(dialog)
     }
 
-    private fun addChipFromTemplate(text: String, chipGroup: ChipGroup) {
-
-        val chip = layoutInflater.inflate(R.layout.chip, chipGroup, false) as Chip
-        chip.text = text
-        chip.id = i++
-
-        // Thêm Chip vào ChipGroup
-        chip.isChecked = sharedViewModel.isContainChip(text)
-        chipGroup.addView(chip)
-        chip.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                sharedViewModel.addSeclectedChip(text)
-                chip.isChecked = true
-            } else {
-                sharedViewModel.delSelectedChip(text)
-                chip.isChecked = false
+    private fun addChipFromTemplate(gerns: List<Genre>, chipGroup: ChipGroup): Boolean {
+        if (gerns.isEmpty()) {
+            return false
+        } else {
+            for (i in gerns) {
+                val chip = layoutInflater.inflate(R.layout.chip, chipGroup, false) as Chip
+                chip.text = i.genreName
+                chip.id = i.genreID!!
+                // Thêm Chip vào ChipGroup
+                chip.isChecked = sharedViewModel.isContainChip(i.genreID)
+                chipGroup.addView(chip)
+                chip.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        sharedViewModel.addSeclectedChip(i.genreID)
+                        chip.isChecked = true
+                    } else {
+                        sharedViewModel.delSelectedChip(i.genreID)
+                        chip.isChecked = false
+                    }
+                }
             }
         }
+        return true
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,10 +43,10 @@ class UserFragment : Fragment() {
     private var isSearchViewOpen = false
     private lateinit var items: List<String>
     private lateinit var binding: FragmentUserBinding
-    private val roleViewModel: RoleViewModel by viewModels {
+    private val roleViewModel: RoleViewModel by activityViewModels{
         RoleViewModelFactory(DatabaseHelper(requireActivity()))
     }
-    private val userViewModel: UserViewModel by viewModels {
+    private val userViewModel: UserViewModel by activityViewModels {
         UserViewModelFactory(DatabaseHelper(requireActivity()))
     }
 
@@ -118,19 +119,15 @@ class UserFragment : Fragment() {
             }
         //recycleview
         binding.userList.layoutManager = LinearLayoutManager(requireContext())
-
-        ////////
-        val color1 = ContextCompat.getColor(requireContext(), R.color.pastel)
-        userAdapter = userViewModel._users.value?.let { UserAdapter(it,color1) }?:
+        val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
+        userAdapter = UserAdapter(userViewModel._users.value?: emptyList(),color1)
         UserAdapter(emptyList(), color1)
         userAdapter.filterByRole(0)
         binding.userList.adapter = userAdapter
         userViewModel._users.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(),"${userViewModel._users.value!!.size}",Toast.LENGTH_LONG).show()
             userAdapter.update(userViewModel._users.value?: emptyList())
 
         }
-
         //swipe
         val simpleItemTouchCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {

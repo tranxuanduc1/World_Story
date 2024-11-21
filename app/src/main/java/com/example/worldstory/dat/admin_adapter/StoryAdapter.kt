@@ -1,5 +1,6 @@
 package com.example.worldstory.dat.admin_adapter
 
+import android.annotation.SuppressLint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -11,7 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.StoryViewHolder
-import com.example.worldstory.model_for_test.Story
+import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.model.Story
+import com.squareup.picasso.Picasso
 
 interface OnItemClickListener {
     fun onItemClick(item: Story)
@@ -37,9 +40,10 @@ class StoryAdapter(
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = filteredList[position]
-        holder.column1.text = highlightQuery(text = story.id, query = searchQuery)
-        holder.column2.text = highlightQuery(text = story.name, query = searchQuery)
-        holder.column3.text = highlightQuery(text = story.tacGia, query = searchQuery)
+        Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.img)
+        holder.column2.text = highlightQuery(text = story.title, query = searchQuery)
+        holder.column3.text = highlightQuery(text = story.author, query = searchQuery)
+        holder.column4.text=highlightQuery(text = story.createdDate, query = searchQuery)
         holder.itemView.setOnClickListener {
             listener.onItemClick(story)
         }
@@ -55,19 +59,15 @@ class StoryAdapter(
         sizeOfChipList = size
     }
 
-    fun filterByCates(catesList: List<String>) {
+    fun filterByCates(catesList: List<Int>) {
         if (catesList.size == 1) filteredList =
             storyList.filter {
-                it.theLoai.joinToString(separator = ",")
-                    .contains(catesList[0],ignoreCase = true)
+                true
             }
         else if (catesList.size == 0) filteredList = storyList
         else
             catesList.forEach { c ->
-                filteredList = filteredList.filter {
-                    it.theLoai.joinToString(separator = ",")
-                        .contains(c,ignoreCase = true)
-                }
+                true
             }
         notifyDataSetChanged()
     }
@@ -80,13 +80,14 @@ class StoryAdapter(
                     storyList
                 } else {
                     storyList.filter {
-                        it.name.contains(query, ignoreCase = true)
-                                || it.id.contains(query, ignoreCase = true) || it.tacGia.contains(
-                            query,
-                            ignoreCase = true
-                        )
-                                || it.theLoai.joinToString(separator = ",")
-                            .contains(query, ignoreCase = true)
+//                        it.name.contains(query, ignoreCase = true)
+//                                || it.id.contains(query, ignoreCase = true) || it.tacGia.contains(
+//                            query,
+//                            ignoreCase = true
+//                        )
+//                                || it.theLoai.joinToString(separator = ",")
+//                            .contains(query, ignoreCase = true)
+                        true
                     }
                 }
 
@@ -121,8 +122,13 @@ class StoryAdapter(
         return spannableString
     }
 
-    public fun updateSearchQuery(query: String?) {
+     fun updateSearchQuery(query: String?) {
         searchQuery = query as String
+        notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(stories:List<Story>){
+        storyList=stories
         notifyDataSetChanged()
     }
 }

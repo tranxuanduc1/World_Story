@@ -1,30 +1,24 @@
 package com.example.worldstory.dat.admin_viewmodels
 
 import android.util.Log
-import android.util.MutableFloat
-import android.util.MutableInt
 import androidx.lifecycle.LiveData
 import org.mindrot.jbcrypt.BCrypt
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.R
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.model.User
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Locale
+
 
 class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     private val __users = MutableLiveData<List<User>>()
     val _users: LiveData<List<User>> get() = __users
-
     val userName = MutableLiveData<String>()
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()
@@ -35,18 +29,11 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     }
 
     fun fetchAllUsers() {
-        viewModelScope.launch {
-            val users = withContext(Dispatchers.IO) {
-                db.getAllUsers() // Truy vấn cơ sở dữ liệu trong background
-            }
-            __users.value = users  // Cập nhật LiveData với dữ liệu mới
-
-        }
-
+        __users.value=db.getAllUsers()
     }
 
 
-    fun onAddUser() {
+    fun onAddUser():Long {
         val hashedpw = hashPassword(password = passWord.value.toString())
         val user = User(
             null,
@@ -57,10 +44,13 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             roleID,
             dateTimeNow
         )
-
-        db.insertUser(user)
+        val l: Long = db.insertUser(user)
+        userName.value = ""
+        passWord.value = ""
+        nickName.value = ""
+        Log.i("ham insert", "da insert")
         fetchAllUsers()
-
+        return l
     }
 
     fun deleteAllUser() {

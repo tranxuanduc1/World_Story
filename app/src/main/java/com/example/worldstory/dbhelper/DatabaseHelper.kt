@@ -433,7 +433,7 @@ class DatabaseHelper(context: Context) :
             Contract.StoryEntry.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(story.storyID.toString())
         )
     }
-    fun deleteStory(storyId: Int): Int {
+    fun deleteStory(storyId: Int?): Int {
         val db = writableDatabase
         return db.delete(
             Contract.StoryEntry.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(storyId.toString())
@@ -627,7 +627,7 @@ class DatabaseHelper(context: Context) :
         }
         return db.insert(Contract.GenreEntry.TABLE_NAME, null, values)
     }
-    fun deleteGenre(genreId: Int): Int {
+    fun deleteGenre(genreId: Int?): Int {
         val db = writableDatabase
         return db.delete(
             Contract.GenreEntry.TABLE_NAME,

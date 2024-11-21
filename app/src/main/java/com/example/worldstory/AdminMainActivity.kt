@@ -12,18 +12,19 @@ import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 
-import com.example.worldstory.dat.admin_view_navs.CategoryFragment
+import com.example.worldstory.dat.admin_view_navs.GenreFragment
 import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.StoryFragment
 import com.example.worldstory.dat.admin_view_navs.UserFragment
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.RoleViewModel
 import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.model.Role
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -37,6 +38,9 @@ class AdminMainActivity : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(DatabaseHelper(this))
+    }
+    private val genreViewModel: GenreViewModel by viewModels {
+        GenreViewModelFactory(DatabaseHelper(this))
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +85,7 @@ class AdminMainActivity : AppCompatActivity() {
                 }
 
                 R.id.categoryFragment -> {
-                    loadFragment(CategoryFragment(), "category")
+                    loadFragment(GenreFragment(), "category")
                     true
                 }
 
@@ -144,7 +148,6 @@ class AdminMainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-
         DatabaseHelper(this).close()
         super.onDestroy()
     }

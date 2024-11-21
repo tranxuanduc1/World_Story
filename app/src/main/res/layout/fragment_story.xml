@@ -1,31 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context="com.example.worldstory.admin_view_navs.StoryFragment">
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view_story"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.worldstory.dat.admin_view_navs.StoryFragment">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/baseline_filter_list_24"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/story_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view_story"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating_action_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                app:srcCompat="@drawable/baseline_filter_list_24" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/story_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

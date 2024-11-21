@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.myapplication.R
 import com.example.myapplication.databinding.AddUserDialogBinding
@@ -24,10 +25,10 @@ import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.model.User
 
 class AddUserDialogFragment : DialogFragment() {
-    private val userViewModel: UserViewModel by viewModels {
+    private val userViewModel: UserViewModel by activityViewModels {
         UserViewModelFactory(DatabaseHelper(requireActivity()))
     }
-    private val roleViewModel: RoleViewModel by viewModels {
+    private val roleViewModel: RoleViewModel by activityViewModels {
         RoleViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private lateinit var binding: AddUserDialogBinding
@@ -80,9 +81,9 @@ class AddUserDialogFragment : DialogFragment() {
 
                     if (isValid) {
                         userViewModel.onAddUser()
+                        Log.i("insert","da insert")
                         Toast.makeText(requireContext(),"Quan sat",Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
-
                     }
                 }
             }

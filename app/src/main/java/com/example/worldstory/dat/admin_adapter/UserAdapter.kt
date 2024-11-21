@@ -1,6 +1,7 @@
 package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -25,7 +26,7 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
 
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = filteredList[position]
+        val user = filteredList.get(position)
         Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
         holder.column1.text = user.nickName
@@ -74,6 +75,7 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
     fun update(users: List<User>) {
         userList = users
         notifyDataSetChanged()
+        Log.i("Observe","da update")
     }
 
 }

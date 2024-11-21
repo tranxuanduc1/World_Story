@@ -18,9 +18,14 @@ import com.example.worldstory.dat.admin_adapter.StoryAdapter
 import com.example.worldstory.dat.admin_dialog.AddStoryDialog
 import com.example.worldstory.dat.admin_sheet.MyBottomSheetFragment
 import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.RecyclerViewState
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.model_for_test.Story
+import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
+import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
+import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Story
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,18 +35,22 @@ import kotlinx.coroutines.withContext
 
 class StoryFragment : Fragment(), OnItemClickListener {
     private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var recyclerView: RecyclerView
     private lateinit var storyAdapter: StoryAdapter
     private val storyList = mutableListOf<Story>()
-    private var searchView: androidx.appcompat.widget.SearchView? = null
     private var isSearchViewOpen = false
+    private val genreViewModel: GenreViewModel by activityViewModels {
+        GenreViewModelFactory(DatabaseHelper(requireActivity()))
+    }
+    private val storyViewModel:StoryViewModel by activityViewModels {
+        StoryViewModelFactory(DatabaseHelper(requireActivity()))
+    }
+    private lateinit var binding: FragmentStoryBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentStoryBinding.inflate(inflater, container, false)
-        searchView = binding.searchViewStory  // Đảm bảo khởi tạo ở đây
+        binding = FragmentStoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,50 +66,54 @@ class StoryFragment : Fragment(), OnItemClickListener {
         }
 
         //tạo list
-        recyclerView = view.findViewById(R.id.story_list)
-        recyclerView.layoutManager =
+        binding.storyList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         //thêm item
         val color1 = ContextCompat.getColor(requireContext(), R.color.pastel)
-        storyAdapter = StoryAdapter(storyList, color1, this)
-        recyclerView.adapter = storyAdapter
-        CoroutineScope(Dispatchers.Main).launch {
-            val data = withContext(Dispatchers.IO) {
-                val tempList = mutableListOf<Story>()
-                for (i in 1..1000) {
-                    tempList.add(
-                        Story(
-                            "T1",
-                            "Ngao, Sò, Ốc, Hến",
-                            "Unknow",
-                            listOf("Hài", "Kịch Tính")
-                        )
-                    )
-                    tempList.add(
-                        Story(
-                            "T2",
-                            "Conan",
-                            "Unknow",
-                            listOf("Hài", "Trinh Thám")
-                        )
-                    )
-                }
-                tempList
-            }
-            // Cập nhật danh sách sau khi load xong
-            storyList.addAll(data)
-
-            if (sharedViewModel._selectedChips.isNotEmpty()) {
-                sharedViewModel._selectedChips.forEach { chip -> storyAdapter.filter.filter(chip) }
-            } else
-                storyAdapter.notifyDataSetChanged()
+        storyAdapter = StoryAdapter(storyViewModel.stories.value?: emptyList(), color1, this)
+        binding.storyList.adapter = storyAdapter
+        storyViewModel.stories.observe(viewLifecycleOwner){
+            storyAdapter.updateList(storyViewModel.stories.value?: emptyList())
         }
+
+        //////////////////////////////////////////
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val data = withContext(Dispatchers.IO) {
+//                val tempList = mutableListOf<Story>()
+//                for (i in 1..1000) {
+//                    tempList.add(
+//                        Story(
+//                            "T1",
+//                            "Ngao, Sò, Ốc, Hến",
+//                            "Unknow",
+//                            listOf("Hài", "Kịch Tính")
+//                        )
+//                    )
+//                    tempList.add(
+//                        Story(
+//                            "T2",
+//                            "Conan",
+//                            "Unknow",
+//                            listOf("Hài", "Trinh Thám")
+//                        )
+//                    )
+//                }
+//                tempList
+//            }
+//            // Cập nhật danh sách sau khi load xong
+//            storyList.addAll(data)
+//
+//            if (sharedViewModel._selectedChips.isNotEmpty()) {
+//                sharedViewModel._selectedChips.forEach { chip -> storyAdapter.filter.filter(chip.toString()) }
+//            } else
+//                storyAdapter.notifyDataSetChanged()
+//        }
 
 
         //searchview
-        searchView = view.findViewById(R.id.search_view_story)
-        searchView?.setOnQueryTextListener(object :
+        binding.searchViewStory.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
                 storyAdapter.updateSearchQuery(p0)
@@ -119,7 +132,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
                 sharedViewModel.searchHandle()
             }
         }
-        searchView?.findViewById<View>(androidx.appcompat.R.id.search_close_btn)
+        binding.searchViewStory.findViewById<View>(androidx.appcompat.R.id.search_close_btn)
             ?.setOnClickListener() {
                 hideSearchView()
                 sharedViewModel
@@ -127,14 +140,14 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         sharedViewModel.searchQueryStory.observe(viewLifecycleOwner) { query ->
             if (sharedViewModel.searchQueryStory.value != "") {
-                searchView?.visibility = View.VISIBLE
-                searchView?.isIconified = false
-                searchView?.setQuery(query, false)
+                binding.searchViewStory.visibility = View.VISIBLE
+                binding.searchViewStory.isIconified = false
+                binding.searchViewStory.setQuery(query, false)
             }
         }
         sharedViewModel.recyclerViewStateStory.observe(viewLifecycleOwner, Observer { state ->
             state?.let {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val layoutManager = binding.storyList.layoutManager as LinearLayoutManager
                 layoutManager.scrollToPositionWithOffset(it.firstVisibleItemPosition, it.offset)
             }
         })
@@ -167,9 +180,9 @@ class StoryFragment : Fragment(), OnItemClickListener {
         super.onPause()
 
         // Lưu trạng thái của RecyclerView
-        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        val layoutManager = binding.storyList.layoutManager as LinearLayoutManager
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        val offset = recyclerView.getChildAt(0)?.top ?: 0
+        val offset = binding.storyList.getChildAt(0)?.top ?: 0
 
         // Cập nhật ViewModel với trạng thái cuộn
         sharedViewModel.recyclerViewStateStory.value =
@@ -182,16 +195,16 @@ class StoryFragment : Fragment(), OnItemClickListener {
     }
 
     private fun showSearchView() {
-        searchView?.visibility = View.VISIBLE
-        searchView?.isIconified = false    // Mở rộng SearchView
+        binding.searchViewStory.visibility = View.VISIBLE
+        binding.searchViewStory.isIconified = false    // Mở rộng SearchView
         isSearchViewOpen = true
-        searchView?.requestFocus()
+        binding.searchViewStory.requestFocus()
     }
 
     private fun hideSearchView() {
-        searchView?.setQuery("", false)  // Xóa nội dung tìm kiếm
-        searchView?.clearFocus()
-        searchView?.visibility = View.GONE
+        binding.searchViewStory.setQuery("", false)  // Xóa nội dung tìm kiếm
+        binding.storyList.clearFocus()
+        binding.searchViewStory.visibility = View.GONE
         sharedViewModel.searchQueryStory.value = ""
     }
 
