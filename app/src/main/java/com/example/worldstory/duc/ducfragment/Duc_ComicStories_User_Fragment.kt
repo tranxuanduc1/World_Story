@@ -202,7 +202,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
 
         // Add 4 stories with details
-        for (i in 1..2) {
+        for (i in 1..8) {
             val story = Story(
                 storyID = null,
                 title = "Story $i",
@@ -217,7 +217,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             )
             addStoryWithDetails(story, dataHelper)
         }
-        for (i in 3..4) {
+        for (i in 9..16) {
             val story = Story(
                 storyID = null,
                 title = "Story $i",
@@ -238,7 +238,18 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         dataHelper.insertStoryGenre(storyId = 2, genreId = 4)
         dataHelper.insertStoryGenre(storyId = 3, genreId = 4)
         dataHelper.insertStoryGenre(storyId = 4, genreId = 2)
-
+        dataHelper.insertStoryGenre(storyId = 5, genreId = 1)
+        dataHelper.insertStoryGenre(storyId = 5, genreId = 2)
+        dataHelper.insertStoryGenre(storyId = 6, genreId = 3)
+        dataHelper.insertStoryGenre(storyId = 6, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 7, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 7, genreId = 2)
+        dataHelper.insertStoryGenre(storyId = 7, genreId = 1)
+        dataHelper.insertStoryGenre(storyId = 8, genreId = 2)
+        dataHelper.insertStoryGenre(storyId = 8, genreId = 3)
+        dataHelper.insertStoryGenre(storyId = 8, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 9, genreId = 4)
+        dataHelper.insertStoryGenre(storyId = 10, genreId = 2)
         // Insert 4 rows for the UserLoveStory table
         dataHelper.insertUserLoveStory(1, 1)
         dataHelper.insertUserLoveStory(2, 2)
@@ -257,6 +268,12 @@ class Duc_ComicStories_User_Fragment : Fragment() {
     }
 
     fun addStoryWithDetails(story: Story, dbHelper: DatabaseHelper) {
+        val p1="https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467623087_987608846509607_7464989657181579078_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PJhBdDIh8ngQ7kNvgFXOx3O&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=AFd7aN9gB5bxoYEwwsXIv2f&oh=00_AYD0Z_URAyRNGfnjU-LURgA-2gVde9_z-mv0bGN_9BaT5g&oe=67422259"
+        val p2="https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/467723438_987608853176273_4668882966082102865_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YWlZYUbYXkwQ7kNvgE3jYCO&_nc_zt=23&_nc_ht=scontent.fhan4-3.fna&_nc_gid=AGDIEQX_cb1_fgYK36qvGVI&oh=00_AYCdk4vBlHeH8OamHhgPsh8Krue4z4n87eTw0ze93H0qkg&oe=674228AA"
+        val p3="https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467668063_987608843176274_2859379085125334494_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=yXXD9A77qecQ7kNvgF_d8YC&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=APlheJAZPnckmNTfHmSXxw1&oh=00_AYA_aNaPZsNIj4d7_m7buS-uLLEZqlrXLFmCT6tjuBpVzg&oe=6742542B"
+        val p4="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.30808-6/467593664_987608919842933_5614161165862365298_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=M890QOlTAdgQ7kNvgGjskoW&_nc_zt=23&_nc_ht=scontent.fhan3-4.fna&_nc_gid=ABNzVvhlzRKGC_pZhF3yrl4&oh=00_AYDMJu16KD0Bab_Mw-oiuajQDLnUI_f6W7WFhcMHoZt7sg&oe=67423E82"
+        val p5="https://scontent.fhan3-4.fna.fbcdn.net/v/t39.30808-6/467600225_987608923176266_4457027657328368414_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=DVp19tJB7wYQ7kNvgEPu0iF&_nc_zt=23&_nc_ht=scontent.fhan3-4.fna&_nc_gid=Apt9d8aT9XV4egL6li5M-yW&oh=00_AYBUuZIL6k6Lrw2KoBPCGUFMf8MUXGL76a5nS48oD0pmJA&oe=67424E4A"
+
         // Insert the story
         val storyId = dbHelper.insertStory(story)
 
@@ -269,17 +286,48 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
                 if (chapterId != -1L) {
                     // Add 4 paragraphs for each chapter
+                    if (story.isTextStory == 0) {
+
+//                            var image = Image(
+//                                null,
+//                                SampleDataStory.getExampleImgURLParagraph(),
+//                                j,
+//                                chapterId.toInt()
+//                            )
+                        var image1 = Image(null, p1, 1,chapterId.toInt())
+                        var image2 = Image(null, p2, 2,chapterId.toInt())
+                        var image3 = Image(null, p3, 3,chapterId.toInt())
+                        var image4 = Image(null, p4, 4,chapterId.toInt())
+                        var image5 = Image(null, p5, 5,chapterId.toInt())
+
+                        dbHelper.insertImage(image1)
+                        dbHelper.insertImage(image2)
+                        dbHelper.insertImage(image3)
+                        dbHelper.insertImage(image4)
+                        dbHelper.insertImage(image5)
+
+                    }
                     for (j in 1..4) {
 
                         if (story.isTextStory == 0) {
 
-                            var image = Image(
-                                null,
-                                SampleDataStory.getExampleImgURLParagraph(),
-                                j,
-                                chapterId.toInt()
-                            )
-                            dbHelper.insertImage(image)
+//                            var image = Image(
+//                                null,
+//                                SampleDataStory.getExampleImgURLParagraph(),
+//                                j,
+//                                chapterId.toInt()
+//                            )
+//                            var image1 = Image(null, p1, 1,chapterId.toInt())
+//                            var image2 = Image(null, p2, 2,chapterId.toInt())
+//                            var image3 = Image(null, p3, 3,chapterId.toInt())
+//                            var image4 = Image(null, p4, 4,chapterId.toInt())
+//                            var image5 = Image(null, p5, 5,chapterId.toInt())
+//
+//                            dbHelper.insertImage(image1)
+//                            dbHelper.insertImage(image2)
+//                            dbHelper.insertImage(image3)
+//                            dbHelper.insertImage(image4)
+//                            dbHelper.insertImage(image5)
 
                         } else {
                             var paragraph = Paragraph(
