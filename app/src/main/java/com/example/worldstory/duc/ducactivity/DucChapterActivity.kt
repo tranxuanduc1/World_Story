@@ -6,21 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
+import androidx.viewpager2.widget.ViewPager2
+import com.denzcoskun.imageslider.ImageSlider
+import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.myapplication.databinding.CommentOppositeLayoutBinding
 import com.example.myapplication.databinding.CommentSelfLayoutBinding
+import com.example.worldstory.dat.admin_adapter.ViewPagerAdapter
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
+import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.dpToPx
+import com.example.worldstory.duc.ducutils.getKeyIsText
+import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
@@ -29,7 +38,9 @@ import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.scrollToBottom
+import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
 import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
@@ -37,16 +48,14 @@ import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucParagraphViewModelFactory
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Image
+import com.example.worldstory.model.Story
 import com.github.chrisbanes.photoview.PhotoView
 
 class DucChapterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDucChapterBinding
 
-    //    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnBackActivity: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
-//    private lateinit var btnOpenCommentDialog: ImageButton
+
     private var mainChapter: Chapter? = null
     private var nextChapter: Chapter? = null
     private var previousChapter: Chapter? = null
@@ -63,7 +72,7 @@ class DucChapterActivity : AppCompatActivity() {
 
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
-
+    private  var storyInfo:Story?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,10 +81,6 @@ class DucChapterActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(view)
 
-
-        var scrollView = binding.scrollParagraphChapter
-        var frameTop = binding.frameTopChapter
-        var frameBottom = binding.frameBottomChapter
         var key: String = getKey_chapterInfo(this)
 //        mainChapter=chapterViewModel.mainChapter
 //        previousChapter=chapterViewModel.previousChapter
@@ -88,11 +93,14 @@ class DucChapterActivity : AppCompatActivity() {
 
             }
         }
-        setData()
-        //loadParagraph()
-        loadComment()
-        setConfigButtonComment()
-        setConfigButtonChapter()
+        ducChapterViewModel.chaptersByStory.observe(this, Observer{
+            setData()
+            loadContent()
+            loadComment()
+            setConfigButtonComment()
+            setConfigButtonChapter()
+        })
+
 
         //-------------
         setAnimationScollView(binding)
@@ -222,32 +230,76 @@ class DucChapterActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadParagraph() {
+    private fun loadContent() {
+
+        if(storyInfo?.isTextStory?.toBoolean()?:false){
+            // disable view container image
+            binding.scrollParagraphChapter.visibility=View.VISIBLE
+            binding.linearContainViewpaperChapter.visibility=View.GONE
+            loadParagraph()
+
+        }else{
+            // disable view container paragraph
+            binding.scrollParagraphChapter.visibility=View.GONE
+            binding.linearContainViewpaperChapter.visibility=View.VISIBLE
+            loadImage()
+
+        }
+
 
 //        var linearContainer = binding.linearContainerContentChapter
 //        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
 //        linearContainer.removeAllViews()
 //        binding.scrollParagraphChapter.scrollTo(0, 0)
 //
-//        var paragraphsList = ducParagraphViewModel.getAllParagraphsByChapter(mainChapter)
+//        var paragraphsList = ducParagraphViewModel.getParagraphsByChapter(mainChapter?:ducChapterViewModel.getOneExampleChapter())
 //        if (paragraphsList.isEmpty()) {
 //            return
 //        }
 //        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
 //        for (item in paragraphsList) {
-//            if (item.isComic) {
-//                linearContainer.addView(createContentPhoToView(item.imgContent))
-//
-//            } else {
-//                linearContainer.addView(createContentTextView(item.textContent))
-//
-//            }
+////            if (item.isComic) {
+////                linearContainer.addView(createContentPhoToView(item.imgContent))
+////
+////            } else {
+////                linearContainer.addView(createContentTextView(item.textContent))
+////
+////            }
+//            linearContainer.addView(createContentPhoToView(item.content))
+
 //        }
 
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa2))
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa3))
-//        linearContainer.addView(createContentPhoToView(R.drawable.pa4))
 
+    }
+
+    private fun loadParagraph() {
+        ducParagraphViewModel.paragraphsByStory.observe(this, Observer{
+            paragraphs->
+            // sap sep lai thu tu cua doan van
+            var listOfParagraphs=paragraphs.sortedBy{   it.paragraphID  }
+            listOfParagraphs.forEach{
+                binding.linearContainerContentChapter.addView(createContentTextView(it.content))
+            }
+        })
+
+        binding.linearContainerContentChapter.addView(createContentTextView(getLoremIpsumLong()))
+        binding.linearContainerContentChapter.addView(createContentTextView(getLoremIpsumLong()))
+
+    }
+
+    private fun loadImage() {
+        var adapterViewPage2 = DucViewPaperPhotoViewAdapter(
+            this,
+            listOf<Image>(
+                Image(1, SampleDataStory.getExampleImgURLParagraph(), 1, 1),
+                Image(1, SampleDataStory.getExampleImgURLParagraph(), 1, 1)
+            )
+        )
+
+        binding.viewPaper2ContainerImageChapter.apply {
+            adapter = adapterViewPage2
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        }
     }
 
     fun createContentPhoToView(imgSrc: String?): PhotoView {
@@ -260,7 +312,7 @@ class DucChapterActivity : AppCompatActivity() {
             adjustViewBounds = true
             scaleType = ImageView.ScaleType.CENTER_INSIDE
         }
-        photoView.loadImgURL(this,imgSrc ?: SampleDataStory.getExampleImgURLParagraph())
+        photoView.loadImgURL(this, imgSrc ?: SampleDataStory.getExampleImgURLParagraph())
         return photoView
     }
 
@@ -285,8 +337,10 @@ class DucChapterActivity : AppCompatActivity() {
             nextChapter = bundle.getParcelable(getKey_nextChapter(this))
             previousChapter =
                 bundle.getParcelable(getKey_previousChapter(this))
+            storyInfo=bundle.getParcelable(getKeyStoryInfo(this))
             ducChapterViewModel.setPreMainNextChapter(mainChapter, previousChapter, nextChapter)
-
+            ducChapterViewModel.setChaptersByStory(storyInfo?.storyID?: numDef)
+            ducParagraphViewModel.setParagraphsByChapter(mainChapter?.chapterID?:numDef)
         }
     }
 
@@ -407,7 +461,8 @@ class DucChapterActivity : AppCompatActivity() {
 
     private fun resetData() {
         setData()
-        loadParagraph()
+        loadContent()
         setConfigButtonChapter()
+        ducParagraphViewModel.setParagraphsByChapter(mainChapter?.chapterID?:numDef)
     }
 }

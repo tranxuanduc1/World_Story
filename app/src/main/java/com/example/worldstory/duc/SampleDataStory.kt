@@ -10,6 +10,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -173,6 +174,7 @@ object SampleDataStory {
     //------------------------------
     fun getOneChapterByID(context: Context,idChapter:Int): DucChapterDataClass{
         return getListOfChapter(context).filter { it.idChapter==idChapter }.first()
+
     }
     fun getOneChapter(): DucChapterDataClass{
         return DucChapterDataClass(1,1,"Chuong 1: khong gia tri","01/02/2024")

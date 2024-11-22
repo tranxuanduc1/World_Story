@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
@@ -29,6 +31,7 @@ import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
@@ -81,17 +84,19 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         recyclerViewGenreButton = binding.rvButtonGenreComicStoriesUser
 
         ///////////////////////
-        //set image banner
-        setImageBanner()
+
 
         //button genre
-        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
-            recyclerViewGenreButton.layoutManager = GridLayoutManager(
-                view.context, 1, GridLayoutManager.HORIZONTAL, false
-            )
-            recyclerViewGenreButton.adapter = Duc_Button_Adapter(
-                requireContext(), ArrayList(genres), isText
-            )
+        ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
+            recyclerViewGenreButton.apply {
+                layoutManager = GridLayoutManager(
+                    view.context, 1, GridLayoutManager.HORIZONTAL, false
+                )
+                adapter = Duc_Button_Adapter(
+                    requireContext(), ArrayList(genres), isText
+                )
+            }
+
             //card view stories
             ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
                 for (genre in genres) {
@@ -100,19 +105,18 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                         inflater,
                         linearLayout,
                         genre,
-                        ducStoryViewModel.getStoriesByGenre(genre?.genreID?:1, isText)
+                        ducStoryViewModel.getStoriesByGenre(genre?.genreID ?: 1, isText)
                     )
 
                 }
-
+                //set image banner
+                setImageBanner()
             })
         })
 
 
         //button search
         setConfigButton()
-
-
 
 
         //testDatabase()
@@ -128,7 +132,15 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             "https://storage-ct.lrclib.net/file/cuutruyen/uploads/manga/2478/cover/processed-4079ee6ed3b108490e33fca63589c35e.jpg"
         var imgURL2: String =
             "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467618820_987540786516413_9022671729236654001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=wcRr4uG_frQQ7kNvgG7AO3Q&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=ACWt9Nxlog48s7vciMKLvlm&oh=00_AYCFt2WZkt3Qy8rXYq0fnq2KdcuMdRdl7Qr9prRr8E71gw&oe=67420403"
-        binding.imgTestComicUserstory.loadImgURL(requireContext(), imgURL2)
+        val imageList = ArrayList<SlideModel>() // Create image list
+
+        imageList.add(SlideModel(imgURL2))
+        imageList.add(SlideModel(imgURL2))
+        imageList.add(SlideModel(imgURL2))
+
+        val imageSlider =binding.imgTestComicUserstory
+        imageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
+        imageSlider.startSliding(3000)
     }
 
     private fun testDatabase() {
@@ -251,31 +263,35 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         if (storyId != -1L) {
             // Add 4 chapters for the story
             for (i in 1..4) {
-                val chapter = Chapter(null, "Chapter $i of ${story.title}",dateTimeNow, storyId.toInt())
+                val chapter =
+                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow, storyId.toInt())
                 val chapterId = dbHelper.insertChapter(chapter)
 
                 if (chapterId != -1L) {
                     // Add 4 paragraphs for each chapter
                     for (j in 1..4) {
-                        var paragraph: Paragraph
+
                         if (story.isTextStory == 0) {
 
-                            paragraph = Paragraph(
+                            var image = Image(
                                 null,
                                 SampleDataStory.getExampleImgURLParagraph(),
                                 j,
                                 chapterId.toInt()
                             )
+                            dbHelper.insertImage(image)
+
                         } else {
-                            paragraph = Paragraph(
+                            var paragraph = Paragraph(
                                 null,
                                 getLoremIpsumLong(),
                                 j,
                                 chapterId.toInt()
                             )
+                            dbHelper.insertParagraph(paragraph)
+
                         }
 
-                        dbHelper.insertParagraph(paragraph)
                     }
                 }
             }

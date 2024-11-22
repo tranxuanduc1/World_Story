@@ -36,4 +36,5 @@ class DucGenreViewModel(var repository: DucDataRepository,var context: Context):
     fun getGenresByStory(storyId: Int):List<Genre>{
         return _genres.value?:listOf<Genre>()
     }
+
 }

@@ -521,7 +521,7 @@ class DatabaseHelper(context: Context) :
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
                 val dateCreate =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
 
                 chapters.add(Chapter(id, title, dateCreate, storyID))
             } while (cursor.moveToNext())
@@ -549,7 +549,7 @@ class DatabaseHelper(context: Context) :
                 val storyID =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
                 val dateCreate =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
 
                 chapters.add(Chapter(id, title, dateCreate, storyID))
             } while (cursor.moveToNext())
@@ -614,7 +614,31 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return paragraphs
     }
+    fun getParagraphsByChapter(chapterId: Int): List<Paragraph> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.ParagraphEntry.TABLE_NAME}
+            WHERE ${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK} = ?
+            """.trimIndent(),
+            arrayOf(chapterId.toString())
+        )
+        val paragraphs = mutableListOf<Paragraph>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val numberOder =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_NUMBER_ORDER))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CONTENT_FILE))
+
+                paragraphs.add(Paragraph(id,content,numberOder,chapterId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return paragraphs
+    }
 
     //////////////////////////
     ///----   USER   -----////
