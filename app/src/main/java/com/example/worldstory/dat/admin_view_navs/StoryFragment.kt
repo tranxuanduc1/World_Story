@@ -41,7 +41,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     private val genreViewModel: GenreViewModel by activityViewModels {
         GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }
-    private val storyViewModel:StoryViewModel by activityViewModels {
+    private val storyViewModel: StoryViewModel by activityViewModels {
         StoryViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private lateinit var binding: FragmentStoryBinding
@@ -70,11 +70,11 @@ class StoryFragment : Fragment(), OnItemClickListener {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         //thêm item
-        val color1 = ContextCompat.getColor(requireContext(), R.color.pastel)
-        storyAdapter = StoryAdapter(storyViewModel.stories.value?: emptyList(), color1, this)
+        val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
+        storyAdapter = StoryAdapter(storyViewModel.stories.value ?: emptyList(), color1, this)
         binding.storyList.adapter = storyAdapter
-        storyViewModel.stories.observe(viewLifecycleOwner){
-            storyAdapter.updateList(storyViewModel.stories.value?: emptyList())
+        storyViewModel.stories.observe(viewLifecycleOwner) {
+            storyAdapter.updateList(storyViewModel.stories.value ?: emptyList())
         }
 
         //////////////////////////////////////////
@@ -165,7 +165,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         sharedViewModel._filterBtn.observe(viewLifecycleOwner) { isClicked ->
 
-            storyAdapter.filterByCates(sharedViewModel._selectedChips,storyViewModel)
+            storyAdapter.filterByCates(sharedViewModel._selectedChips, storyViewModel)
 
 
         }
@@ -191,6 +191,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
     override fun onItemClick(item: Story) {
         val intent = Intent(requireContext(), ChapterActivity::class.java)
+        intent.putExtra("ID",item.storyID)
         startActivity(intent)
     }
 

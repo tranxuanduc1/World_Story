@@ -19,11 +19,23 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val author = MutableLiveData<String>()
     val decription = MutableLiveData<String>()
     val isText = MutableLiveData(false)
+    val storyImg=MutableLiveData<String>()
     val genreIDList = MutableLiveData<List<Int>>()
-    val storyGenreMap = mutableMapOf<Int,Set<Int>>()
+    val storyGenreMap = mutableMapOf<Int, Set<Int>>()
+
 
     init {
         fetchAllStories()
+    }
+
+    fun setStoryByID(id: Int) {
+        val story = stories.value?.filter { it -> it.storyID == id }!!.first()
+        author.value = story.author
+        decription.value = story.description
+        isText.value = if(story.isTextStory == 1) true else false
+        title.value=story.title
+        genreIDList.value= storyGenreMap[story.storyID]?.toList()
+        storyImg.value=story.bgImgUrl
     }
 
     fun onAddNewStory(): Long {
@@ -42,19 +54,23 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 
         val l: Long = insertStory(story)
         genreIDList.value?.forEach { gID -> insertStoryGenre(l.toInt(), gID) }
+        resetValue()
+        return l
+    }
 
+    fun resetValue() {
         genreIDList.value = emptyList()
         decription.value = ""
         isText.value = false
         author.value = ""
         title.value = ""
-        return l
+        storyImg.value=""
     }
 
     fun fetchAllStories() {
         _stories.value = db.getAllStories()
-        stories.value?.forEach{
-            a->storyGenreMap[a.storyID?:0]=db.getGenreIDbyStoryID(a.storyID)
+        stories.value?.forEach { a ->
+            storyGenreMap[a.storyID ?: 0] = db.getGenreIDbyStoryID(a.storyID)
         }
     }
 
