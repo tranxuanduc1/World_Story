@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 
@@ -41,6 +42,10 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     }
     fun getParagraphsByChapter(chapterId:Int): List<Paragraph>{
         return dbHelper.getParagraphsByChapter(chapterId)
+    }
+    //image
+    fun getImagesByChapter(chapterId: Int): List<Image>{
+return listOf()
     }
 
 }
