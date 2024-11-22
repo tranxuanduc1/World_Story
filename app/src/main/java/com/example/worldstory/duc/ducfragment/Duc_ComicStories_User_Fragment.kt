@@ -29,6 +29,7 @@ import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
@@ -259,25 +260,28 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 if (chapterId != -1L) {
                     // Add 4 paragraphs for each chapter
                     for (j in 1..4) {
-                        var paragraph: Paragraph
+
                         if (story.isTextStory == 0) {
 
-                            paragraph = Paragraph(
+                            var image = Image(
                                 null,
                                 SampleDataStory.getExampleImgURLParagraph(),
                                 j,
                                 chapterId.toInt()
                             )
+                            dbHelper.insertImage(image)
+
                         } else {
-                            paragraph = Paragraph(
+                            var paragraph = Paragraph(
                                 null,
                                 getLoremIpsumLong(),
                                 j,
                                 chapterId.toInt()
                             )
+                            dbHelper.insertParagraph(paragraph)
+
                         }
 
-                        dbHelper.insertParagraph(paragraph)
                     }
                 }
             }

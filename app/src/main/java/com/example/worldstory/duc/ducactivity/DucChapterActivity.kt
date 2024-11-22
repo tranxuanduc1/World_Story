@@ -80,7 +80,7 @@ class DucChapterActivity : AppCompatActivity() {
             }
         }
         setData()
-        //loadParagraph()
+        loadContent()
         loadComment()
         setConfigButtonComment()
         setConfigButtonChapter()
@@ -213,34 +213,39 @@ class DucChapterActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadParagraph() {
+    private fun loadContent() {
 
-        var linearContainer = binding.linearContainerContentChapter
-        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
-        linearContainer.removeAllViews()
-        binding.scrollParagraphChapter.scrollTo(0, 0)
-
-        var paragraphsList = ducParagraphViewModel.getParagraphsByChapter(mainChapter?:ducChapterViewModel.getOneExampleChapter())
-        if (paragraphsList.isEmpty()) {
-            return
-        }
-        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
-        for (item in paragraphsList) {
-//            if (item.isComic) {
-//                linearContainer.addView(createContentPhoToView(item.imgContent))
+//        var linearContainer = binding.linearContainerContentChapter
+//        // lam moi lai , xoa di nhung du lieu cu truoc do, dong thoi cuon ve diem ban dau
+//        linearContainer.removeAllViews()
+//        binding.scrollParagraphChapter.scrollTo(0, 0)
 //
-//            } else {
-//                linearContainer.addView(createContentTextView(item.textContent))
+//        var paragraphsList = ducParagraphViewModel.getParagraphsByChapter(mainChapter?:ducChapterViewModel.getOneExampleChapter())
+//        if (paragraphsList.isEmpty()) {
+//            return
+//        }
+//        //phan loai kieu doan van,co hinh anh la comic, khong co anh la text
+//        for (item in paragraphsList) {
+////            if (item.isComic) {
+////                linearContainer.addView(createContentPhoToView(item.imgContent))
+////
+////            } else {
+////                linearContainer.addView(createContentTextView(item.textContent))
+////
+////            }
+//            linearContainer.addView(createContentPhoToView(item.content))
 //
-//            }
-            linearContainer.addView(createContentPhoToView(item.content))
-
-        }
-
+//        }
+//
 
 
     }
+    private fun loadParagraph() {
 
+    }
+    private fun loadImage() {
+
+    }
     fun createContentPhoToView(imgSrc: String?): PhotoView {
         var photoView = PhotoView(this)
         photoView.apply {

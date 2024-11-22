@@ -84,4 +84,5 @@ dependencies {
     implementation(libs.coil)
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
+    implementation (libs.imageslideshow)
 }
