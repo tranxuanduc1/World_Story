@@ -87,7 +87,7 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
                 chipGroup.addView(chip)
                 chip.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
-                        sharedViewModel.addSeclectedChip(i.genreID)
+                        sharedViewModel.addSeclectedChip(i.genreID,i.genreName)
                         chip.isChecked = true
                     } else {
                         sharedViewModel.delSelectedChip(i.genreID)

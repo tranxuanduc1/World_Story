@@ -46,6 +46,10 @@ class AddCategoryDialog : DialogFragment() {
                         binding.edAddCate.error = "Không được để trống"
                         isValid = false
                     }
+                    if(genreViewModel.checkExits(binding.edAddCate.text.toString())==1){
+                        binding.edAddCate.error="Nhập tên khác!"
+                        isValid=false
+                    }
                     if (isValid) {
                         genreViewModel.onAddNewGern()
                         dialog.dismiss()

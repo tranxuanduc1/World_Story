@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.StoryViewHolder
+import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.model.Story
 import com.squareup.picasso.Picasso
@@ -43,7 +44,7 @@ class StoryAdapter(
         Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.img)
         holder.column2.text = highlightQuery(text = story.title, query = searchQuery)
         holder.column3.text = highlightQuery(text = story.author, query = searchQuery)
-        holder.column4.text=highlightQuery(text = story.createdDate, query = searchQuery)
+        holder.column4.text = highlightQuery(text = story.createdDate, query = searchQuery)
         holder.itemView.setOnClickListener {
             listener.onItemClick(story)
         }
@@ -59,15 +60,21 @@ class StoryAdapter(
         sizeOfChipList = size
     }
 
-    fun filterByCates(catesList: List<Int>) {
-        if (catesList.size == 1) filteredList =
+    @SuppressLint("NotifyDataSetChanged")
+    fun filterByCates(catesMap: Map<Int, String>, viewModel: StoryViewModel) {
+        if (catesMap.size == 1) filteredList =
             storyList.filter {
+                viewModel.storyGenreMap[it.storyID]?.contains(catesMap.entries.first().key)
                 true
             }
-        else if (catesList.size == 0) filteredList = storyList
+        else if (catesMap.size == 0) filteredList = storyList
         else
-            catesList.forEach { c ->
-                true
+            catesMap.forEach { c ->
+                filteredList =
+                    filteredList.filter {
+                        viewModel.storyGenreMap[it.storyID]?.contains(c.key)
+                        true
+                    }
             }
         notifyDataSetChanged()
     }
@@ -122,13 +129,15 @@ class StoryAdapter(
         return spannableString
     }
 
-     fun updateSearchQuery(query: String?) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateSearchQuery(query: String?) {
         searchQuery = query as String
         notifyDataSetChanged()
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(stories:List<Story>){
-        storyList=stories
+    fun updateList(stories: List<Story>) {
+        storyList = stories
         notifyDataSetChanged()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.worldstory.dat.admin_viewmodels
 
 import android.widget.Toast
+import androidx.collection.MutableScatterMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Story
 
 class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
@@ -16,13 +18,15 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val title = MutableLiveData<String>()
     val author = MutableLiveData<String>()
     val decription = MutableLiveData<String>()
-    val isText = MutableLiveData<Int>()
+    val isText = MutableLiveData(false)
+    val genreIDList = MutableLiveData<List<Int>>()
+    val storyGenreMap = mutableMapOf<Int,Set<Int>>()
 
     init {
         fetchAllStories()
     }
 
-    fun onAddNewStory() :Long{
+    fun onAddNewStory(): Long {
         val story = Story(
             null,
             title.value.toString(),
@@ -30,23 +34,42 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             decription.value.toString(),
             SampleDataStory.getExampleImgURL(),
             SampleDataStory.getExampleImgURLParagraph(),
-            isTextStory = isText.value ?: 1,
+            isTextStory = isText.value?.toInt() ?: 1,
             dateTimeNow,
             Float.MAX_VALUE / Float.MAX_VALUE,
             1
         )
-        val l=insertStory(story)
+
+        val l: Long = insertStory(story)
+        genreIDList.value?.forEach { gID -> insertStoryGenre(l.toInt(), gID) }
+
+        genreIDList.value = emptyList()
+        decription.value = ""
+        isText.value = false
+        author.value = ""
+        title.value = ""
         return l
     }
 
     fun fetchAllStories() {
         _stories.value = db.getAllStories()
+        stories.value?.forEach{
+            a->storyGenreMap[a.storyID?:0]=db.getGenreIDbyStoryID(a.storyID)
+        }
     }
 
     fun insertStory(story: Story): Long {
         val l = db.insertStory(story)
         fetchAllStories()
         return l
+    }
+
+    fun insertStoryGenre(sID: Int, gID: Int): Long {
+        return db.insertStoryGenre(sID, gID)
+    }
+
+    fun getStoryByGenre() {
+
     }
 
     fun deleteStory(story: Story): Int {

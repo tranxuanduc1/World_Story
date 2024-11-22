@@ -11,23 +11,23 @@ class SharedViewModel : ViewModel() {
     val recyclerViewStateStory = MutableLiveData<RecyclerViewState>()
     val recycleViewStateUser=MutableLiveData<RecyclerViewState>()
     val searchQueryStory = MutableLiveData<String>()
-    private val selectedChips = mutableSetOf<Int>()
+    private val selectedChips = mutableMapOf<Int,String>()
     val _add: LiveData<Boolean?> get() = add
     val _search: LiveData<Boolean?> get() = search
     val _filterBtn: LiveData<Boolean?> get() = filterBtn
-    val _selectedChips: MutableSet<Int> get() = selectedChips
+    val _selectedChips: MutableMap<Int,String> get() = selectedChips
 
     //////////
-    fun addSeclectedChip(text: Int) {
-        selectedChips.add(text)
+    fun addSeclectedChip(id:Int,name:String) {
+        selectedChips[id]=name
     }
 
-    fun delSelectedChip(text: Int) {
-        selectedChips.remove(text)
+    fun delSelectedChip(id: Int) {
+        selectedChips.remove(id)
     }
 
-    fun isContainChip(text: Int): Boolean {
-        return selectedChips.contains(text)
+    fun isContainChip(id: Int): Boolean {
+        return selectedChips.contains(id)
     }
 
 

@@ -165,7 +165,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         sharedViewModel._filterBtn.observe(viewLifecycleOwner) { isClicked ->
 
-            storyAdapter.filterByCates(sharedViewModel._selectedChips.toList())
+            storyAdapter.filterByCates(sharedViewModel._selectedChips,storyViewModel)
 
 
         }

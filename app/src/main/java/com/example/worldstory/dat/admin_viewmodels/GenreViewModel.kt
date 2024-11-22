@@ -28,6 +28,14 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         _genres.value = db.getAllGenres()
     }
 
+    fun getIDbyName(name: String): Int {
+        return db.getGenreIDByName(name)
+    }
+
+    fun checkExits(name: String): Int {
+        return db.checkExistGenreName(name)
+    }
+
     fun deleteGenre(genre: Genre): Int {
         val i: Int = db.deleteGenre(genre.genreID)
         fetchAllGenre()

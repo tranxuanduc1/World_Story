@@ -78,7 +78,6 @@ class AddUserDialogFragment : DialogFragment() {
                         binding.newNickname.error = "Vui lòng không bỏ trống nickname"
                         isValid = false
                     }
-
                     if (isValid) {
                         userViewModel.onAddUser()
                         Log.i("insert","da insert")
