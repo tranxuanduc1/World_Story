@@ -1,38 +1,42 @@
 package com.example.worldstory.duc.ducviewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducrepository.DucDataRepository
-import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Paragraph
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DucParagraphViewModel(var repository: DucDataRepository,var context: Context): ViewModel() {
+class DucParagraphViewModel(var repository: DucDataRepository, var context: Context) : ViewModel() {
 
-    private val _paragraphsByStory= MutableLiveData<List<Paragraph>>()
-    val paragraphsByStory: LiveData<List<Paragraph>> get()=_paragraphsByStory
+    private val _paragraphsByChapter = MutableLiveData<List<Paragraph>>()
+    val paragraphsByChapter: LiveData<List<Paragraph>> get() = _paragraphsByChapter
 
-    fun setParagraphsByChapter(chapterId: Int){
-        viewModelScope.launch{
-            val result= withContext(Dispatchers.IO){
+    fun setParagraphsByChapter(chapterId: Int) {
+
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
                 repository.getParagraphsByChapter(chapterId)
             }
-            _paragraphsByStory.value=result
+
+            _paragraphsByChapter.value = result
+
         }
     }
-    fun getExampleParagraph(): Paragraph{
-        return Paragraph(1, SampleDataStory.getExampleImgURLParagraph(),1,1)
+
+    fun getExampleParagraph(): Paragraph {
+        return Paragraph(1, SampleDataStory.getExampleImgURLParagraph(), 1, 1)
     }
-    fun getParagraphsByChapter(chapterId: Int): List<Paragraph>{
-        setParagraphsByChapter(chapterId)
-        var paragraphs= _paragraphsByStory.value?:listOf()
+
+    fun getParagraphsByChapter(chapterId: Int): List<Paragraph> {
+        // setParagraphsByChapter(chapterId)
+        var paragraphs = _paragraphsByChapter.value ?: listOf()
         return paragraphs
     }
 //    fun getNextParagraphsByChapter(currentParagraph: DucParagraphDataClass): DucParagraphDataClass?{

@@ -25,13 +25,34 @@
             >
 
 
-            <!--            <TextView-->
-<!--                android:padding="20dp"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="@string/loremIpsum"-->
-<!--                />-->
+                        <TextView
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/loremIpsumLong"
+                />
+            <TextView
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/loremIpsumLong"
+                />
+            <TextView
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/loremIpsumLong"
+                />
+            <TextView
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/loremIpsumLong"
+                />
             <!--            <com.github.chrisbanes.photoview.PhotoView-->
             <!--                android:layout_width="match_parent"-->
             <!--                android:layout_height="wrap_content"-->
@@ -143,7 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTint="@android:color/transparent"
-        android:visibility="visible"
+        android:visibility="gone"
         >
         <FrameLayout
             android:id="@+id/viewBackground_commentDialog_chapter"

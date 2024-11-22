@@ -1,6 +1,7 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -124,8 +125,10 @@ class DucStoryOverviewActivity : AppCompatActivity() {
 
     fun generateChapter(story: Story) {
         ducChapterViewModel.setChaptersByStory(storyInfo.storyID?:1)
-        ducChapterViewModel.chaptersByStory.observe(this, Observer { chapters ->
+        ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->
 
+
+            binding.lineaerlistChapterStoryOverview.removeAllViews()
             for (item in chapters) {
                 // Inflate each item view
                 val itemView = LayoutInflater.from(this)
