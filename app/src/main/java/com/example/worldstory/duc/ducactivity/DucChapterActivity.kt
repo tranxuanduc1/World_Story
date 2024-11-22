@@ -9,7 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityDucChapterBinding
+import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
@@ -24,11 +27,14 @@ import com.example.worldstory.duc.ducutils.scrollToBottom
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
+import com.example.worldstory.duc.ducviewmodel.DucImageViewModel
 import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucImageViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucParagraphViewModelFactory
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Image
 import com.example.worldstory.model.Story
 
 
@@ -49,7 +55,9 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducCommentViewModel: DucCommentViewModel by viewModels {
         DucCommentViewModelFactory(this)
     }
-
+    private val ducImageViewModel: DucImageViewModel by viewModels{
+        DucImageViewModelFactory(this)
+    }
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
     private var storyInfo: Story? = null
@@ -202,7 +210,7 @@ class DucChapterActivity : AppCompatActivity() {
         } else {
 
             // prepare images from view model
-           // ducParagraphViewModel.setParagraphsByChapter(mainChapter?.chapterID ?: numDef)
+            ducImageViewModel.setImagesByChapter(mainChapter?.chapterID?:numDef)
 
         }
     }
@@ -215,7 +223,7 @@ class DucChapterActivity : AppCompatActivity() {
 
         } else {
 
-            //loadImage()
+            loadImage()
 
         }
 
@@ -242,6 +250,23 @@ class DucChapterActivity : AppCompatActivity() {
         })
 
     }
+    private fun loadImage() {
+        ducImageViewModel.imagesByChapter.observe(this, Observer{
+            images->
+            var adapterViewPage2 = DucViewPaperPhotoViewAdapter(
+                this,
+                images
+            )
+
+            binding.viewPaper2ContainerImageChapter.apply {
+                adapter = adapterViewPage2
+                orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            }
+        })
+
+    }
+
+
 
     fun createContentTextView(textContent: String?): TextView {
         var textView = TextView(this)
