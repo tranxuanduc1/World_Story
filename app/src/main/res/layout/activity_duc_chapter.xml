@@ -20,10 +20,12 @@
             android:layout_marginVertical="50dp"
             android:id="@+id/linear_containerContent_chapter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             >
-<!--            <TextView-->
+
+
+            <!--            <TextView-->
 <!--                android:padding="20dp"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
@@ -37,33 +39,29 @@
             <!--                android:src="@drawable/pa1"-->
             <!--                android:scaleType="centerInside"-->
             <!--                />-->
-            <!--            <com.github.chrisbanes.photoview.PhotoView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:adjustViewBounds="true"-->
-            <!--                android:src="@drawable/pa2"-->
-            <!--                android:scaleType="centerInside"-->
-            <!--                />-->
-            <!--            <com.github.chrisbanes.photoview.PhotoView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:src="@drawable/pa3"-->
-            <!--                android:adjustViewBounds="true"-->
-            <!--                android:scaleType="centerInside"-->
-            <!--                />-->
-            <!--            <com.github.chrisbanes.photoview.PhotoView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:adjustViewBounds="true"-->
-            <!--                android:src="@drawable/pa4"-->
-            <!--                android:scaleType="centerInside"-->
-            <!--                />-->
+
 
 
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:id="@+id/linear_containViewpaper_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginVertical="50dp"
+        >
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPaper2_containerImage_chapter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+
+            />
+    </LinearLayout>
+
     <FrameLayout
 
         android:id="@+id/frameTop_chapter"

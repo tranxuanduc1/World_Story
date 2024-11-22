@@ -39,5 +39,8 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var list=dbHelper.getAllParagraphs()
         return list
     }
+    fun getParagraphsByChapter(chapterId:Int): List<Paragraph>{
+        return dbHelper.getParagraphsByChapter(chapterId)
+    }
 
 }

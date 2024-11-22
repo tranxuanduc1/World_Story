@@ -15,16 +15,15 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
-import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
+import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
-import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -120,11 +119,11 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)
-        ducChapterViewModel.setChaptersByStory(storyInfo.storyID?:1)
+
     }
 
     fun generateChapter(story: Story) {
-
+        ducChapterViewModel.setChaptersByStory(storyInfo.storyID?:1)
         ducChapterViewModel.chaptersByStory.observe(this, Observer { chapters ->
 
             for (item in chapters) {
@@ -169,6 +168,8 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         var key_mainChapter = getKey_mainChapter(this)
         var key_nextChapter = getKey_nextChapter(this)
         var key_previousChapter = getKey_previousChapter(this)
+        var key_storyInfo = getKeyStoryInfo(this)
+
         var bundle = Bundle()
         bundle.putParcelable(key_mainChapter, chapter)
         bundle.putParcelable(
@@ -179,7 +180,10 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             key_previousChapter,
             ducChapterViewModel.getPreviousChapterByCurrentChapter(chapter)
         )
-
+        bundle.putParcelable(
+            key_storyInfo,
+            storyInfo
+        )
         this.toActivity(DucChapterActivity::class.java, key, bundle)
     }
 
