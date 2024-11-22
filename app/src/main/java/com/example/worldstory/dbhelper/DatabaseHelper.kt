@@ -1149,7 +1149,30 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return imgs
     }
+    fun getImagesByChapter(chapterId: Int): List<Image> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.ImageEntry.TABLE_NAME}
+            Where ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK} = ?
+            """.trimIndent(),
+            arrayOf(chapterId.toString()))
+        val imgs = mutableListOf<Image>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CONTENT_FILE))
+                val order =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_NUMBER_ORDER))
+                val chapterID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK))
+                imgs.add(Image(id, content, order, chapterID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return imgs
+    }
 
     //////////////////////////
     ///----      -----////

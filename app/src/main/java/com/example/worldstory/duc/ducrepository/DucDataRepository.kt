@@ -45,7 +45,7 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     }
     //image
     fun getImagesByChapter(chapterId: Int): List<Image>{
-return listOf()
+        return dbHelper.getImagesByChapter(chapterId)
     }
 
 }
