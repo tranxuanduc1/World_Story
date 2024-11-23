@@ -86,6 +86,13 @@ object Contract {
         const val COLUMN_ROLE_ID_FK = "role_id"
     }
 
+    //User table
+    object UserSession : BaseColumns {
+
+        const val TABLE_NAME = "user_session_table"
+        //Foreign key
+        const val COLUMN_USER_ID_FK = "role_id"
+    }
     //Role table
     object RoleEntry : BaseColumns {
         const val TABLE_NAME = "role_table"
@@ -221,6 +228,15 @@ class DatabaseHelper(context: Context) :
             ${Contract.UserEntry.COLUMN_CREATED_DATE} text not null,
             ${Contract.UserEntry.COLUMN_ROLE_ID_FK} integer not null,
             foreign key (${Contract.UserEntry.COLUMN_ROLE_ID_FK}) references ${Contract.UserEntry.TABLE_NAME}(${_ID}))
+        """.trimIndent()
+        //////////////////////////
+        //////////////////////////
+        var createUserSessionTable = """
+            create table ${Contract.UserSession.TABLE_NAME}(
+            ${_ID} integer primary key autoincrement,
+           
+            ${Contract.UserSession.COLUMN_USER_ID_FK} integer not null,
+            foreign key (${Contract.UserSession.COLUMN_USER_ID_FK}) references ${Contract.UserEntry.TABLE_NAME}(${_ID}))
         """.trimIndent()
         //////////////////////////
         //////////////////////////
@@ -368,6 +384,8 @@ class DatabaseHelper(context: Context) :
         p0?.execSQL(createRateTable)
         p0?.execSQL(createUserLoveStoryTable)
         p0?.execSQL(createStoryGernTable)
+        p0?.execSQL(createUserSessionTable)
+
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -766,6 +784,73 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return users
     }
+    fun getUserByUsersId(userId:Int): User? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.UserEntry.TABLE_NAME}" +
+                "WHERE ${BaseColumns._ID} = ? ", arrayOf(userId.toString()))
+        var user: User?=null
+
+        if (cursor.moveToFirst()) {
+
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+                val hashedPw =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val nickName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+                val imgAvatar =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+                val roleID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+                val createdDate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+                user=User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate)
+        }
+        cursor.close()
+        return user
+    }
+//////////////////////////
+    ///----   USER SESSION   -----////
+    //////////////////////////
+
+    fun insertUserSession(user: User): Long {
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserSession.COLUMN_USER_ID_FK, user.userID)
+
+        }
+        return db.insert(Contract.UserSession.TABLE_NAME, null, values)
+    }
+
+    fun deleteUserSession(): Int {
+        val db = writableDatabase
+        return db.delete(
+            Contract.UserSession.TABLE_NAME,
+            null,
+            null
+        )
+    }
+
+
+
+
+
+    fun getUserIdByUsersSession(): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.UserSession.TABLE_NAME}", null)
+        var userId :Int=-1
+
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val userID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserSession.COLUMN_USER_ID_FK))
+            userId=userID
+        }
+        cursor.close()
+        return userId
+    }
 
 
     //////////////////////////
@@ -1087,7 +1172,31 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return comments
     }
+    fun getCommentsByStory(storyId: Int): List<Comment> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.CommentEntry.TABLE_NAME}
+            WHERE ${Contract.CommentEntry.COLUMN_STORY_ID_FK} = ?
+        """.trimIndent(), arrayOf(storyId.toString()))
+        val comments = mutableListOf<Comment>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_CONTENT))
+                val time =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_TIME))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
+                comments.add(Comment(id, content, time, userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return comments
+    }
 
     //////////////////////////
     ///----ChapterMark-----////

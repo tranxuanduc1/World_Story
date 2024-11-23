@@ -25,6 +25,7 @@ import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -67,12 +68,12 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     private fun setGenreButton() {
-        ducGenreViewModel.genres.observe(this, Observer{
-            genres ->
-            var listGenres = ducGenreViewModel.getGenresByStory(storyInfo.storyID ?: 1)
-            for (genre in listGenres) {
+        ducGenreViewModel.fetchGenresByStory(storyInfo.storyID ?: numDef)
+        ducGenreViewModel.genresByStory.observe(this, Observer { genresByStory ->
+
+            for (genre in genresByStory) {
                 var genreButton = AppCompatButton(this)
-                setStyleGenreButton(genreButton,genre)
+                setStyleGenreButton(genreButton, genre)
 
                 genreButton.setOnClickListener {
                     this.toActivityStoriesByGenre(storyInfo.isTextStory.toBoolean(), genre)
@@ -86,7 +87,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
 
     }
 
-    private fun setStyleGenreButton(genreButton: AppCompatButton,genre: Genre) {
+    private fun setStyleGenreButton(genreButton: AppCompatButton, genre: Genre) {
         genreButton.apply {
             layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -124,7 +125,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     fun generateChapter(story: Story) {
-        ducChapterViewModel.setChaptersByStory(storyInfo.storyID?:1)
+        ducChapterViewModel.setChaptersByStory(storyInfo.storyID ?: 1)
         ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->
 
 

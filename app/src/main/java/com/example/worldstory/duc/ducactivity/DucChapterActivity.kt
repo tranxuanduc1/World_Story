@@ -2,17 +2,23 @@ package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityDucChapterBinding
+import com.example.myapplication.databinding.CommentOppositeLayoutBinding
+import com.example.myapplication.databinding.CommentSelfLayoutBinding
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
+import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
@@ -90,7 +96,8 @@ class DucChapterActivity : AppCompatActivity() {
             loadContent()
 
         }
-
+//        loadComment()
+//        setConfigButtonComment()
 
         //
         setConfigCommentDialog()
@@ -283,6 +290,124 @@ class DucChapterActivity : AppCompatActivity() {
     }
 
     //--------------Comment---------------------
+
+    private fun loadComment() {
+        //lam moi hop thoai scroll view chua cac comment
+        binding.linearContainerCommentChapter.removeAllViews()
+
+        var listComments = ducCommentViewModel.getCommentsByStory(
+            mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID
+        )
+
+        for (comment in listComments) {
+            var commentLayoutBinding: ViewBinding
+
+            if (ducCommentViewModel.checkCommentFromUser(comment)) {
+                commentLayoutBinding = CommentSelfLayoutBinding.inflate(layoutInflater)
+                setCommentSelf(commentLayoutBinding, comment)
+            } else {
+                commentLayoutBinding = CommentOppositeLayoutBinding.inflate(layoutInflater)
+                setCommentOpposite(commentLayoutBinding, comment)
+            }
+            binding.linearContainerCommentChapter.addView(commentLayoutBinding.root)
+        }
+        binding.scrollViewMainCommentDialogChapter.scrollToBottom()
+    }
+    private fun setConfigButtonComment() {
+        binding.btnSendCommentUserChapter.setOnClickListener {
+            var content = binding.etxtCommentUserChapter.text.toString()
+            if (content.isEmpty()) {
+                return@setOnClickListener
+            }
+
+            ducCommentViewModel.createUserCommnet(
+                mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID, content
+            )
+
+            //xoa trang editText de nhap comment moi
+            binding.etxtCommentUserChapter.setText("")
+            // chay lai comment dialog
+            loadComment()
+        }
+    }
+    private fun setCommentSelf(
+        commentLayoutBinding: CommentSelfLayoutBinding, comment: DucCommentDataClass
+    ) {
+        setCommentSelfLayoutParams((commentLayoutBinding.root))
+
+        commentLayoutBinding.txtDisplayNameCommentSelfLayout.text =
+            ducCommentViewModel.getDisplayNameUserByComment(comment)
+        commentLayoutBinding.txtContentCommentSelfLayout.text = comment.content
+        commentLayoutBinding.imgAvatarUserCommentSelfLayout.setImageResource(
+            ducCommentViewModel.getAvatarUserByComment(comment)
+        )
+        commentLayoutBinding.txtDateCreatedCommentSelfLayout.text = comment.date
+    }
+
+    private fun setCommentOpposite(
+        commentLayoutBinding: CommentOppositeLayoutBinding, comment: DucCommentDataClass
+    ) {
+        setCommentOppositeLayoutParams(commentLayoutBinding.root)
+
+        commentLayoutBinding.txtDisplayNameCommentOppositeLayout.text =
+            ducCommentViewModel.getDisplayNameUserByComment(comment)
+        commentLayoutBinding.txtContentCommentOppositeLayout.text = comment.content
+        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.setImageResource(
+            ducCommentViewModel.getAvatarUserByComment(comment)
+        )
+        commentLayoutBinding.txtDateCreatedCommentOppositeLayout.text = comment.date
+    }
+    fun setCommentSelfLayoutParams(view: View) {
+        view.apply {
+            //android:layout_width="wrap_content"
+            //android:layout_height="wrap_content"
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+            //android:layout_margin="10dp"
+            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
+                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+            }
+
+            //android:layout_gravity="end"
+            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
+                gravity = Gravity.END
+            }
+            //android:orientation="vertical"
+            if (view is LinearLayout) {
+                (view as LinearLayout).orientation = LinearLayout.VERTICAL
+            }
+
+        }
+    }
+
+    fun setCommentOppositeLayoutParams(view: View) {
+        view.apply {
+            //android:layout_width="wrap_content"
+            //android:layout_height="wrap_content"
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+            //android:layout_margin="10dp"
+            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
+                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+            }
+
+            //android:layout_gravity="start"
+            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
+                gravity = Gravity.START
+            }
+
+            //android:orientation="vertical"
+            if (view is LinearLayout) {
+                (view as LinearLayout).orientation = LinearLayout.VERTICAL
+            }
+
+        }
+    }
+
     private fun setConfigCommentDialog() {
         binding.frameContainerCommentDialogChapter.visibility = View.GONE
         var viewBackground = binding.viewBackgroundCommentDialogChapter
