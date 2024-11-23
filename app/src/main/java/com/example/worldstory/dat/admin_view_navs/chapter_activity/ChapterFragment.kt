@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentChapterBinding
+import com.example.worldstory.dat.admin_dialog.AddChapterDialog
 import com.example.worldstory.dat.admin_dialog.EditTitleDialog
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
@@ -41,7 +42,13 @@ class ChapterFragment(private val idStory:Int) : Fragment() {
         binding.storyViewModel=storyViewModel
         binding.lifecycleOwner=this
         storyViewModel.setStoryByID(idStory)
+        binding.addChapter.setOnClickListener{
+            onClickAddChapter()
+        }
         Picasso.get().load(storyViewModel.storyImg.value).into(binding.imgBground)
     }
+   fun onClickAddChapter(){
+       AddChapterDialog().show(parentFragmentManager,"AddChapter")
+   }
 
 }

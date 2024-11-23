@@ -192,6 +192,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     override fun onItemClick(item: Story) {
         val intent = Intent(requireContext(), ChapterActivity::class.java)
         intent.putExtra("ID",item.storyID)
+
         startActivity(intent)
     }
 

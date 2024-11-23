@@ -614,6 +614,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return paragraphs
     }
+
     fun getParagraphsByChapter(chapterId: Int): List<Paragraph> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -633,7 +634,7 @@ class DatabaseHelper(context: Context) :
                 val content =
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.ParagraphEntry.COLUMN_CONTENT_FILE))
 
-                paragraphs.add(Paragraph(id,content,numberOder,chapterId))
+                paragraphs.add(Paragraph(id, content, numberOder, chapterId))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -1105,6 +1106,24 @@ class DatabaseHelper(context: Context) :
             put(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK, img.chapterID)
         }
         return db.insert(Contract.ImageEntry.TABLE_NAME, null, values)
+    }
+
+    fun insertAllImage(vararg imgs: Image): Boolean {
+        val db = writableDatabase
+        try {
+            for (i in imgs) {
+                val values = ContentValues().apply {
+                    put(Contract.ImageEntry.COLUMN_CONTENT_FILE, i.imgFilePath)
+                    put(Contract.ImageEntry.COLUMN_NUMBER_ORDER, i.order)
+                    put(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK, i.chapterID)
+                }
+                db.insert(Contract.ImageEntry.TABLE_NAME, null, values)
+            }
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+
     }
 
     fun deleteImage(ImageID: Int): Int {
