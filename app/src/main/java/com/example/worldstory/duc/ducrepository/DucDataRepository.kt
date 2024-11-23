@@ -2,6 +2,7 @@ package com.example.worldstory.duc.ducrepository
 
 import android.util.Log
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
@@ -24,7 +25,15 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var list =dbHelper.getAllGenres()
         return list
     }
-
+    fun getGenresByStory(storyId: Int): List<Genre>{
+        var setOfGenresId=dbHelper.getGenreIDbyStoryID(storyId)
+        var tempGenre= SampleDataStory.getexampleGenre()
+        var listOfGenres=mutableListOf<Genre>()
+        setOfGenresId.forEach{
+            listOfGenres.add(dbHelper.getGenreByGenresId(it)?:tempGenre)
+        }
+        return listOfGenres
+    }
     //chapter
     fun getAllChapter(): List<Chapter>{
         var list=dbHelper.getAllChapters()

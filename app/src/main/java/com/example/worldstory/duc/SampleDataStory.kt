@@ -10,6 +10,7 @@ import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 import java.time.LocalDateTime
@@ -339,5 +340,8 @@ object SampleDataStory {
     private fun getNextIdComment():Int{
         sumIdComment=sumIdComment+1
         return sumIdComment
+    }
+    fun getexampleGenre():Genre{
+        return Genre(1,"Khong co du lieu",1)
     }
 }

@@ -797,7 +797,27 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return exists
     }
+    fun getGenreByGenresId(genreId: Int): Genre? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.GenreEntry.TABLE_NAME}
+            WHERE ${BaseColumns._ID} = ?
+        """.trimIndent(), arrayOf(genreId.toString()))
+        var genre: Genre?=null
 
+        if (cursor.moveToFirst()) {
+
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val name =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_NAME))
+            val userID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK))
+            genre= Genre(id, name, userID)
+
+        }
+        cursor.close()
+        return genre
+    }
     //////////////////////////
     ///----   ROLE   -----////
     //////////////////////////
