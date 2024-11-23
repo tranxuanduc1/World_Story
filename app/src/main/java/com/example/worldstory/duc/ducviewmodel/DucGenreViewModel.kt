@@ -29,7 +29,7 @@ class DucGenreViewModel(var repository: DucDataRepository,var context: Context):
         }
 
     }
-    fun setGenresByStory(storyId: Int){
+    fun fetchGenresByStory(storyId: Int){
         viewModelScope.launch{
             val result = withContext(Dispatchers.IO){
                 repository.getGenresByStory(storyId)
