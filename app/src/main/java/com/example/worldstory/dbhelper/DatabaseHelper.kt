@@ -1228,7 +1228,23 @@ class DatabaseHelper(context: Context) :
         )
         with(cursor) {
             while (moveToNext()) {
-                idList.add(getInt(getColumnIndexOrThrow(BaseColumns._ID)))
+                idList.add(getInt(getColumnIndexOrThrow(Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK)))
+            }
+        }
+        cursor.close()
+        return idList
+    }
+    fun getStoriesIdbyGenreId(genreId: Int?): Set<Int> {
+        val db = readableDatabase
+        val idList = mutableSetOf<Int>()
+        val cursor = db.rawQuery(
+            "SELECT ${BaseColumns._ID} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+                    " WHERE ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}=${genreId}",
+            null
+        )
+        with(cursor) {
+            while (moveToNext()) {
+                idList.add(getInt(getColumnIndexOrThrow(Contract.StoryGenreEntry.COLUMN_STORY_ID_FK)))
             }
         }
         cursor.close()
