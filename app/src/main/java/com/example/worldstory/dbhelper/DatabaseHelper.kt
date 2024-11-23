@@ -1087,7 +1087,31 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return comments
     }
+    fun getCommentsByStory(storyId: Int): List<Comment> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.CommentEntry.TABLE_NAME}
+            WHERE ${Contract.CommentEntry.COLUMN_STORY_ID_FK} = ?
+        """.trimIndent(), arrayOf(storyId.toString()))
+        val comments = mutableListOf<Comment>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_CONTENT))
+                val time =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_TIME))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
+                comments.add(Comment(id, content, time, userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return comments
+    }
 
     //////////////////////////
     ///----ChapterMark-----////

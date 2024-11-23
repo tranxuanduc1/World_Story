@@ -5,6 +5,7 @@ import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
@@ -18,15 +19,7 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     }
    // fun getStoryById(id: Int): Story? = dbHelper.getStoryById(id)
     fun addStory(story: Story): Long = dbHelper.insertStory(story)
-//    fun getStoriesByGenre(genreId: Int): List<Story>{
-//        var setOfStoryId=dbHelper.getStoriesIdbyGenreId(genreId)
-//        var tempStory= SampleDataStory.getexampleStory()
-//        var listOfStories=mutableListOf<Story>()
-//        setOfStoryId.forEach{
-//            listOfStories.add(dbHelper.getStoryByStoryId(it)?:tempStory)
-//        }
-//        return listOfStories
-//    }
+
     fun getStoriesByGenre(genreId: Int,isText: Boolean): List<Story>{
         var setOfStoryId=dbHelper.getStoriesIdbyGenreId(genreId)
         var tempStory= SampleDataStory.getexampleStory()
@@ -74,9 +67,17 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun getParagraphsByChapter(chapterId:Int): List<Paragraph>{
         return dbHelper.getParagraphsByChapter(chapterId)
     }
+
+
     //image
     fun getImagesByChapter(chapterId: Int): List<Image>{
         return dbHelper.getImagesByChapter(chapterId)
+    }
+
+    //comment
+
+    fun getCommentsByStory(storyId:Int):List<Comment>{
+        return dbHelper.getCommentsByStory(storyId)
     }
 
 }
