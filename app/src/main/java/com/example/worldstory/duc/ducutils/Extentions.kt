@@ -10,6 +10,7 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -67,7 +68,9 @@ fun getLoremIpsumLong(): String{
 fun getTextDataNotFound(context: Context): String{
     return context.resources.getString(R.string.dataNotFound)
 }
-
+fun callLog(name: String, text: String){
+    Log.w(name,text)
+}
 //--------------------------------------
 fun Int.toBoolean(): Boolean = this == 1
 fun Boolean.toInt(): Int {
@@ -179,13 +182,11 @@ fun createGridCardViewStory(
     inflater:LayoutInflater,
     viewGroup: ViewGroup, genre: Genre,
     dataList: List<Story> ){
+
     var blistCardStoriesLayout= ListCardStoriesLayoutBinding.inflate(inflater)
     val listCardStoriesLayout = blistCardStoriesLayout.root
     var gridLayout=blistCardStoriesLayout.gridLayoutListCardStory
     var txtGenre=blistCardStoriesLayout.genreListCardStory
-//        val listCardStoriesLayout = inflater.inflate(R.layout.list_card_stories_layout,container,false)
-//        var gridLayout=listCardStoriesLayout.findViewById<GridLayout>(R.id.gridLayout_listCardStory)
-//        var txtGenre=listCardStoriesLayout.findViewById<TextView>(R.id.genre_listCardStory)
     for(i in dataList){
         var bCardView= CardStoryItemLayoutBinding.inflate(inflater)
         var cardView =bCardView.root
@@ -226,6 +227,8 @@ fun createGridCardViewStory(
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }
+
+
 fun Context.toActivityStoriesByGenre(isText: Boolean,genre: Genre){
     var keyIsText = getKeyIsText(this)
     var keyGenreInfo = getKeyGenreInfo(this)

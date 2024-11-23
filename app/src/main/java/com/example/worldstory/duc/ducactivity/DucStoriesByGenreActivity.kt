@@ -1,7 +1,6 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -16,7 +15,6 @@ import com.example.worldstory.duc.ducutils.getKeyGenreInfo
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoriesByGenre
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
-import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.model.Genre
@@ -63,10 +61,11 @@ class DucStoriesByGenreActivity : AppCompatActivity() {
         return intent.hasExtra(key)
     }
     private fun setCardStories(isText: Boolean, genre: Genre) {
-        ducStoryViewModel.stories.observe(this, Observer{
-            stories ->
+        ducStoryViewModel.fetchGenreAndStoriesByGenre(genre,isText)
+        ducStoryViewModel.genreAndStoriesByGenre.observe(this, Observer{
+            storiesByGenre ->
 
-            var dataList=ArrayList( ducStoryViewModel.getStoriesByGenre(genre.genreID?: numDef,isText))
+            var dataList=ArrayList( storiesByGenre.second)
             var cardAdapter = Duc_CardStoryItem_Adapter(this, dataList)
             binding.recyclerStoryStoriesByGenre.apply {
                 adapter=cardAdapter

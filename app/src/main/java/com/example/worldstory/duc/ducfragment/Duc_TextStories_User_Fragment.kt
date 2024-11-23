@@ -67,9 +67,21 @@ class Duc_TextStories_User_Fragment : Fragment() {
 //--------------------------------------
         linearLayout = binding.linearLayoutFragmentTextStoryUser
         recyclerViewGenreButton = binding.rvButtonGenreTextStoriesUser
+        var linearContainerGridCardStory =
+            binding.linearContainerGridCardStoryFragmentTextStoriesUser
 
 
         ///////////////////////
+
+        ducStoryViewModel.genreAndStoriesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
+
+                createGridCardViewStory(
+                    requireContext(), inflater, linearContainerGridCardStory, storiesByGenre.first,
+                    storiesByGenre.second
+                )
+
+        })
+
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
             recyclerViewGenreButton.layoutManager = GridLayoutManager(
@@ -81,14 +93,9 @@ class Duc_TextStories_User_Fragment : Fragment() {
                 requireContext(), ArrayList(genres),
                 isText
             )
-            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
-                for (i in genres) {
-                    createGridCardViewStory(
-                        requireContext(), inflater, linearLayout, i,
-                        ducStoryViewModel.getStoriesByGenre(i?.genreID?:1, isText)
-                    )
-                }
-            })
+           for(genre in genres){
+               ducStoryViewModel.fetchGenreAndStoriesByGenre(genre,isText)
+           }
         })
 
 

@@ -8,8 +8,10 @@ import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
+import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 import java.time.LocalDateTime
@@ -339,5 +341,13 @@ object SampleDataStory {
     private fun getNextIdComment():Int{
         sumIdComment=sumIdComment+1
         return sumIdComment
+    }
+    fun getexampleGenre():Genre{
+        return Genre(1,"Khong co du lieu",1)
+    }
+    fun getexampleStory(): Story{
+        return Story(1,"Khong co du lieu","tac gia","mieu ta",getExampleImgURL(),getExampleImgURL(),0,
+            dateTimeNow,1f,1)
+
     }
 }

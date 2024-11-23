@@ -471,6 +471,57 @@ class DatabaseHelper(context: Context) :
         )
     }
 
+    fun getStoryByStoryId(storyId: Int): Story? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.StoryEntry.TABLE_NAME}
+            WHERE ${BaseColumns._ID} = ?
+        """.trimIndent(), arrayOf(storyId.toString())
+        )
+        var story: Story? = null
+
+        if (cursor.moveToFirst()) {
+
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
+            val title =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+            val author =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+            val description =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+            val imgURL =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+            val bgImgURL =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+            val score =
+                cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+            val isTextStory =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+            val dateCreated =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+            val userID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+
+
+            story = Story(
+                id,
+                title,
+                author,
+                description,
+                imgURL,
+                bgImgURL,
+                isTextStory,
+                dateCreated,
+                score,
+                userID
+            )
+
+
+        }
+        cursor.close()
+        return story
+    }
     //////////////////////////
     ///----  CHAPTER -----////
     //////////////////////////
@@ -797,6 +848,30 @@ class DatabaseHelper(context: Context) :
         }
         cursor.close()
         return exists
+    }
+
+    fun getGenreByGenresId(genreId: Int): Genre? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.GenreEntry.TABLE_NAME}
+            WHERE ${BaseColumns._ID} = ?
+        """.trimIndent(), arrayOf(genreId.toString())
+        )
+        var genre: Genre? = null
+
+        if (cursor.moveToFirst()) {
+
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val name =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_NAME))
+            val userID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.GenreEntry.COLUMN_USER_CREATED_ID_FK))
+            genre = Genre(id, name, userID)
+
+        }
+        cursor.close()
+        return genre
     }
 
     //////////////////////////
@@ -1169,6 +1244,32 @@ class DatabaseHelper(context: Context) :
         return imgs
     }
 
+    fun getImagesByChapter(chapterId: Int): List<Image> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.ImageEntry.TABLE_NAME}
+            Where ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK} = ?
+            """.trimIndent(),
+            arrayOf(chapterId.toString())
+        )
+        val imgs = mutableListOf<Image>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val content =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CONTENT_FILE))
+                val order =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_NUMBER_ORDER))
+                val chapterID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ImageEntry.COLUMN_CHAPTER_ID_FK))
+                imgs.add(Image(id, content, order, chapterID))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return imgs
+    }
 
     //////////////////////////
     ///----      -----////
@@ -1198,13 +1299,30 @@ class DatabaseHelper(context: Context) :
         val db = readableDatabase
         val idList = mutableSetOf<Int>()
         val cursor = db.rawQuery(
-            "SELECT ${BaseColumns._ID} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+            "SELECT ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
                     " WHERE ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}=${storyId}",
             null
         )
         with(cursor) {
             while (moveToNext()) {
-                idList.add(getInt(getColumnIndexOrThrow(BaseColumns._ID)))
+                idList.add(getInt(getColumnIndexOrThrow(Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK)))
+            }
+        }
+        cursor.close()
+        return idList
+    }
+
+    fun getStoriesIdbyGenreId(genreId: Int?): Set<Int> {
+        val db = readableDatabase
+        val idList = mutableSetOf<Int>()
+        val cursor = db.rawQuery(
+            "SELECT ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+                    " WHERE ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}=${genreId}",
+            null
+        )
+        with(cursor) {
+            while (moveToNext()) {
+                idList.add(getInt(getColumnIndexOrThrow(Contract.StoryGenreEntry.COLUMN_STORY_ID_FK)))
             }
         }
         cursor.close()
