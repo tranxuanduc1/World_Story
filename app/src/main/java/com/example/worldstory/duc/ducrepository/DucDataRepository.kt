@@ -2,6 +2,7 @@ package com.example.worldstory.duc.ducrepository
 
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
@@ -25,7 +26,6 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
 //            listOfStories.add(dbHelper.getStoryByStoryId(it)?:tempStory)
 //        }
 //        return listOfStories
-//        return dbHelper.getAllStories()
 //    }
     fun getStoriesByGenre(genreId: Int,isText: Boolean): List<Story>{
         var setOfStoryId=dbHelper.getStoriesIdbyGenreId(genreId)
@@ -39,7 +39,6 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
 
         }
         return listOfStories
-        //return dbHelper.getAllStories()
 
     }
 

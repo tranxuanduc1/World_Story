@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
+import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
@@ -23,8 +24,6 @@ import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
-import com.example.worldstory.duc.ducutils.loadImgURL
-import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
@@ -83,20 +82,20 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         val view = binding.root
         linearLayout = binding.linearLayoutFragmentComicStoryUser
         recyclerViewGenreButton = binding.rvButtonGenreComicStoriesUser
-
+        var linearContainerGridCardStory =
+            binding.linearContainerGridCardStoryFragmentComicStoriesUser
         ///////////////////////
-        var currentGenre: Genre? = null
-        ducStoryViewModel.storiesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
-            if (currentGenre != null) {
-                createGridCardViewStory(
-                    requireContext(),
-                    inflater,
-                    linearLayout,
-                    currentGenre ?: SampleDataStory.getexampleGenre(),
-                    storiesByGenre
-                )
-            }
 
+        var listBindingGrid: List<ListCardStoriesLayoutBinding>
+        ducStoryViewModel.genreAndStoriesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
+
+            createGridCardViewStory(
+                requireContext(),
+                inflater,
+                linearContainerGridCardStory,
+                storiesByGenre.first,
+                storiesByGenre.second
+            )
 
         })
         //button genre
@@ -110,8 +109,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 )
             }
             for (genre in genres) {
-                currentGenre = genre
-                ducStoryViewModel.fetchStoriesByGenre(genre.genreID ?: numDef, isText)
+
+                ducStoryViewModel.fetchGenreAndStoriesByGenre(genre, isText)
             }
 
 
@@ -220,22 +219,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         dataHelper.insertGenre(Genre(null, "Fantasy", 1))
 
 
-        // Add 4 stories with details
-        for (i in 6..10) {
-            val story = Story(
-                storyID = null,
-                title = "Story $i",
-                description = "Description of Story $i",
-                imgUrl = SampleDataStory.getExampleImgURL(),
-                bgImgUrl = SampleDataStory.getExampleImgURL(),
-                author = "Author $i",
-                createdDate = dateTimeNow,
-                isTextStory = 1,
-                score = 4.0f,
-                userID = 1 // Assuming user ID 1 created the stories
-            )
-            addStoryWithDetails(story, dataHelper)
-        }
         val imgUrlListString = arrayOf(
             "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244",
             "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467577331_987540779849747_3591926939402667045_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=NhyibJOpEmAQ7kNvgEAGM7r&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=AnVmve5NRl4OrLjx-d8EHne&oh=00_AYCuRMR1pjI8KRGlcie1RnAycQoSrQ86nppSJgvOwGmXyA&oe=67423357",
@@ -259,6 +242,22 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 author = "Author $i",
                 createdDate = dateTimeNow,
                 isTextStory = 0,
+                score = 4.0f,
+                userID = 1 // Assuming user ID 1 created the stories
+            )
+            addStoryWithDetails(story, dataHelper)
+        }
+        // Add 4 stories with details
+        for (i in 6..10) {
+            val story = Story(
+                storyID = null,
+                title = "Story $i",
+                description = "Description of Story $i",
+                imgUrl = SampleDataStory.getExampleImgURL(),
+                bgImgUrl = SampleDataStory.getExampleImgURL(),
+                author = "Author $i",
+                createdDate = dateTimeNow,
+                isTextStory = 1,
                 score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
             )

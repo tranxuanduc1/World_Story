@@ -10,7 +10,9 @@ import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,8 +22,10 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
     private val _stories = MutableLiveData<List<Story>>()
     val stories: LiveData<List<Story>> get() = _stories
 
-    private val _storiesByGenre = MutableLiveData<List<Story>>()
-    val storiesByGenre: LiveData<List<Story>> get() = _storiesByGenre
+    private val _genreAndStoriesByGenre = MutableLiveData<Pair< Genre,List<Story>>>()
+    val genreAndStoriesByGenre: LiveData<Pair< Genre,List<Story>>> get() = _genreAndStoriesByGenre
+
+
     init {
         fetchStories()
     }
@@ -36,12 +40,13 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
         }
 
     }
-    fun fetchStoriesByGenre(genreId: Int, isText: Boolean){
+    fun fetchGenreAndStoriesByGenre(genre: Genre, isText: Boolean){
         viewModelScope.launch{
-            val result=withContext(Dispatchers.IO){
-                repository.getStoriesByGenre(genreId,isText)
+            val resultStoriesByGenre=withContext(Dispatchers.IO){
+                repository.getStoriesByGenre(genre.genreID?: numDef,isText)
             }
-            _storiesByGenre.value=result
+
+            _genreAndStoriesByGenre.value= Pair(genre, resultStoriesByGenre)
         }
     }
 

@@ -15,7 +15,6 @@ import com.example.worldstory.duc.ducutils.getKeyGenreInfo
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoriesByGenre
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
-import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.model.Genre
@@ -62,11 +61,11 @@ class DucStoriesByGenreActivity : AppCompatActivity() {
         return intent.hasExtra(key)
     }
     private fun setCardStories(isText: Boolean, genre: Genre) {
-        ducStoryViewModel.fetchStoriesByGenre(genre.genreID?:numDef,isText)
-        ducStoryViewModel.storiesByGenre.observe(this, Observer{
+        ducStoryViewModel.fetchGenreAndStoriesByGenre(genre,isText)
+        ducStoryViewModel.genreAndStoriesByGenre.observe(this, Observer{
             storiesByGenre ->
 
-            var dataList=ArrayList( storiesByGenre)
+            var dataList=ArrayList( storiesByGenre.second)
             var cardAdapter = Duc_CardStoryItem_Adapter(this, dataList)
             binding.recyclerStoryStoriesByGenre.apply {
                 adapter=cardAdapter
