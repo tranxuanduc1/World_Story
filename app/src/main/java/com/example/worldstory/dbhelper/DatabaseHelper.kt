@@ -1281,7 +1281,7 @@ class DatabaseHelper(context: Context) :
         val db = readableDatabase
         val idList = mutableSetOf<Int>()
         val cursor = db.rawQuery(
-            "SELECT ${BaseColumns._ID} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+            "SELECT ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
                     " WHERE ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}=${storyId}",
             null
         )
@@ -1298,7 +1298,7 @@ class DatabaseHelper(context: Context) :
         val db = readableDatabase
         val idList = mutableSetOf<Int>()
         val cursor = db.rawQuery(
-            "SELECT ${BaseColumns._ID} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+            "SELECT ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK} FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
                     " WHERE ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}=${genreId}",
             null
         )

@@ -1,7 +1,6 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -63,10 +62,11 @@ class DucStoriesByGenreActivity : AppCompatActivity() {
         return intent.hasExtra(key)
     }
     private fun setCardStories(isText: Boolean, genre: Genre) {
-        ducStoryViewModel.stories.observe(this, Observer{
-            stories ->
+        ducStoryViewModel.fetchStoriesByGenre(genre.genreID?:numDef,isText)
+        ducStoryViewModel.storiesByGenre.observe(this, Observer{
+            storiesByGenre ->
 
-            var dataList=ArrayList( ducStoryViewModel.getStoriesByGenre(genre.genreID?: numDef,isText))
+            var dataList=ArrayList( storiesByGenre)
             var cardAdapter = Duc_CardStoryItem_Adapter(this, dataList)
             binding.recyclerStoryStoriesByGenre.apply {
                 adapter=cardAdapter

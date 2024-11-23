@@ -2,6 +2,7 @@ package com.example.worldstory.duc.ducrepository
 
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
@@ -16,16 +17,31 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     }
    // fun getStoryById(id: Int): Story? = dbHelper.getStoryById(id)
     fun addStory(story: Story): Long = dbHelper.insertStory(story)
-    fun getStoriesByGenre(genreId: Int): List<Story>{
+//    fun getStoriesByGenre(genreId: Int): List<Story>{
+//        var setOfStoryId=dbHelper.getStoriesIdbyGenreId(genreId)
+//        var tempStory= SampleDataStory.getexampleStory()
+//        var listOfStories=mutableListOf<Story>()
+//        setOfStoryId.forEach{
+//            listOfStories.add(dbHelper.getStoryByStoryId(it)?:tempStory)
+//        }
+//        return listOfStories
+//        return dbHelper.getAllStories()
+//    }
+    fun getStoriesByGenre(genreId: Int,isText: Boolean): List<Story>{
         var setOfStoryId=dbHelper.getStoriesIdbyGenreId(genreId)
         var tempStory= SampleDataStory.getexampleStory()
         var listOfStories=mutableListOf<Story>()
         setOfStoryId.forEach{
-            listOfStories.add(dbHelper.getStoryByStoryId(it)?:tempStory)
+            var story=dbHelper.getStoryByStoryId(it)?:tempStory
+            if( story.isTextStory.toBoolean()==isText){
+                listOfStories.add(story)
+            }
+
         }
         return listOfStories
-    }
+        //return dbHelper.getAllStories()
 
+    }
 
     //genre
     fun getAllGenres(): List<Genre>{

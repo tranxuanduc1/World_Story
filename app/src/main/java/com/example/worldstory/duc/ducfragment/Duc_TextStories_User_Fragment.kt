@@ -13,13 +13,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.myapplication.databinding.FragmentDucTextStoriesBinding
+import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.getKeyIsText
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
+import com.example.worldstory.model.Genre
 import kotlin.getValue
 
 // TODO: Rename parameter arguments, choose names that match
@@ -70,6 +73,16 @@ class Duc_TextStories_User_Fragment : Fragment() {
 
 
         ///////////////////////
+        var currentGenre: Genre?=null
+        ducStoryViewModel.storiesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
+
+                createGridCardViewStory(
+                    requireContext(), inflater, linearLayout, currentGenre?: SampleDataStory.getexampleGenre(),
+                    storiesByGenre
+                )
+
+        })
+
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
             recyclerViewGenreButton.layoutManager = GridLayoutManager(
@@ -81,14 +94,10 @@ class Duc_TextStories_User_Fragment : Fragment() {
                 requireContext(), ArrayList(genres),
                 isText
             )
-            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
-                for (i in genres) {
-                    createGridCardViewStory(
-                        requireContext(), inflater, linearLayout, i,
-                        ducStoryViewModel.getStoriesByGenre(i?.genreID?:1, isText)
-                    )
-                }
-            })
+           for(genre in genres){
+               currentGenre=genre
+               ducStoryViewModel.fetchStoriesByGenre(genre.genreID?: numDef,isText)
+           }
         })
 
 
