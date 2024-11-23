@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorldStory"
         tools:targetApi="31">
+        <activity
+            android:name="com.example.worldstory.StartActivity"
+            android:exported="false" />
         <activity
             android:name="com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity"
             android:exported="false" />
@@ -37,8 +43,7 @@
             android:exported="false" />
         <activity
             android:name="com.example.worldstory.AdminMainActivity"
-            android:exported="false" />
-        <!-- user gui -->
+            android:exported="false" /> <!-- user gui -->
         <activity
             android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity"
             android:exported="false" />
@@ -51,10 +56,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>
