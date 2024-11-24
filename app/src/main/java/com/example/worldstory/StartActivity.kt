@@ -1,5 +1,6 @@
 package com.example.worldstory
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,9 +28,18 @@ class StartActivity : AppCompatActivity() {
 
         val handler= Handler(Looper.getMainLooper())
         handler.postDelayed({
+            if(isCheckUserSession()==false){
+                //tao tai khoan guest
+            }
             toActivity(DucUserHomeActivity::class.java)
         },2000)
 
+
+    }
+    fun isCheckUserSession(): Boolean{
+        var sharePref=this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+        val userId=sharePref.getInt(getString(R.string.key_user_id),-1)
+        return userId != -1
 
     }
 }
