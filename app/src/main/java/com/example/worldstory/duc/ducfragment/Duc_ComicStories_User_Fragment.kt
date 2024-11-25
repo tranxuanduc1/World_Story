@@ -3,6 +3,7 @@ package com.example.worldstory.duc.ducfragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getKeyIsText
@@ -48,6 +50,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Duc_ComicStories_User_Fragment : Fragment() {
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -77,7 +80,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        callLog("=========","ye")
         binding = FragmentDucComicStoriesUserBinding.inflate(layoutInflater)
         val view = binding.root
         linearLayout = binding.linearLayoutFragmentComicStoryUser
@@ -149,7 +152,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         var imgURL: String =
             "https://storage-ct.lrclib.net/file/cuutruyen/uploads/manga/2478/cover/processed-4079ee6ed3b108490e33fca63589c35e.jpg"
         var imgURL2: String =
-            "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467618820_987540786516413_9022671729236654001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=wcRr4uG_frQQ7kNvgG7AO3Q&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=ACWt9Nxlog48s7vciMKLvlm&oh=00_AYCFt2WZkt3Qy8rXYq0fnq2KdcuMdRdl7Qr9prRr8E71gw&oe=67420403"
+            "https://drive.usercontent.google.com/download?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz&authuser=0"
         val imageList = ArrayList<SlideModel>() // Create image list
 
         imageList.add(SlideModel(imgURL2))

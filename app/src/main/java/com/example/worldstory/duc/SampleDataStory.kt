@@ -39,7 +39,7 @@ object SampleDataStory {
         generateListOfChapter()
     }
     fun getExampleImgURL():String{
-        return "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244"
+        return "https://drive.google.com/uc?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz"
 
     }
     fun getExampleImgURLParagraph():String{
