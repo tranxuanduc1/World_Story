@@ -3,6 +3,7 @@ package com.example.worldstory.duc.ducrepository
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.callLog
+import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
@@ -10,6 +11,7 @@ import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
 
 class DucDataRepository(private var dbHelper: DatabaseHelper) {
     //story
@@ -79,5 +81,11 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun getCommentsByStory(storyId:Int):List<Comment>{
         return dbHelper.getCommentsByStory(storyId)
     }
+    //user
+     fun createGuestUser(){
+         dbHelper.insertUser(User(null,"guest","", SampleDataStory.getExampleImgURL(),"Guest",1,
+             dateTimeNow
+         ))
+     }
 
 }

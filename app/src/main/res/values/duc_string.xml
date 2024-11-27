@@ -3,6 +3,7 @@
     <string name="line">
 
     </string>
+    <string name="tenUngDung">Thế giới truyện</string>
     <string name="titleTab1">Comic</string>
     <string name="titleTab2">Truyện chữ</string>
     <string name="titleTab3">Tủ truyện</string>
@@ -46,5 +47,8 @@
     <string name="key_resultSearchInfo">RESULT_SEARCH_INFO</string>
     <string name="key_textQuery">TEXT_QUERY</string>
 
+    //----------------KEY SHARE PREFERENCE----------------
+    <string name="key_user_session">KEY_USER_SESSION</string>
+    <string name="key_user_id">KEY_USER_ID</string>
 
 </resources>

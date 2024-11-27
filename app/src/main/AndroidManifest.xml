@@ -21,7 +21,7 @@
             android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.StartActivity"
+            android:name="com.example.worldstory.duc.ducactivity.DucUserHomeActivity"
             android:exported="false" />
         <activity
             android:name="com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity"
@@ -51,7 +51,7 @@
             android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucUserHomeActivity"
+            android:name="com.example.worldstory.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

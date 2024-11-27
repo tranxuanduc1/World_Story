@@ -125,6 +125,7 @@ fun Context.toActivity(activityClass: Class<out Activity>){
     var intent= Intent(this, activityClass)
     this.startActivity(intent)
 }
+
 fun Context.toActivity(activityClass: Class<out Activity>, key: Int, value: Parcelable?){
     var intent= Intent(this, activityClass)
     intent.putExtra(this.resources.getString(key),value)
