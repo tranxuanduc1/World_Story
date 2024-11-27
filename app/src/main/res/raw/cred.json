@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "world-story-442817",
+  "private_key_id": "7ee4673f155444b645fa62b08a330b9bac74c197",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6ZHH7+MgeTa9F\nlxEeVDPik9VHqgTQ1zopTToI1gqDC/jz6/K/QaTyw9Ghb8tFFdUcqNhTU0igExRc\niE/LHNV5Ux3+XN+L5UuFIymSpKKvYit3FOpCo1hEpEz/kHH7kvACInkJMriXcyH1\nR1lB8zQytlzoPdTl4Rka+xUQ35n8k9FVhxTYLb1KwFYPIfQjwRqusrDFFRrMyVoR\nnBXfC1KbTLXek+VLjOLzsEsqsW7HgaLpf3PDdv9DrqzYvyviYSiKIPyFhUc4eO1b\nb4zpbNB2t/hgrqg0adip+G76/DouwDCzOpQRqEWKAwTn4/RWm3f0hlZ5vscLNWvK\n1/mzdoI3AgMBAAECggEARBzinm6KSrCexTJwOgIRN9JIFTknK14LTf5/n60ACGV+\nozxs58FIUsKGP5VH1cYlq6Rz8Pc1SfHO9gWGCzZNOFnMUyCDPG8dStjPn1v0a1zX\nf1uwQ4vHfMYBsT6KuKE4fb81NcxIMmgLV8Or9XK3d3S2vNOjkiHQ99AbIaBkeCy4\nkFDHXMby0xSQhsqcuvtun9JiJ57CtApU+J/Z88ajgXxv774qHinTyyAruQt33GiV\n1JnDlXa9hQ24ukpCkhBP/MX7vh7fJ4LuM7gUwLIf1WKblftiupBxLD68BWfkjH0c\nrzudtpr52shHzCGW9JMNAtAm+OLBdqcgmvBTKyYR0QKBgQDhJc8/fW1ZGAvMXsYW\nUQ7JRYGgveP2yflCvnl3NwcO7x7YGc4Qn0FNeMcjOJEqrgMBN56mQg3NbD7zqvzw\ninQKBJDv14CFajLb5xiQ7j2rSlYe/HH8qrNiHWQM5QlqHCf8C6h6gXDtkh1xJPtJ\noO+0bjsDG4mvaid5TCvzfs11uQKBgQDT7xjdR7MhUHXWkCk0NVCnQS5j+MXby6/1\nbd8LxwqnUVHtgGGLYhRXdfj/04UyN7K1Lfm6edmdduXllRJcZD3dw7jFQ0zHd49/\nIZnXYhTat2SWApRAUvBDbNgF0EEwFKEQuU/WQriznGplskhg7gZ6cVdf+GpSWiq4\nZbaH35+vbwKBgQC4inodyxvWm+wHvmLUpendtVfzvdFdVd02BNOgkHz7k6mPbU9G\ntpIbAvUOfG4YMnsKA2HJWnjfuGq85JjgPEuybl2yCMwyDoLTVc7/9BaeEJcYXMi9\nVdkkgXyhSRX3YE6xu4iDqRc70rjJJYvGpN/03ykFegvXuMXUGUgpE/UqGQKBgQCA\nFNTLDoT0kkLVDETKl5oJqrvVkUhKYFwUEHWnEYCfw+amiVrqOLkgblywh23M/ppT\nItj02KUqo+umhyQUkERPXPSyysyBFAG2DGGEKHOAByuT+TUNdtJbfVFEmip7W0xH\n5iaYz7P+YH5wvYE+izuBDjSG/IONB48f5+CbVwuTowKBgCLwS/8yxkK6IqBMX9DF\nGK9nKc2qHdp1b83I04N+9lNEhfRgBjyLwLGegOW5OAM7j4zF7xktNruVGFfC77I/\nuLdCCQb4igi+M1/zKQbAWJumcrdLm3iUePKMyXKloL2C9eFFbnuvyZYL2XWN7oja\nDY7bS1H3oTl5xtWuMI5d4cVG\n-----END PRIVATE KEY-----\n",
+  "client_email": "world-story@world-story-442817.iam.gserviceaccount.com",
+  "client_id": "101703668742461177174",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/world-story%40world-story-442817.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -11,9 +11,8 @@ import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 
+import androidx.fragment.app.Fragment
 import com.example.worldstory.dat.admin_view_navs.GenreFragment
 import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.StoryFragment
@@ -128,6 +127,7 @@ class AdminMainActivity : AppCompatActivity() {
                 toast.show()
             }
         }
+
     }
 
     private fun loadFragment(fragment: Fragment, tag: String) {

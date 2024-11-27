@@ -3,10 +3,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<TextView
-    android:id="@+id/prv_upload_textview"
+<ImageView
+    android:id="@+id/prv_upload_imgview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="111111111111111111111111111111111111111111111111"/>
+    android:scaleType="fitCenter"
+    />
 
 </LinearLayout>

@@ -2,6 +2,10 @@
 agp = "8.6.1"
 coil = "3.0.3"
 glide = "4.14.2"
+googleApiClient = "1.35.0"
+googleApiServicesDrive = "v3-rev305-1.25.0"
+googleHttpClientGson = "1.41.0"
+googleHttpClientGsonVersion = "1.41.1"
 imageslideshow = "0.1.2"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
@@ -20,7 +24,11 @@ coreKtxVersion = "1.15.0"
 flexbox = "3.0.0"
 fragmentKtx = "1.8.5"
 photoview = "2.3.0"
+playServicesAuth = "21.2.0"
 touchimageview = "1.4.1"
+emoji2 = "1.5.0"
+picasso = "2.8"
+emoji2Bundled = "1.5.0"
 
 
 [libraries]
@@ -28,6 +36,11 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+google-api-client = { module = "com.google.api-client:google-api-client", version.ref = "googleApiClient" }
+google-api-client-android = { module = "com.google.api-client:google-api-client-android", version.ref = "googleApiClient" }
+google-api-services-drive = { module = "com.google.apis:google-api-services-drive", version.ref = "googleApiServicesDrive" }
+google-http-client-gson = { module = "com.google.http-client:google-http-client-gson", version.ref = "googleHttpClientGson" }
+google-http-client-gson-v1411 = { module = "com.google.http-client:google-http-client-gson", version.ref = "googleHttpClientGsonVersion" }
 imageslideshow = { module = "com.github.denzcoskun:ImageSlideshow", version.ref = "imageslideshow" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -44,7 +57,12 @@ androidx-core-ktx-v1150 = { module = "androidx.core:core-ktx", version.ref = "co
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 touchimageview = { module = "com.github.MikeOrtiz:TouchImageView", version.ref = "touchimageview" }
+v3-rev305-x-x5-x = { module = "com.google.api-services-drive:v3-rev305-1.25.0" }
+androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2", version.ref = "emoji2" }
+picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
+androidx-emoji2-bundled = { group = "androidx.emoji2", name = "emoji2-bundled", version.ref = "emoji2Bundled" }
 
 
 [plugins]

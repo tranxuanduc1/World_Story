@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="chapterViewModel"
+            type="com.example.worldstory.dat.admin_viewmodels.ChapterViewModel" />
+
+        <variable
+            name="imageViewModel"
+            type="com.example.worldstory.dat.admin_viewmodels.ImageViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="Chapter mới"
+            android:textSize="34sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/ten_chap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên truyện"
+            android:lines="1"
+            android:text="@={chapterViewModel.name}"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm tranh/ảnh/hình" />
+
+            <ImageButton
+                android:id="@+id/upload_img_src"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:src="@drawable/baseline_upload_24" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/prev_uploaded"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gỡ hết" />
+
+            <ImageButton
+                android:id="@+id/remove_uploaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:backgroundTint="@color/red"
+                android:onClickListener="@{()->chapterViewModel.removeAllSelectedImgs()}"
+                android:src="@drawable/white_outline_delete_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel_add_chapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/accept_add_chapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accept" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

@@ -7,6 +7,7 @@ plugins {
 
 }
 android {
+
     namespace = "com.example.myapplication"
     compileSdk = 35
     buildFeatures {
@@ -39,13 +40,24 @@ android {
         jvmTarget = "1.8"
     }
     buildToolsVersion = "35.0.0"
+    packaging{
+        resources{
+            excludes+="META-INF/DEPENDENCIES"
+        }
+    }
 }
 
 dependencies {
+    implementation ("androidx.activity:activity-ktx:1.7.0") // ActivityResult API
+    implementation ("com.google.android.gms:play-services-auth:20.7.0") // Google Sign-In
+    implementation ("com.google.apis:google-api-services-drive:v3-rev136-1.25.0") // Google Drive API
+    implementation("com.google.http-client:google-http-client:1.43.3")
+
     implementation("org.mindrot:jbcrypt:0.4")
     implementation ("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.filament.android)
+
     val nav_version = "2.8.3"
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")

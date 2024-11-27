@@ -26,7 +26,7 @@ object SampleDataStory {
     private var sumIdComment:Int=0
     var idUser:Int get()=4
         private set(value) {}
-//    var date: String get() ="11/11/2004"
+    //    var date: String get() ="11/11/2004"
 //        private set(value) {}
     var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 
@@ -39,7 +39,7 @@ object SampleDataStory {
         generateListOfChapter()
     }
     fun getExampleImgURL():String{
-        return "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244"
+        return "https://drive.google.com/uc?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz"
 
     }
     fun getExampleImgURLParagraph():String{
@@ -89,7 +89,7 @@ object SampleDataStory {
             "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467618820_987540786516413_9022671729236654001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=wcRr4uG_frQQ7kNvgG7AO3Q&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=ACWt9Nxlog48s7vciMKLvlm&oh=00_AYCFt2WZkt3Qy8rXYq0fnq2KdcuMdRdl7Qr9prRr8E71gw&oe=67420403",
 
 
-        )
+            )
         val bgImgUrlListString = arrayOf(
             "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/467637825_987540789849746_543458540327297711_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iQOcKkq2qUYQ7kNvgEgyvuo&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=Aym2wPdWobnahsnjGHBJ8Oe&oh=00_AYDvl3AyQ-c3GFb3FLj7XK2t_c8cj8bY6POC_kkaENEi1A&oe=67420244",
             "https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/467577331_987540779849747_3591926939402667045_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=NhyibJOpEmAQ7kNvgEAGM7r&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=AnVmve5NRl4OrLjx-d8EHne&oh=00_AYCuRMR1pjI8KRGlcie1RnAycQoSrQ86nppSJgvOwGmXyA&oe=67423357",
@@ -192,16 +192,16 @@ object SampleDataStory {
     private fun generateListOfChapter(){
 
         var titleList = arrayOf(
-          "Chuong 1: hoho",
+            "Chuong 1: hoho",
             "Chuong 2: hoho",
             "Chuong 3: hohoa",
             "Chuong 4: hoho e ew werwer",
             "Chuong 5: hoho sfge",
             "Chuong 6: hohodas",
 
-        )
+            )
         var dateCraetedList = arrayOf(
-           "01/02/2024",
+            "01/02/2024",
             "01/03/2024",
             "01/04/2024",
             "01/05/2024",
@@ -210,7 +210,7 @@ object SampleDataStory {
 
             )
         var idList = arrayOf(
-           1,2,3,4,5,6
+            1,2,3,4,5,6
 
         )
         var idChapter:Int=1
@@ -240,7 +240,7 @@ object SampleDataStory {
         listOfParagraph.addAll(item)
     }
     fun getOneComicParagraph(): DucParagraphDataClass{
-       return DucParagraphDataClass(3,getExampleImgURLParagraph(), null,1,2)
+        return DucParagraphDataClass(3,getExampleImgURLParagraph(), null,1,2)
     }
     fun getOneTextParagraph(context:Context): DucParagraphDataClass{
         return DucParagraphDataClass(1,null, getLoremIpsumLong(context),1,1,false)
@@ -304,7 +304,7 @@ object SampleDataStory {
 
     }
     //---------------------------------------------------
-     fun addComment(item: DucCommentDataClass ){
+    fun addComment(item: DucCommentDataClass ){
         listOfComment.add(item)
     }
     fun addUserComment(idStory:Int,content:String,date:String){

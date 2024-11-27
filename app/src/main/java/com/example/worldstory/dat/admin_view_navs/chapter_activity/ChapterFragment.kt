@@ -1,5 +1,6 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import android.widget.ImageButton
 import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentChapterBinding
-import com.example.worldstory.dat.admin_dialog.AddChapterDialog
 import com.example.worldstory.dat.admin_dialog.EditTitleDialog
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
@@ -18,11 +18,11 @@ import com.example.worldstory.duc.SampleDataStory
 import com.squareup.picasso.Picasso
 
 
-class ChapterFragment(private val idStory:Int) : Fragment() {
+class ChapterFragment(private val idStory: Int) : Fragment() {
     private val storyViewModel: StoryViewModel by activityViewModels {
         StoryViewModelFactory(DatabaseHelper(requireActivity()))
     }
-    private lateinit var binding:FragmentChapterBinding
+    private lateinit var binding: FragmentChapterBinding
 
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class ChapterFragment(private val idStory:Int) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=FragmentChapterBinding.inflate(inflater,container,false)
+        binding = FragmentChapterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -39,16 +39,18 @@ class ChapterFragment(private val idStory:Int) : Fragment() {
         binding.editTitleBtn.setOnClickListener {
             EditTitleDialog().show(parentFragmentManager, "Edit")
         }
-        binding.storyViewModel=storyViewModel
-        binding.lifecycleOwner=this
+        binding.storyViewModel = storyViewModel
+        binding.lifecycleOwner = this
         storyViewModel.setStoryByID(idStory)
-        binding.addChapter.setOnClickListener{
+        binding.addChapter.setOnClickListener {
             onClickAddChapter()
         }
         Picasso.get().load(storyViewModel.storyImg.value).into(binding.imgBground)
     }
-   fun onClickAddChapter(){
-       AddChapterDialog().show(parentFragmentManager,"AddChapter")
-   }
+
+    fun onClickAddChapter() {
+        val intent = Intent(requireContext(), AddChapterActivity::class.java)
+        startActivity(intent)
+    }
 
 }
