@@ -4,16 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityStartBinding
 import android.os.Looper
 import android.os.Handler
-import android.window.SplashScreen
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucUserHomeActivity
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.toActivity
@@ -36,15 +35,27 @@ class StartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding= ActivityStartBinding.inflate(layoutInflater)
         val view =binding.root
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(view)
         var isCheck =isCheckUserSession()
         //testDatabase()
         val handler= Handler(Looper.getMainLooper())
         handler.postDelayed({
             if(isCheck==false){
-                //tao tai khoan guest
+                //chua dang nhap ,tao tai khoan guest
+
 
             }
+            // vi du tao tai khioan admin
+            var sharePref=this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+            with(sharePref.edit()){
+                putInt(getString(R.string.key_user_id_session),1)//id admin
+                putInt(getString(R.string.key_user_role_session),1)//role user, nho thao luan id guest la gi
+                apply()
+            }
+
+            //--------------------
             toActivity(DucUserHomeActivity::class.java)
             finish()
         },2000)
@@ -53,7 +64,7 @@ class StartActivity : AppCompatActivity() {
     }
     fun isCheckUserSession(): Boolean{
         var sharePref=this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
-        val userId=sharePref.getInt(getString(R.string.key_user_id),-1)
+        val userId=sharePref.getInt(getString(R.string.key_user_id_session),-1)
         return userId != -1
 
     }
@@ -108,10 +119,14 @@ class StartActivity : AppCompatActivity() {
                 dateTimeNow
             )
         )
-
+        callLog("++++","Action")
         dataHelper.insertGenre(Genre(null, "Action", 1))
+        callLog("++++","Romance")
+
         dataHelper.insertGenre(Genre(null, "Romance", 1))
+        callLog("++++","Horror")
         dataHelper.insertGenre(Genre(null, "Horror", 1))
+        callLog("++++","Fantasy")
         dataHelper.insertGenre(Genre(null, "Fantasy", 1))
 
 

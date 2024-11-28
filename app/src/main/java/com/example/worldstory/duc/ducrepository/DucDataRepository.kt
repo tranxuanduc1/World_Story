@@ -10,6 +10,7 @@ import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
@@ -87,5 +88,17 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
              dateTimeNow
          ))
      }
+
+    //rating
+    fun getRatingsByStory(storyId: Int): List<Rate>{
+        return dbHelper.getRatesByStory(storyId)
+    }
+    fun ratingStoryByCurrentUser(rate: Rate){
+
+        //xoa cai cu
+        dbHelper.deleteRate(rate)
+        // them cai moi
+        dbHelper.insertRate(rate)
+    }
 
 }

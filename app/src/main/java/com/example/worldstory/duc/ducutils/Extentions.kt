@@ -25,10 +25,8 @@ import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
-import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 
@@ -279,4 +277,33 @@ fun getExampleTextStory(context: Context): DucStoryDataClass{
         4f,
         false
     )
+}
+fun Context.getUserIdSession(): Int{
+    var sharePref=getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+    val userId=sharePref.getInt(getString(R.string.key_user_id_session),-1)
+    return userId
+
+}
+fun Context.isUserCurrentGuest(): Boolean{
+    if(getUserIdSession()==4)return true
+    else return false
+}
+fun Context.isUserCurrentAdmin(): Boolean{
+    if(getUserIdSession()==1)return true
+    else return false
+}
+fun Context.isUserCurrentAuthor(): Boolean{
+    if(getUserIdSession()==2)return true
+    else return false
+}
+fun Context.isUserCurrentMember(): Boolean{
+    if(getUserIdSession()==3)return true
+    else return false
+}
+fun  Context.clearUserSession() {
+    val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+    with(sharedPref.edit()) {
+        clear()
+        apply()
+    }
 }

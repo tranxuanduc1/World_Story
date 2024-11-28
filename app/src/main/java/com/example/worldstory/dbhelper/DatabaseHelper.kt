@@ -1111,7 +1111,29 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return rates
     }
+    fun getRatesByStory(storyId:Int): List<Rate> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.RateEntry.TABLE_NAME}
+            WHERE ${Contract.RateEntry.COLUMN_STORY_ID_FK} = ?
+        """.trimIndent(), arrayOf(storyId.toString()))
+        val rates = mutableListOf<Rate>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val rateId = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_USER_ID_FK))
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_STORY_ID_FK))
+                val score =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_RATE))
+                rates.add(Rate(rateId, score, userId, storyId))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return rates
+    }
 
     //////////////////////////
     ///----  Comment -----////
