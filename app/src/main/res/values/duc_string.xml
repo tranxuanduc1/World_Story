@@ -49,6 +49,7 @@
 
     //----------------KEY SHARE PREFERENCE----------------
     <string name="key_user_session">KEY_USER_SESSION</string>
-    <string name="key_user_id">KEY_USER_ID</string>
+    <string name="key_user_id_session">KEY_USER_ID_SESSION</string>
+    <string name="key_user_role_session">KEY_USER_ROLE_SESSION</string>
 
 </resources>

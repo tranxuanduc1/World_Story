@@ -1,7 +1,6 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
-import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
@@ -31,8 +29,10 @@ import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
+import com.example.worldstory.duc.ducviewmodel.DucRateViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucRateViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
@@ -46,7 +46,9 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     private val ducGenreViewModel: DucGenreViewModel by viewModels {
         DucGenreViewModelFactory(this)
     }
-
+    private val ducRateViewModel: DucRateViewModel by viewModels {
+       DucRateViewModelFactory(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucStoryOverviewBinding.inflate(layoutInflater)
@@ -60,12 +62,15 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         if (checkloadInfoStory(key)) {
             loadInfoStory(key)
             setGenreButton()
+            setRatingBar()
         } else {
             Toast.makeText(this, resources.getString(R.string.storyDataNotFound), Toast.LENGTH_LONG)
                 .show()
         }
 
     }
+
+
 
     private fun setGenreButton() {
         ducGenreViewModel.fetchGenresByStory(storyInfo.storyID ?: numDef)
@@ -119,7 +124,6 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         binding.imgStoryStoryOverview.loadImgURL(this, storyInfo.imgUrl)
         binding.imgBackgroundStoryStoryOverview.loadImgURL(this, storyInfo.bgImgUrl)
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
-        binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(storyInfo.score)
         generateChapter(storyInfo)
 
     }
@@ -140,7 +144,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
                     )
 
                 // Set up itemView data if needed
-                setItemViewChpater(itemView, item)
+                setItemViewChapter(itemView, item)
                 // Add itemView to the container
                 binding.lineaerlistChapterStoryOverview.addView(itemView)
             }
@@ -148,7 +152,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
 
     }
 
-    private fun setItemViewChpater(itemView: View, chapter: Chapter) {
+    private fun setItemViewChapter(itemView: View, chapter: Chapter) {
         val titleTextView =
             itemView.findViewById<TextView>(R.id.txtTitleChapter_listItemStoryOverview_layout)
         val idChapterTextView =
@@ -190,7 +194,42 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         )
         this.toActivity(DucChapterActivity::class.java, key, bundle)
     }
+    private fun setRatingBar() {
+        ducRateViewModel.setRateByStory(storyInfo.storyID?:numDef)
+        ducRateViewModel.ratingsByStory.observe(this, Observer{
+            ratings->
+            var averageScore: Float
+            if(ratings.isEmpty()){
+                averageScore=5.0f
+            }else{ratings.stream()
+                 averageScore = ratings.map { it.score }.average().toFloat()
 
+            }
+            binding.txtScoreStoryStoryOverview.text=averageScore.toString()
+            binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(averageScore)
+
+            var scoreUserSessionRated=ducRateViewModel.getScoreRateByUserSession()
+            if(scoreUserSessionRated<0f)
+            {
+                //user hien tai chua danh gia
+                binding.rateBarStoryOverview.rating=0f
+
+            }else{
+                binding.rateBarStoryOverview.rating=scoreUserSessionRated
+
+            }
+        })
+
+        binding.rateBarStoryOverview.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            if(fromUser)
+            {
+                ducRateViewModel.ratingStoryByCurrentUser(storyInfo.storyID?:numDef, rating.toInt())
+
+            }
+        }
+
+
+    }
     fun setButtonWithOutData() {
         binding.btnBackSotryOverview.setOnClickListener {
             finish()

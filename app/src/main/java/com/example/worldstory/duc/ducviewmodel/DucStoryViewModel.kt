@@ -9,6 +9,7 @@ import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducrepository.DucDataRepository
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -44,6 +45,20 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
         viewModelScope.launch{
             val resultStoriesByGenre=withContext(Dispatchers.IO){
                 repository.getStoriesByGenre(genre.genreID?: numDef,isText)
+            }
+            //lay rating cua tung story
+            for(story in resultStoriesByGenre){
+                var ratings=repository.getRatingsByStory(story.storyID?:numDef)
+
+                if(ratings.isNullOrEmpty()){
+                    story.score=5f
+                }else{
+                    var averageScore= ratings.map { it.score }.average().toFloat()
+
+                    story.score=averageScore
+
+                }
+
             }
 
             _genreAndStoriesByGenre.value= Pair(genre, resultStoriesByGenre)

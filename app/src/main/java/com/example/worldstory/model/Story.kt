@@ -12,6 +12,6 @@ data class Story(
     val bgImgUrl:String,
     val isTextStory: Int,
     val createdDate:String,
-    val score: Float,
+    var score: Float,
     val userID:Int
 ): Parcelable
