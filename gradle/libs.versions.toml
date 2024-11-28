@@ -7,6 +7,7 @@ googleApiServicesDrive = "v3-rev305-1.25.0"
 googleHttpClientGson = "1.41.0"
 googleHttpClientGsonVersion = "1.41.1"
 imageslideshow = "0.1.2"
+jbcrypt = "0.4"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -42,6 +43,7 @@ google-api-services-drive = { module = "com.google.apis:google-api-services-driv
 google-http-client-gson = { module = "com.google.http-client:google-http-client-gson", version.ref = "googleHttpClientGson" }
 google-http-client-gson-v1411 = { module = "com.google.http-client:google-http-client-gson", version.ref = "googleHttpClientGsonVersion" }
 imageslideshow = { module = "com.github.denzcoskun:ImageSlideshow", version.ref = "imageslideshow" }
+jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

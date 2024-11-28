@@ -1,6 +1,8 @@
 package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,9 +11,9 @@ import com.example.worldstory.dat.admin_viewholder.PreviewViewHolder
 import com.example.worldstory.duc.SampleDataStory
 import com.squareup.picasso.Picasso
 
-class PreviewUploadedAdapter(private var items: Map<Int, String>?) :
+class PreviewUploadedAdapter(private val items: MutableMap<Int, Uri>?) :
     RecyclerView.Adapter<PreviewViewHolder>() {
-    override fun getItemCount(): Int = items?.size!!
+    override fun getItemCount(): Int = items?.size?:0
     override fun onBindViewHolder(holder: PreviewViewHolder, position: Int) {
         Picasso.get().load(items?.get(position)).into(holder.col)
     }
@@ -23,10 +25,11 @@ class PreviewUploadedAdapter(private var items: Map<Int, String>?) :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateMap(imgMap: Map<Int, String>?) {
+    fun updateMap(imgMap: Map<Int, Uri>?) {
         if (imgMap != null) {
-            items = imgMap
+            items?.putAll(imgMap)
         }
+        Log.d("sdddddddcsdcc",items?.size.toString())
         notifyDataSetChanged()
     }
 }

@@ -1,7 +1,5 @@
 package com.example.worldstory.dat.admin_viewmodels
 
-import android.widget.Toast
-import androidx.collection.MutableScatterMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +8,7 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.toInt
+import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
 
 class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
@@ -19,23 +18,38 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val author = MutableLiveData<String>()
     val decription = MutableLiveData<String>()
     val isText = MutableLiveData(false)
-    val storyImg=MutableLiveData<String>()
+    val storyImg = MutableLiveData<String>()
     val genreIDList = MutableLiveData<List<Int>>()
     val storyGenreMap = mutableMapOf<Int, Set<Int>>()
 
 
+    val currentStoryID = MutableLiveData(-1)
+    val chapterListByStory = mutableListOf<Chapter>()
+
     init {
         fetchAllStories()
+        fetchAllChapters()
     }
 
-    fun setStoryByID(id: Int) {
+
+    fun fetchAllChapters() {
+        if (currentStoryID.value!! >= 0)
+            chapterListByStory.addAll(db.getChaptersByStory(currentStoryID.value!!))
+    }
+
+    fun setIDStory(id: Int?) {
+        currentStoryID.value = id
+        fetchAllChapters()
+    }
+
+    fun setStoryByID(id: Int?) {
         val story = stories.value?.filter { it -> it.storyID == id }!!.first()
         author.value = story.author
         decription.value = story.description
-        isText.value = if(story.isTextStory == 1) true else false
-        title.value=story.title
-        genreIDList.value= storyGenreMap[story.storyID]?.toList()
-        storyImg.value=story.bgImgUrl
+        isText.value = if (story.isTextStory == 1) true else false
+        title.value = story.title
+        genreIDList.value = storyGenreMap[story.storyID]?.toList()
+        storyImg.value = story.bgImgUrl
     }
 
     fun onAddNewStory(): Long {
@@ -64,7 +78,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         isText.value = false
         author.value = ""
         title.value = ""
-        storyImg.value=""
+        storyImg.value = ""
     }
 
     fun fetchAllStories() {

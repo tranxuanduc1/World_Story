@@ -116,7 +116,10 @@
                 android:layout_height="wrap_content"
                 android:text="Thêm chapter" />
         </LinearLayout>
-
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_margin="13dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chapter_list"
             android:layout_width="match_parent"

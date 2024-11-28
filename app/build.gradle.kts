@@ -48,12 +48,15 @@ android {
 }
 
 dependencies {
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
     implementation ("androidx.activity:activity-ktx:1.7.0") // ActivityResult API
     implementation ("com.google.android.gms:play-services-auth:20.7.0") // Google Sign-In
     implementation ("com.google.apis:google-api-services-drive:v3-rev136-1.25.0") // Google Drive API
     implementation("com.google.http-client:google-http-client:1.43.3")
 
-    implementation("org.mindrot:jbcrypt:0.4")
+    implementation(libs.jbcrypt)
     implementation ("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.filament.android)

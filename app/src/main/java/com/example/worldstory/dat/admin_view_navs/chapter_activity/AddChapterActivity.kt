@@ -11,11 +11,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityAddChapterBinding
+import com.example.worldstory.dat.admin_adapter.PreviewUploadedAdapter
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
@@ -28,44 +32,120 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.InputStream
+import kotlinx.coroutines.awaitAll
 import java.util.Collections
 
 class AddChapterActivity : AppCompatActivity() {
-    private lateinit var pickFolderLauncher: ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddChapterBinding
+    val tempImgs = mutableMapOf<Int, Uri>()
+    private lateinit var prvImgAdapter: PreviewUploadedAdapter
+    private var index = 0
     private val chapterViewModel: ChapterViewModel by viewModels {
         ChapterViewModelFactory(DatabaseHelper(this))
     }
-    private lateinit var googleDriveService: Drive
+    private lateinit var driveService: Drive
     private val pickImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            if (uri != null) {
-                uploadImageToDrive(uri)
+        registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris: List<Uri> ->
+            uris.let {
+                for (i in uris) {
+                    tempImgs[index++] = i
+                    Log.w("size", tempImgs.size.toString())
+
+//                    Log.w("content", uris.toString())
+//                    uploadImageToDrive(i)
+                }
+                prvImgAdapter.updateMap(tempImgs)
+
             }
 
+//            if (uris != null) {
+//                for (uri in uris) {
+//                    chapterViewModel.tempImgs.value = mapOf(index to uri.toString())
+//                    index++
+//                    Log.w("i",index.toString())
+//                    Log.d("l",uri.toString())
+//                }
+//
+//            }
+//            Log.w("index",index.toString())
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAddChapterBinding.inflate(layoutInflater)
-        binding.chapterViewModel=chapterViewModel
-        binding.lifecycleOwner=this
+        binding.chapterViewModel = chapterViewModel
+        binding.lifecycleOwner = this
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        binding.uploadImgSrc.setOnClickListener{
+        binding.uploadImgSrc.setOnClickListener {
             openImagePicker()
         }
+        prvImgAdapter = PreviewUploadedAdapter(tempImgs)
 
+        binding.prevUploaded.layoutManager = LinearLayoutManager(this)
+        binding.prevUploaded.adapter = prvImgAdapter
+
+        binding.removeUploaded.setOnClickListener {
+            chapterViewModel.arrID.clear()
+            chapterViewModel.imgMap.clear()
+            tempImgs.clear()
+            prvImgAdapter.updateMap(tempImgs)
+            index = 0
+        }
+        binding.acceptAddChapter.setOnClickListener {
+            val storyID = intent.getIntExtra("storyID", -1)
+
+            if (binding.tenChap.text.isNullOrEmpty()) {
+                binding.tenChap.error = "Không được bỏ trống"
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    val deferredTasks =
+                        tempImgs.map { (k, v) ->
+                            async {
+                                uploadImageToDrive(k,v, chapterViewModel.arrID)
+                            }
+                        }
+                    val rs = deferredTasks.awaitAll()
+
+                    withContext(Dispatchers.Main) {
+                        if (rs.all { it }) {
+                            chapterViewModel.setImgs()
+                            chapterViewModel.onAddChapter(storyID = storyID)
+                        } else {
+                            Log.w("khoong thanh cong", "that bai")
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        driveService = getDriveService(this)
+
+
+        chapterViewModel.getAllImage().forEach { i ->
+            println(i)
+        }
     }
 
     fun openImagePicker() {
-        pickImageLauncher.launch("image/jpeg")
+        pickImageLauncher.launch(arrayOf("image/jpeg"))
+
     }
 
 
@@ -87,45 +167,32 @@ class AddChapterActivity : AppCompatActivity() {
             .build()
     }
 
-    fun uploadImageToDrive(uri: Uri) {
-        val driveService = getDriveService(this)
+    fun uploadImageToDrive(order:Int,uri: Uri, arrID: MutableMap<Int, String>): Boolean {
+
         val mediaContent =
             InputStreamContent("image/jpeg", contentResolver.openInputStream(uri))
 
         val fileMetadata = File()
-        fileMetadata.name = "UploadedImage.jpg" // Tên file sẽ lưu trên Drive
-        fileMetadata.parents = listOf("1oGZqzVFyIrvOIXB36ybsJuW81-ppjIsp")  // Tải lên thư mục gốc của Drive
+        fileMetadata.name = "$order" // Tên file sẽ lưu trên Drive
 
-        // Upload file lên Google Drive
-        Thread {
-            try {
-                val file = driveService.files().create(fileMetadata, mediaContent)
-                    .setFields("id, webViewLink")
-                    .execute()
+        fileMetadata.parents =
+            listOf("1oGZqzVFyIrvOIXB36ybsJuW81-ppjIsp")  // Tải lên thư mục gốc của Drive
 
-                val fileId = file.id
-                val webViewLink = file.webViewLink
 
-                runOnUiThread() {
-                    // Hiển thị link chia sẻ
-                    Log.i("Link", webViewLink)
-                    Log.i("id", fileId)
-                    Toast.makeText(
-                        this,
-                        "File uploaded. Link: $webViewLink \nid : $fileId",
-                        Toast.LENGTH_LONG
-                    ).show()
+        try {
+            val file = driveService.files().create(fileMetadata, mediaContent)
+                .setFields("id, webViewLink")
+                .execute()
+            arrID[order] = file.id
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("k up dc", "hythtyht")
+            return false
+        }
 
-                }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                runOnUiThread() {
-                    Toast.makeText(this, "Error uploading file", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }.start()
     }
+
 
 }

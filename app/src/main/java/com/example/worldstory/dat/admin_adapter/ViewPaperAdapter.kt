@@ -9,13 +9,17 @@ import com.example.worldstory.dat.admin_view_navs.chapter_activity.RateFragment
 
 class ViewPagerAdapter(fragmentActivity: FragmentActivity,private val idStory:Int) : FragmentStateAdapter(fragmentActivity) {
     private val fragments = listOf(
-       ChapterFragment(idStory),
+       ChapterFragment(),
         CommentFragment(),
        RateFragment()
     )
     override fun getItemCount(): Int = fragments.size
 
     override fun createFragment(position: Int): Fragment {
-        return fragments[position]
+        return when (position) {
+            0 -> ChapterFragment.newInstance(idStory)
+            1 -> CommentFragment()
+            else -> RateFragment()
+        }
     }
 }

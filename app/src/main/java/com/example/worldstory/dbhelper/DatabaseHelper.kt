@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
@@ -90,9 +91,11 @@ object Contract {
     object UserSession : BaseColumns {
 
         const val TABLE_NAME = "user_session_table"
+
         //Foreign key
         const val COLUMN_USER_ID_FK = "role_id"
     }
+
     //Role table
     object RoleEntry : BaseColumns {
         const val TABLE_NAME = "role_table"
@@ -194,7 +197,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "app_doc_truyen_db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val _ID = BaseColumns._ID
 
     }
@@ -388,8 +391,20 @@ class DatabaseHelper(context: Context) :
 
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        TODO("Not yet implemented")
+    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterEntry.TABLE_NAME}")
+
+        // Tạo lại bảng chapter_table với cấu trúc mới
+        db?.execSQL(
+            """
+        CREATE TABLE ${Contract.ChapterEntry.TABLE_NAME} (
+        ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
+        ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
+        ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
+        FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}))
+    """
+        )
     }
 
 
@@ -554,6 +569,14 @@ class DatabaseHelper(context: Context) :
         return db.insert(Contract.ChapterEntry.TABLE_NAME, null, values)
     }
 
+    fun deleteAllChapter() {
+        val db = writableDatabase
+        try {
+            db.execSQL("DELETE FROM ${Contract.ChapterEntry.TABLE_NAME}")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+    }
 
     fun deleteChapter(chapterID: Int): Int {
         val db = writableDatabase
@@ -784,28 +807,31 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return users
     }
-    fun getUserByUsersId(userId:Int): User? {
+
+    fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM ${Contract.UserEntry.TABLE_NAME}" +
-                "WHERE ${BaseColumns._ID} = ? ", arrayOf(userId.toString()))
-        var user: User?=null
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${Contract.UserEntry.TABLE_NAME}" +
+                    "WHERE ${BaseColumns._ID} = ? ", arrayOf(userId.toString())
+        )
+        var user: User? = null
 
         if (cursor.moveToFirst()) {
 
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-                val userName =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
-                val hashedPw =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
-                val nickName =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
-                val imgAvatar =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
-                val roleID =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
-                val createdDate =
-                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
-                user=User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate)
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val userName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+            val hashedPw =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+            val nickName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+            val imgAvatar =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+            val roleID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+            val createdDate =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+            user = User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate)
         }
         cursor.close()
         return user
@@ -834,19 +860,16 @@ class DatabaseHelper(context: Context) :
     }
 
 
-
-
-
     fun getUserIdByUsersSession(): Int {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM ${Contract.UserSession.TABLE_NAME}", null)
-        var userId :Int=-1
+        var userId: Int = -1
 
         if (cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
             val userID =
                 cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserSession.COLUMN_USER_ID_FK))
-            userId=userID
+            userId = userID
         }
         cursor.close()
         return userId
@@ -1172,12 +1195,15 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return comments
     }
+
     fun getCommentsByStory(storyId: Int): List<Comment> {
         val db = readableDatabase
-        val cursor = db.rawQuery("""
+        val cursor = db.rawQuery(
+            """
             SELECT * FROM ${Contract.CommentEntry.TABLE_NAME}
             WHERE ${Contract.CommentEntry.COLUMN_STORY_ID_FK} = ?
-        """.trimIndent(), arrayOf(storyId.toString()))
+        """.trimIndent(), arrayOf(storyId.toString())
+        )
         val comments = mutableListOf<Comment>()
 
         if (cursor.moveToFirst()) {
@@ -1306,6 +1332,16 @@ class DatabaseHelper(context: Context) :
             return true
         } catch (e: Exception) {
             return false
+        }
+
+    }
+
+    fun deleteAllImage() {
+        val db = writableDatabase
+        try {
+            db.execSQL("DELETE FROM ${Contract.ImageEntry.TABLE_NAME}")
+        } catch (e: SQLException) {
+            e.printStackTrace()
         }
 
     }

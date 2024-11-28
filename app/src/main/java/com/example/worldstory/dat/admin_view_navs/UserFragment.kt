@@ -43,7 +43,7 @@ class UserFragment : Fragment() {
     private var isSearchViewOpen = false
     private lateinit var items: List<String>
     private lateinit var binding: FragmentUserBinding
-    private val roleViewModel: RoleViewModel by activityViewModels{
+    private val roleViewModel: RoleViewModel by activityViewModels {
         RoleViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private val userViewModel: UserViewModel by activityViewModels {
@@ -120,12 +120,12 @@ class UserFragment : Fragment() {
         //recycleview
         binding.userList.layoutManager = LinearLayoutManager(requireContext())
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        userAdapter = UserAdapter(userViewModel._users.value?: emptyList(),color1)
+        userAdapter = UserAdapter(userViewModel._users.value ?: emptyList(), color1)
         UserAdapter(emptyList(), color1)
         userAdapter.filterByRole(0)
         binding.userList.adapter = userAdapter
         userViewModel._users.observe(viewLifecycleOwner) {
-            userAdapter.update(userViewModel._users.value?: emptyList())
+            userAdapter.update(userViewModel._users.value ?: emptyList())
 
         }
         //swipe
@@ -272,17 +272,19 @@ class UserFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        outState.putString(
-            "search_query",
-            binding.searchViewUser.query.toString()
-        ) // Lưu giá trị tìm kiếm
-        outState.putBoolean(
-            "is_search_view_open",
-            isSearchViewOpen
-        )
-        outState.putString("default", items[0])
-        outState.putString("selected", binding.autoCompleteTextF.text.toString())
-        outState.putStringArrayList("items", ArrayList(items))
+        if (::binding.isInitialized) {
+            outState.putString(
+                "search_query",
+                binding.searchViewUser.query.toString()
+            ) // Lưu giá trị tìm kiếm
+            outState.putBoolean(
+                "is_search_view_open",
+                isSearchViewOpen
+            )
+            outState.putString("default", items[0])
+            outState.putString("selected", binding.autoCompleteTextF.text.toString())
+            outState.putStringArrayList("items", ArrayList(items))
+        }
     }
+
 }

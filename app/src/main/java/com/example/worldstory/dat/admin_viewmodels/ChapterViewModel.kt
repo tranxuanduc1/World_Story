@@ -1,5 +1,8 @@
 package com.example.worldstory.dat.admin_viewmodels
 
+import android.net.Uri
+import android.util.Log
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,31 +13,55 @@ import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Image
 
 class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
-    val imgMap: MutableLiveData<Map<Int, String>> = MutableLiveData()
-    val name = MutableLiveData<String>()
-    private val _isChangedImgMap=MutableLiveData<Boolean?>()
-    val isChangedImgMap:LiveData<Boolean?>get()=_isChangedImgMap
 
-    fun onAddChapter(storyID: Int) {
-        val chapter = Chapter(
-            null, name.value.toString(), dateTimeNow.toString(), storyID
-        )
-        val l: Long = db.insertChapter(chapter)
-        if (imgMap.value != null)
-            for (i in imgMap.value!!) {
-                val img=Image(null,i.value,i.key,l.toInt())
-                db.insertImage(img)
-            }
+    val arrID = mutableMapOf<Int, String>()
+    val imgMap = mutableMapOf<Int, String>()
+    val name = MutableLiveData<String>()
+
+
+    fun transform(id: String): String {
+        return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
-    fun onChangedImgMap(){
-        _isChangedImgMap.value=true
+
+    fun setImgs() {
+        println("trước" + arrID.size)
+        val sortedMap = arrID.toSortedMap()
+        println("sau" + arrID.size)
+        sortedMap.forEach { (k, v) ->
+            imgMap[k] = transform(v)
+        }
+        println("map" + imgMap.size)
     }
-    fun onChangedImgMapHandled(){
-        _isChangedImgMap.value=false
+
+    fun getAllImage(): List<Image> {
+        return db.getAllImage()
     }
-    fun removeAllSelectedImgs(){
-        imgMap.value= emptyMap()
+
+    fun onAddChapter(storyID: Int): Boolean {
+        if (storyID != -1) {
+            val chapter = Chapter(
+                null, name.value.toString(), dateTimeNow.toString(), storyID
+            )
+            val l: Long = db.insertChapter(chapter)
+
+
+            if (imgMap.isNotEmpty())
+                for (i in imgMap) {
+                    val img = Image(null, i.value, i.key, l.toInt())
+                    val ll = db.insertImage(img)
+
+
+                }
+            imgMap.clear()
+            name.value = ""
+            return true
+        }
+        imgMap.clear()
+        name.value = ""
+        return false
     }
+
+
 }
 
 class ChapterViewModelFactory(private val databaseHelper: DatabaseHelper) :
