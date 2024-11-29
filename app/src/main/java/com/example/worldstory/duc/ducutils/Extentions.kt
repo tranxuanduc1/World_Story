@@ -199,7 +199,7 @@ fun createGridCardViewStory(
         author.text=i.author
         imgURL.loadImgURL(context,i.imgUrl)
 
-        score.text= (i.score).toString()
+        score.text= String.format("%.1f",i.score)
         idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({

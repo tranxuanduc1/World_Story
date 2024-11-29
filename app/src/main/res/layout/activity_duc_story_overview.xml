@@ -175,11 +175,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginVertical="10dp"
-                    android:background="@drawable/shape_button_secondary"
-                    android:drawableEnd="@drawable/selector_icon_button_love"
+                    android:background="@drawable/shape_button_user_not_love_story"
+                    android:drawableEnd="@drawable/icon_heart_outline"
                     android:paddingHorizontal="20dp"
                     android:text="@string/buttonLoveStoryOverview"
-                    android:textColor="@color/selector_button_text_color_secondy" />
+                    android:textColor="@color/color_text_user_not_love_story" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_readFirstChapter_storyOverview"

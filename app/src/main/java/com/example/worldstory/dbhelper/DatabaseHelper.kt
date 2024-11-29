@@ -1076,7 +1076,25 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return userLoveStories
     }
+    fun getLoveStoriesIdByUser(userId:Int): List<Int>{
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.UserLoveStory.TABLE_NAME}
+            WHERE ${Contract.UserLoveStory.COLUMN_USER_ID_FK} = ?
+        """.trimIndent(), arrayOf(userId.toString()))
+        val storiesId = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_STORY_ID_FK))
+                storiesId.add(storyId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return storiesId
+    }
 
     //////////////////////////
     ///----  Rate    -----////

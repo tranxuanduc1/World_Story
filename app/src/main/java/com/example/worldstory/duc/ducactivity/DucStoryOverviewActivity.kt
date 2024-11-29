@@ -30,9 +30,11 @@ import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucRateViewModel
+import com.example.worldstory.duc.ducviewmodel.DucUserLoveStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucRateViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucUserLoveStoryViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
@@ -47,8 +49,12 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         DucGenreViewModelFactory(this)
     }
     private val ducRateViewModel: DucRateViewModel by viewModels {
-       DucRateViewModelFactory(this)
+        DucRateViewModelFactory(this)
     }
+    private val ducUserLoveStoryViewModel: DucUserLoveStoryViewModel by viewModels {
+        DucUserLoveStoryViewModelFactory(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucStoryOverviewBinding.inflate(layoutInflater)
@@ -63,13 +69,13 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             loadInfoStory(key)
             setGenreButton()
             setRatingBar()
+            setUserSessionLoveStory()
         } else {
             Toast.makeText(this, resources.getString(R.string.storyDataNotFound), Toast.LENGTH_LONG)
                 .show()
         }
 
     }
-
 
 
     private fun setGenreButton() {
@@ -194,41 +200,106 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         )
         this.toActivity(DucChapterActivity::class.java, key, bundle)
     }
+
     private fun setRatingBar() {
-        ducRateViewModel.setRateByStory(storyInfo.storyID?:numDef)
-        ducRateViewModel.ratingsByStory.observe(this, Observer{
-            ratings->
+        ducRateViewModel.setRateByStory(storyInfo.storyID ?: numDef)
+        ducRateViewModel.ratingsByStory.observe(this, Observer { ratings ->
             var averageScore: Float
-            if(ratings.isEmpty()){
-                averageScore=5.0f
-            }else{ratings.stream()
-                 averageScore = ratings.map { it.score }.average().toFloat()
+            if (ratings.isEmpty()) {
+                averageScore = 5.0f
+            } else {
+                ratings.stream()
+                averageScore = ratings.map { it.score }.average().toFloat()
 
             }
-            binding.txtScoreStoryStoryOverview.text=averageScore.toString()
+            binding.txtScoreStoryStoryOverview.text =String.format("%.1f",averageScore)
             binding.txtScoreStoryStoryOverview.changeBackgroundTintColorByScore(averageScore)
 
-            var scoreUserSessionRated=ducRateViewModel.getScoreRateByUserSession()
-            if(scoreUserSessionRated<0f)
-            {
+            var scoreUserSessionRated = ducRateViewModel.getScoreRateByUserSession()
+            if (scoreUserSessionRated < 0f) {
                 //user hien tai chua danh gia
-                binding.rateBarStoryOverview.rating=0f
+                binding.rateBarStoryOverview.rating = 0f
 
-            }else{
-                binding.rateBarStoryOverview.rating=scoreUserSessionRated
+            } else {
+                binding.rateBarStoryOverview.rating = scoreUserSessionRated
 
             }
         })
 
         binding.rateBarStoryOverview.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            if(fromUser)
-            {
-                ducRateViewModel.ratingStoryByCurrentUser(storyInfo.storyID?:numDef, rating.toInt())
+            if (fromUser) {
+                ducRateViewModel.ratingStoryByCurrentUser(
+                    storyInfo.storyID ?: numDef,
+                    rating.toInt()
+                )
 
             }
         }
 
 
+    }
+
+    private fun setUserSessionLoveStory() {
+
+        ducUserLoveStoryViewModel.userSessionLoveStories.observe(this, Observer { stories ->
+            var isLike = false
+            if (stories != null) {
+                var loveStories = stories.filter { it.storyID == storyInfo.storyID }
+                if (loveStories.isNotEmpty()) {
+                    // neu nhu user da bam thich story nay
+                        isLike=true
+                        setStyleButtonLoveStory(isLike)
+
+
+                }
+                    //  neu user bam nut lan nua
+                    binding.btnLoveStoryStoryOverview.setOnClickListener {
+                        isLike = !isLike
+                        setStyleButtonLoveStory(isLike)
+                        updateDataUserSessionLoveStory(isLike)
+                    }
+
+            }
+        })
+
+    }
+
+
+    fun setStyleButtonLoveStory(isLove: Boolean) {
+        if (isLove) {
+            binding.btnLoveStoryStoryOverview.apply {
+                setTextColor(ContextCompat.getColor(context, R.color.color_test_user_loved_story))
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_heart_fill, 0)
+                setBackgroundResource(R.drawable.shape_button_user_loved_story)
+            }
+        } else {
+            binding.btnLoveStoryStoryOverview.apply {
+                setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_text_user_not_love_story
+                    )
+                )
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_heart_outline, 0)
+                setBackgroundResource(R.drawable.shape_button_user_not_love_story)
+            }
+        }
+    }
+
+    private fun updateDataUserSessionLoveStory(isLove: Boolean) {
+        if (isLove){
+            if(storyInfo!=null)
+            {
+                ducUserLoveStoryViewModel.setUserSessionLovedStory(storyInfo.storyID?:numDef)
+
+            }
+        }else{
+            if(storyInfo.storyID!=null)
+            {
+                ducUserLoveStoryViewModel.deleteUserSessionLovedStory(storyInfo.storyID?:numDef)
+
+            }
+        }
     }
     fun setButtonWithOutData() {
         binding.btnBackSotryOverview.setOnClickListener {

@@ -21,6 +21,7 @@ import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
@@ -200,6 +201,15 @@ class StartActivity : AppCompatActivity() {
         dataHelper.insertUserLoveStory(2, 2)
         dataHelper.insertUserLoveStory(3, 3)
         dataHelper.insertUserLoveStory(4, 4)
+
+
+        dataHelper.insertRate(Rate(null,3,1,1))
+        dataHelper.insertRate(Rate(null,5,2,1))
+        dataHelper.insertRate(Rate(null,2,3,1))
+        dataHelper.insertRate(Rate(null,1,2,2))
+        dataHelper.insertRate(Rate(null,3,3,2))
+        dataHelper.insertRate(Rate(null,4,4,2))
+
 
         dataHelper.insertChapterMark(1, 1)
         dataHelper.insertChapterMark(2, 2)

@@ -4,6 +4,7 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
@@ -101,4 +102,27 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         dbHelper.insertRate(rate)
     }
 
+
+    //user love stories
+    fun getLoveStoriesByUser(userId: Int): List<Story>{
+        var storiesId=dbHelper.getLoveStoriesIdByUser(userId)
+        var stories=mutableListOf<Story>()
+        storiesId.forEach{
+            var story= dbHelper.getStoryByStoryId(it)
+            if(story!=null)
+            {
+                stories.add(story)
+            }
+        }
+        return stories
+    }
+    fun setUserLovedStory(userId: Int,storyId: Int){
+        //xoa cai cu
+        dbHelper.deleteUserLoveStory(userId,storyId)
+        dbHelper.insertUserLoveStory(userId,storyId)
+    }
+    fun deleteUserLovedStory(userId: Int,storyId: Int){
+        //xoa cai cu
+        dbHelper.deleteUserLoveStory(userId,storyId)
+    }
 }
