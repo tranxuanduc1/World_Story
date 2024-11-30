@@ -52,7 +52,7 @@ class Duc_LoveBookStories_Fragment : Fragment() {
 
         binding = FragmentDucLoveBookStoriesBinding.inflate(layoutInflater)
         val view = binding.root
-        storyViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+        storyViewModel.storiesUserSessionLoved.observe(viewLifecycleOwner, Observer { stories ->
 
             var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
             binding.recyclerCardStoryLoveBookFragment.apply {

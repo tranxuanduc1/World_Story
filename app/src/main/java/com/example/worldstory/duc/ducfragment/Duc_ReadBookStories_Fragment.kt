@@ -54,7 +54,7 @@ class Duc_ReadBookStories_Fragment : Fragment() {
         binding = FragmentDucReadBookStoriesBinding.inflate(layoutInflater)
         val view = binding.root
         //____________________________________________
-        storyViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
+        storyViewModel.storiesHistory.observe(viewLifecycleOwner, Observer { stories ->
 
             var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
             binding.recyclerCardStoryReadBookFragment.apply {

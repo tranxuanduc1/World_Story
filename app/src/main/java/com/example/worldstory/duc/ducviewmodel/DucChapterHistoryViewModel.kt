@@ -17,6 +17,7 @@ class DucChapterHistoryViewModel (var repository: DucDataRepository, var context
     private val _chaptersHistoryByStory= MutableLiveData<List<Chapter>>()
     val chaptersHistoryByStory:LiveData<List<Chapter>>  get()=_chaptersHistoryByStory
 
+
     fun fetchChaptersHistoryByStory(storyId:Int){
         viewModelScope.launch{
             var userId= context.getUserIdSession()

@@ -9,8 +9,8 @@ import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducrepository.DucDataRepository
-import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Genre
@@ -26,12 +26,23 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
     private val _genreAndStoriesByGenre = MutableLiveData<Pair< Genre,List<Story>>>()
     val genreAndStoriesByGenre: LiveData<Pair< Genre,List<Story>>> get() = _genreAndStoriesByGenre
 
+    private val _storiesHistory = MutableLiveData<List<Story>>()
+    val storiesHistory: LiveData<List<Story>> get() = _storiesHistory
+
+    private val _storiesUserSessionLoved= MutableLiveData<List<Story>>()
+    val storiesUserSessionLoved: LiveData<List<Story>> get() = _storiesUserSessionLoved
 
     init {
         fetchStories()
+        fetchStoriesHistory()
+        fetchStoriesUserSessionLoved()
+
     }
 
-     fun fetchStories() {
+
+
+
+    private fun fetchStories() {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 repository.getAllStories()
@@ -40,6 +51,26 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
 
         }
 
+    }
+    private fun fetchStoriesHistory() {
+        viewModelScope.launch {
+            var userId=context.getUserIdSession()
+            val result = withContext(Dispatchers.IO) {
+                repository.getStoriesHistoryByUser(userId)
+            }
+            _storiesHistory.value = result
+
+        }
+    }
+    private fun fetchStoriesUserSessionLoved() {
+        viewModelScope.launch {
+            var userId=context.getUserIdSession()
+            val result = withContext(Dispatchers.IO) {
+                repository.getLoveStoriesByUser(userId)
+            }
+            _storiesUserSessionLoved.value = result
+
+        }
     }
     fun fetchGenreAndStoriesByGenre(genre: Genre, isText: Boolean){
         viewModelScope.launch{

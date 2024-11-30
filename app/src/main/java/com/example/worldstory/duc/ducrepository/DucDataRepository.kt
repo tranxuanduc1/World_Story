@@ -2,9 +2,7 @@ package com.example.worldstory.duc.ducrepository
 
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
-import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
@@ -147,8 +145,26 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return listOfChapters
     }
     // use in read fragment
-    private fun getStoriesHistoryByUser(userId: Int): List<Chapter>{
-        return listOf()
+    fun getStoriesHistoryByUser(userId: Int): List<Story>{
+        var listOfChapters=getChaptersHistoryByUser(userId)
+        var listOfStoriesId=mutableListOf<Int>()
+        listOfChapters.forEach{
+            if(!listOfStoriesId.contains(it.storyID)){
+                //listStoryId dont have this id
+                //add id to listStoryId
+                listOfStoriesId.add(it.storyID)
+            }
+        }
+        // get dataclass Story from id
+        var listStories=mutableListOf<Story>()
+        listOfStoriesId.forEach{
+            var story=dbHelper.getStoryByStoryId(it)
+            story?.let {
+                listStories.add(story)
+
+            }
+        }
+        return listStories
     }
      fun setChapterHistory(userId: Int,chapterId:Int){
         // delete old data
