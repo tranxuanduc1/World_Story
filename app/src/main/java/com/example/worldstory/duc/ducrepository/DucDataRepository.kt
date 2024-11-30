@@ -125,4 +125,35 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         //xoa cai cu
         dbHelper.deleteUserLoveStory(userId,storyId)
     }
+
+
+    //chapter history
+    // use in story overview activity
+    fun getChaptersHistoryByStoryAndUser(storyId: Int,userId: Int): List<Chapter>{
+        var list=getChaptersHistoryByUser(userId)
+        var filter =list.filter { it.storyID==storyId }
+        return filter
+    }
+    // use by getStoriesHistoryByUser function
+    fun getChaptersHistoryByUser(userId: Int): List<Chapter>{
+        var listOfChaptersId =dbHelper.getChapterHistoriesIdByUser(userId)
+        var listOfChapters=mutableListOf<Chapter>()
+        listOfChaptersId.forEach{
+            var chapter=dbHelper.getChaptersByChapterId(it)
+            if (chapter!=null){
+                listOfChapters.add(chapter)
+            }
+        }
+        return listOfChapters
+    }
+    // use in read fragment
+    private fun getStoriesHistoryByUser(userId: Int): List<Chapter>{
+        return listOf()
+    }
+     fun setChapterHistory(userId: Int,chapterId:Int){
+        // delete old data
+        dbHelper.deleteChapterHistory(userId,chapterId)
+        // add history
+        dbHelper.insertChapterHistory(userId,chapterId)
+    }
 }

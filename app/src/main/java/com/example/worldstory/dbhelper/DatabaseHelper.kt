@@ -1,6 +1,5 @@
 package com.example.worldstory.dbhelper
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -8,23 +7,8 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.provider.ContactsContract
-import android.util.Log
-import androidx.room.util.query
 
 import com.example.worldstory.dbhelper.Contract.CommentEntry
-import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
-import com.example.worldstory.duc.ducdatabase.COL_BG_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_DATECREATED
-import com.example.worldstory.duc.ducdatabase.COL_DESCRIPTION
-import com.example.worldstory.duc.ducdatabase.COL_ID
-import com.example.worldstory.duc.ducdatabase.COL_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_IS_COMIC
-import com.example.worldstory.duc.ducdatabase.COL_SCORE
-import com.example.worldstory.duc.ducdatabase.COL_TITLE
-import com.example.worldstory.duc.ducdatabase.TABLE_NAME
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -649,7 +633,33 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return chapters
     }
+    fun getChaptersByChapterId(chapterId: Int): Chapter? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.ChapterEntry.TABLE_NAME}
+            WHERE ${BaseColumns._ID} = ?
+            """.trimIndent(),
+            arrayOf(chapterId.toString())
+        )
+        var chapter : Chapter?=null
 
+        if (cursor.moveToFirst()) {
+
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
+                val storyID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
+
+                chapter=Chapter(id, title, dateCreate, storyID)
+
+        }
+        cursor.close()
+        return chapter
+    }
     //////////////////////////
     ///---- PARAGRAPH-----////
     //////////////////////////
@@ -1343,7 +1353,24 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return chapterHistories
     }
+    fun getChapterHistoriesIdByUser(userId: Int): List<Int> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.ChapterHistoryEntry.TABLE_NAME}
+            WHERE ${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK} = ?
+        """.trimIndent(), arrayOf(userId.toString()))
+        val chapterHistoriesId = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                  val chapterId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK))
+                chapterHistoriesId.add( chapterId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapterHistoriesId
+    }
     //////////////////////////
     ///---- Image     -----////
     //////////////////////////

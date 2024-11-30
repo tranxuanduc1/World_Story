@@ -53,7 +53,7 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
                 if(ratings.isNullOrEmpty()){
                     story.score=5f
                 }else{
-                    var averageScore= ratings.map { it.score }.average().toFloat()
+                    var averageScore= String.format("%.1f", ratings.map { it.score }.average()).toFloat()
 
                     story.score=averageScore
 

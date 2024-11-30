@@ -31,10 +31,12 @@ import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.scrollToBottom
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducviewmodel.DucChapterHistoryViewModel
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
 import com.example.worldstory.duc.ducviewmodel.DucImageViewModel
 import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucChapterHistoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucImageViewModelFactory
@@ -64,6 +66,9 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducImageViewModel: DucImageViewModel by viewModels{
         DucImageViewModelFactory(this)
     }
+    private val ducChapterHistoryViewModel: DucChapterHistoryViewModel by viewModels{
+        DucChapterHistoryViewModelFactory(this)
+    }
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
     private var storyInfo: Story? = null
@@ -87,8 +92,16 @@ class DucChapterActivity : AppCompatActivity() {
 
             loadInfoChpater()
             ducChapterViewModel.chaptersByStory.observe(this, Observer {
+                chapters->
                 setViewButtonChapter()
                 setConfigButtonChapter()
+                //asign chapter history
+                mainChapter?.let {
+
+                    ducChapterHistoryViewModel.setChapterHistoryUserSession(mainChapter?.chapterID?:return@let)
+
+                }
+
             })
 
             setupViewImageOrParagraph()

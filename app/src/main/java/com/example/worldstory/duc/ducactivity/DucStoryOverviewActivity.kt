@@ -27,10 +27,12 @@ import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducviewmodel.DucChapterHistoryViewModel
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucRateViewModel
 import com.example.worldstory.duc.ducviewmodel.DucUserLoveStoryViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucChapterHistoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucRateViewModelFactory
@@ -54,7 +56,9 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     private val ducUserLoveStoryViewModel: DucUserLoveStoryViewModel by viewModels {
         DucUserLoveStoryViewModelFactory(this)
     }
-
+    private val ducChapterHistoryViewModel: DucChapterHistoryViewModel by viewModels {
+        DucChapterHistoryViewModelFactory(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucStoryOverviewBinding.inflate(layoutInflater)
@@ -139,26 +143,14 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->
 
 
-            binding.lineaerlistChapterStoryOverview.removeAllViews()
-            for (item in chapters) {
-                // Inflate each item view
-                val itemView = LayoutInflater.from(this)
-                    .inflate(
-                        R.layout.list_item_chapter_story_overview_layout,
-                        binding.lineaerlistChapterStoryOverview,
-                        false
-                    )
 
-                // Set up itemView data if needed
-                setItemViewChapter(itemView, item)
-                // Add itemView to the container
-                binding.lineaerlistChapterStoryOverview.addView(itemView)
-            }
+            storyInfo?.let { setChapterHistoryAndChapterNotRead(it.storyID?:return@let,chapters)}
+
         })
 
     }
 
-    private fun setItemViewChapter(itemView: View, chapter: Chapter) {
+    private fun setItemViewChapter(itemView: View, chapter: Chapter,isRead: Boolean) {
         val titleTextView =
             itemView.findViewById<TextView>(R.id.txtTitleChapter_listItemStoryOverview_layout)
         val idChapterTextView =
@@ -169,6 +161,10 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         titleTextView.text = chapter.title
         idChapterTextView.text = chapter.chapterID.toString()
         dateCreatedTextView.text = chapter.dateCreated.toString()
+        if (isRead){
+            itemView.setBackgroundResource( R.color.duc_skin)
+        }
+
         btn.setOnClickListener {
             // tao key de chuyen cac chuong truoc, sau ,hien tai cho chapter activity
             toChapterActivity(chapter)
@@ -301,9 +297,40 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             }
         }
     }
+    private fun setChapterHistoryAndChapterNotRead(storyId: Int,notReadChapers: List<Chapter>) {
+        ducChapterHistoryViewModel.fetchChaptersHistoryByStory(storyId)
+        ducChapterHistoryViewModel.chaptersHistoryByStory.observe(this, Observer{
+            chaptersHistory->
+            binding.lineaerlistChapterStoryOverview.removeAllViews()
+            for (item in notReadChapers) {
+                // Inflate each item view
+                val itemView = LayoutInflater.from(this)
+                    .inflate(
+                        R.layout.list_item_chapter_story_overview_layout,
+                        binding.lineaerlistChapterStoryOverview,
+                        false
+                    )
+                var isRead=false
+                var listChapterHis=chaptersHistory.filter { it.chapterID==item.chapterID }
+                //neu truyen nay da duoc user hien tai doc qua
+                if(listChapterHis.isNotEmpty())isRead=true
+
+
+                // Set up itemView data if needed
+                setItemViewChapter(itemView, item,isRead)
+                // Add itemView to the container
+                binding.lineaerlistChapterStoryOverview.addView(itemView)
+
+
+            }
+
+        })
+    }
     fun setButtonWithOutData() {
         binding.btnBackSotryOverview.setOnClickListener {
             finish()
         }
     }
 }
+
+
