@@ -11,7 +11,8 @@ class DucChapterViewModelFactory(private var context :Context): ViewModelProvide
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DucChapterViewModel::class.java))
         {
-            var dbHepler= DatabaseHelper(context)
+            var dbHepler= DatabaseHelper.getInstance(context)
+
             var repository= DucDataRepository(dbHepler)
             return DucChapterViewModel(repository,context) as T
         }

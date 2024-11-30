@@ -11,7 +11,8 @@ class DucCommentViewModelFactory (private var context :Context): ViewModelProvid
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DucCommentViewModel::class.java))
         {
-            var dbHepler= DatabaseHelper(context)
+            var dbHepler= DatabaseHelper.getInstance(context)
+
             var repository= DucDataRepository(dbHepler)
             return DucCommentViewModel(repository,context) as T
         }

@@ -80,7 +80,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        callLog("=========","bat dau chay frment comic")
         binding = FragmentDucComicStoriesUserBinding.inflate(layoutInflater)
         val view = binding.root
         linearLayout = binding.linearLayoutFragmentComicStoryUser
