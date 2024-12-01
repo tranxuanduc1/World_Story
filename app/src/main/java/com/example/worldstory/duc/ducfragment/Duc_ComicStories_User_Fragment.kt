@@ -178,7 +178,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname1",
                 1,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -189,7 +189,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname2",
                 2,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -200,7 +200,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname3",
                 3,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -211,7 +211,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname4",
                 4,
-                dateTimeNow
+                dateTimeNow()
             )
         )
 
@@ -242,7 +242,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 imgUrl = imgUrlListString[i],
                 bgImgUrl = imgUrlListString[i],
                 author = "Author $i",
-                createdDate = dateTimeNow,
+                createdDate = dateTimeNow(),
                 isTextStory = 0,
                 score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
@@ -258,7 +258,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 imgUrl = SampleDataStory.getExampleImgURL(),
                 bgImgUrl = SampleDataStory.getExampleImgURL(),
                 author = "Author $i",
-                createdDate = dateTimeNow,
+                createdDate = dateTimeNow(),
                 isTextStory = 1,
                 score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
@@ -319,7 +319,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             // Add 4 chapters for the story
             for (i in 1..4) {
                 val chapter =
-                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow, storyId.toInt())
+                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow(), storyId.toInt())
                 val chapterId = dbHelper.insertChapter(chapter)
 
                 if (chapterId != -1L) {
@@ -387,7 +387,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 val comment = Comment(
                     null,
                     "Comment $i on ${story.title}",
-                    dateTimeNow,
+                    dateTimeNow(),
                     userId = 1, // Assuming user ID 1 for simplicity
                     storyId = storyId.toInt()
                 )

@@ -846,8 +846,10 @@ class DatabaseHelper(context: Context) :
     fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM ${Contract.UserEntry.TABLE_NAME}" +
-                    "WHERE ${BaseColumns._ID} = ? ", arrayOf(userId.toString())
+          """
+                SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
+                WHERE ${BaseColumns._ID} = ? 
+          """.trimIndent(), arrayOf(userId.toString())
         )
         var user: User? = null
 

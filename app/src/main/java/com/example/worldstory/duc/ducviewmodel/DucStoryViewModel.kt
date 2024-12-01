@@ -152,7 +152,7 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             SampleDataStory.getExampleImgURL(),
             SampleDataStory.getExampleImgURL(),
             0,
-            dateTimeNow,
+            dateTimeNow(),
             4f,
             1
         )

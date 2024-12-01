@@ -40,9 +40,8 @@ import java.time.format.DateTimeFormatter
 fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
-var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-var dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-var timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+
 var numDef=1
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
@@ -68,6 +67,15 @@ fun getTextDataNotFound(context: Context): String{
 }
 fun callLog(name: String, text: String){
     Log.w(name,text)
+}
+fun dateTimeNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+}
+fun dateNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+}
+fun timeNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 }
 //--------------------------------------
 fun Int.toBoolean(): Boolean = this == 1

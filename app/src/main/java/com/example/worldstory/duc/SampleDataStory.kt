@@ -34,7 +34,7 @@ object SampleDataStory {
     init {
         generateData()
         generateListOfGenre()
-        generateListOfComment()
+//        generateListOfComment()
         generateListOfParagraph()
         generateListOfChapter()
     }
@@ -309,37 +309,33 @@ object SampleDataStory {
     fun addComment(item: DucCommentDataClass ){
         listOfComment.add(item)
     }
-    fun addUserComment(idStory:Int,content:String,date:String){
-
-        listOfComment.add(DucCommentDataClass(getNextIdComment(),idStory,idUser,content,date))
-    }
 
     fun getListOfComment(context: Context): List<DucCommentDataClass>{
 //        listOfComment.clear()
 //        generateListOfComment()
         return  listOfComment
     }
-    private fun generateListOfComment(){
-
-        for(story in dataList)
-        {
-            for(i in 1..3){
-                var item = DucCommentDataClass(getNextIdComment() ,story.idStory,i, getLoremIpsum(),"11/11/2004")
-
-                addComment(item)
-            }
-            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsumLong(),date))
-
-
-            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsum(),date))
-
-
-            for (i in 6..8) {
-                var item = DucCommentDataClass(getNextIdComment(),story.idStory, i, getLoremIpsumLong(), "11/11/2004")
-                addComment(item)
-            }
-        }
-    }
+//    private fun generateListOfComment(){
+//
+//        for(story in dataList)
+//        {
+//            for(i in 1..3){
+//                var item = DucCommentDataClass(getNextIdComment() ,story.idStory,i, getLoremIpsum(),"11/11/2004")
+//
+//                addComment(item)
+//            }
+//            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsumLong(),date))
+//
+//
+//            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsum(),date))
+//
+//
+//            for (i in 6..8) {
+//                var item = DucCommentDataClass(getNextIdComment(),story.idStory, i, getLoremIpsumLong(), "11/11/2004")
+//                addComment(item)
+//            }
+//        }
+//    }
     private fun getNextIdComment():Int{
         sumIdComment=sumIdComment+1
         return sumIdComment
@@ -349,7 +345,7 @@ object SampleDataStory {
     }
     fun getexampleStory(): Story{
         return Story(1,"Khong co du lieu","tac gia","mieu ta",getExampleImgURL(),getExampleImgURL(),0,
-            dateTimeNow,1f,1)
+            dateTimeNow(),1f,1)
 
     }
 }

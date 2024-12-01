@@ -40,7 +40,7 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     fun onAddChapter(storyID: Int): Boolean {
         if (storyID != -1) {
             val chapter = Chapter(
-                null, name.value.toString(), dateTimeNow.toString(), storyID
+                null, name.value.toString(), dateTimeNow().toString(), storyID
             )
             val l: Long = db.insertChapter(chapter)
 

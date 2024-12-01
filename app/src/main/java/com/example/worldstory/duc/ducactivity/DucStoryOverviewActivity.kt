@@ -139,7 +139,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
     }
 
     fun generateChapter(story: Story) {
-        ducChapterViewModel.setChaptersByStory(storyInfo.storyID ?: 1)
+        ducChapterViewModel.fetchChaptersByStory(storyInfo.storyID ?: 1)
         ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->
 
 
