@@ -1,5 +1,6 @@
 package com.example.worldstory.dat.admin_view_navs
 
+import android.app.AlertDialog
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -25,6 +26,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentUserBinding
 import com.example.worldstory.dat.admin_adapter.UserAdapter
 import com.example.worldstory.dat.admin_dialog.AddUserDialogFragment
+import com.example.worldstory.dat.admin_dialog.EditUserDialog
 import com.example.worldstory.dat.admin_viewmodels.RecyclerViewState
 import com.example.worldstory.dat.admin_viewmodels.RoleViewModel
 import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
@@ -32,6 +34,7 @@ import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.User
 import java.util.ArrayList
 
 
@@ -43,6 +46,8 @@ class UserFragment : Fragment() {
     private var isSearchViewOpen = false
     private lateinit var items: List<String>
     private lateinit var binding: FragmentUserBinding
+    private val currentUserID = arguments?.getInt("currentID")
+    private val currentRole = arguments?.getString("currentRole")
     private val roleViewModel: RoleViewModel by activityViewModels {
         RoleViewModelFactory(DatabaseHelper(requireActivity()))
     }
@@ -142,12 +147,18 @@ class UserFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                if (direction == ItemTouchHelper.LEFT) {
-                    userAdapter.notifyItemChanged(position)
-                    Toast.makeText(requireContext(), "Swipe left", Toast.LENGTH_SHORT).show()
-                } else if (direction == ItemTouchHelper.RIGHT) {
+                val user = userAdapter.getUser(position)
+                if (direction == ItemTouchHelper.LEFT ) {
+//                    Toast.makeText(requireContext(), "Swipe left $position", Toast.LENGTH_SHORT).show()
+                    showConfirmationDialog(user,position)
+                } else if (direction == ItemTouchHelper.RIGHT ) {
                     userAdapter.notifyItemChanged(position)
                     Toast.makeText(requireContext(), "Swipe right", Toast.LENGTH_SHORT).show()
+//                    val editDialog = EditUserDialog()
+//                    val bundle = Bundle()
+//                    bundle.putInt("userID", user.userID!!)
+//                    editDialog.arguments = bundle
+//                    editDialog.show(requireActivity().supportFragmentManager, "EditUserDialog")
                 }
             }
 
@@ -285,6 +296,26 @@ class UserFragment : Fragment() {
             outState.putString("selected", binding.autoCompleteTextF.text.toString())
             outState.putStringArrayList("items", ArrayList(items))
         }
+    }
+
+    private fun showConfirmationDialog(user: User,p:Int) {
+        // Tạo AlertDialog.Builder
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage("Có chắc muốn xóa không?")
+            .setCancelable(false)
+            .setPositiveButton("Chấp nhận") { dialog, id ->
+                userViewModel.delUser(user)
+                userAdapter.removeUser(p)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Không chấp nhận") { dialog, id ->
+                userAdapter.notifyItemChanged(p)
+                dialog.dismiss()
+            }
+
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 }

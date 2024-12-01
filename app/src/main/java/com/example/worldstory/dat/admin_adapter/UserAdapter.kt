@@ -25,13 +25,14 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = filteredList.get(position)
+        val user = filteredList[position]
         Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
-        holder.column1.text = user.nickName
-        holder.column3.text = user.createdDate
-        holder.column4.text = user.userName
+        holder.column1.text ="Nickname: ${user.nickName}"
+        holder.column3.text ="Created date: ${user.createdDate}"
+        holder.column4.text ="Username: ${user.userName}"
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(color)
         } else
@@ -47,7 +48,7 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(p0: CharSequence): FilterResults {
-                var query: String = p0.toString()
+                val query: String = p0.toString()
                 filteredList = if (query.isEmpty()) {
                     userList
                 } else {
@@ -75,7 +76,18 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
     fun update(users: List<User>) {
         userList = users
         notifyDataSetChanged()
-        Log.i("Observe","da update")
+        Log.i("Observe", "da update")
     }
 
+    fun getUser(position: Int): User {
+        return filteredList[position]
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun removeUser(po: Int) {
+        val newList = userList.filter { it != userList[po] }
+        userList = newList
+        notifyItemRemoved(po)
+        notifyDataSetChanged()
+    }
 }

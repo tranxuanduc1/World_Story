@@ -140,4 +140,16 @@ class StoryAdapter(
         storyList = stories
         notifyDataSetChanged()
     }
+
+    fun getStory(p:Int):Story{
+        return filteredList[p]
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun delete(p:Int){
+        val newList=storyList.filter { it!=storyList[p] }
+        storyList=newList
+        notifyItemRemoved(p)
+        notifyDataSetChanged()
+    }
 }

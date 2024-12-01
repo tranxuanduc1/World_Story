@@ -181,7 +181,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "app_doc_truyen_db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 5
         private const val _ID = BaseColumns._ID
 
 
@@ -279,8 +279,8 @@ class DatabaseHelper(context: Context) :
         ${Contract.RateEntry.COLUMN_RATE} INTEGER NOT NULL,
         ${Contract.RateEntry.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${Contract.RateEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.RateEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}),
-        FOREIGN KEY (${Contract.RateEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.RateEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE ,
+        FOREIGN KEY (${Contract.RateEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -292,8 +292,8 @@ class DatabaseHelper(context: Context) :
         ${CommentEntry.COLUMN_TIME} TEXT NOT NULL,
         ${CommentEntry.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${CommentEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${CommentEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}),
-        FOREIGN KEY (${CommentEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${CommentEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
+        FOREIGN KEY (${CommentEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -304,7 +304,7 @@ class DatabaseHelper(context: Context) :
         ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
         ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
         ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -314,8 +314,8 @@ class DatabaseHelper(context: Context) :
         ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Contract.ChapterMarkEntry.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ChapterMarkEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}),
-        FOREIGN KEY (${Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ChapterMarkEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
+        FOREIGN KEY (${Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -325,8 +325,8 @@ class DatabaseHelper(context: Context) :
         ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
         ${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}),
-        FOREIGN KEY (${Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
+        FOREIGN KEY (${Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -337,7 +337,7 @@ class DatabaseHelper(context: Context) :
         ${Contract.ParagraphEntry.COLUMN_CONTENT_FILE} TEXT NOT NULL,
         ${Contract.ParagraphEntry.COLUMN_NUMBER_ORDER} INTEGER NOT NULL,
         ${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -348,7 +348,7 @@ class DatabaseHelper(context: Context) :
         ${Contract.ImageEntry.COLUMN_CONTENT_FILE} TEXT NOT NULL,
         ${Contract.ImageEntry.COLUMN_NUMBER_ORDER} INTEGER NOT NULL,
         ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK}) REFERENCES ${Contract.ChapterEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -359,8 +359,8 @@ class DatabaseHelper(context: Context) :
         ${Contract.ReadHistory.COLUMN_DATE_TIME} TEXT NOT NULL,
         ${Contract.ReadHistory.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${Contract.ReadHistory.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ReadHistory.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}),
-        FOREIGN KEY (${Contract.ReadHistory.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID})
+        FOREIGN KEY (${Contract.ReadHistory.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
+        FOREIGN KEY (${Contract.ReadHistory.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
     )
 """.trimIndent()
         //////////////////////////
@@ -384,6 +384,24 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+
+        db?.let {
+            // Lấy danh sách tất cả các bảng trong cơ sở dữ liệu
+            val cursor = it.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null)
+            while (cursor.moveToNext()) {
+                val tableName = cursor.getString(0)
+                if (tableName != "android_metadata" && tableName != "sqlite_sequence") {
+                    // Bỏ qua các bảng hệ thống
+                    it.execSQL("DROP TABLE IF EXISTS $tableName")
+                }
+            }
+            cursor.close()
+
+            // Gọi lại phương thức onCreate để tạo lại bảng
+            onCreate(it)
+        }
+
+
 //        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterMarkEntry.TABLE_NAME}")
 //        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterHistoryEntry.TABLE_NAME}")
 //        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ParagraphEntry.TABLE_NAME}")

@@ -9,13 +9,17 @@ import com.example.worldstory.model.Role
 
 class RoleViewModel(val db: DatabaseHelper) : ViewModel(db) {
     val roles = mutableListOf<Role>()
-
+    val id_role_map= mutableMapOf<Int?,String>()
     init {
         fetchAllRole()
     }
 
     fun fetchAllRole() {
+        roles.clear()
         roles.addAll(db.getAllRoles())
+        roles.forEach{
+            r-> id_role_map[r.roleID]=r.roleName
+        }
     }
 
     fun insertRole(role: Role) {
@@ -30,10 +34,12 @@ class RoleViewModel(val db: DatabaseHelper) : ViewModel(db) {
 
     fun deleteRole(role: Role) {
         role.roleID?.let { db.deleteRole(it) }
+        fetchAllRole()
     }
 
     fun deleteAllRole() {
         db.deleteAllRole()
+        fetchAllRole()
     }
 }
 

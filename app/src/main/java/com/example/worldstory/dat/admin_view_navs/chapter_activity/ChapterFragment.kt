@@ -73,8 +73,8 @@ class ChapterFragment() : Fragment() {
         binding.addChapter.setOnClickListener {
             onClickAddChapter()
         }
-        Picasso.get().load(storyViewModel.storyImg.value).into(binding.imgBground)
-
+        Picasso.get().load(storyViewModel.storyBgImg.value).into(binding.imgBground)
+        Picasso.get().load(storyViewModel.storyImg.value).into(binding.avtStory)
 
 
         chapterAdapter = ChapterAdapter(storyViewModel.chapterListByStory)

@@ -24,6 +24,9 @@ import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.model.Comment
+import com.example.worldstory.model.Role
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -51,7 +54,11 @@ class AdminMainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
-
+//        roleViewModel.deleteAllRole()
+//        roleViewModel.insertRole(Role(null,"ADMIN"))
+//        roleViewModel.insertRole(Role(null,"MANANGER"))
+//        roleViewModel.insertRole(Role(null,"AUTHOR"))
+//        roleViewModel.insertRole(Role(null,"READER"))
 
         //Thiết lập sự kiện thông báo nhấn nút add
         val topAppBar: MaterialToolbar = findViewById(R.id.topAppBar)
@@ -76,25 +83,42 @@ class AdminMainActivity : AppCompatActivity() {
             loadFragment(UserFragment(), "user")
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        val bundle =Bundle()
+//        val userID=this.getUserIdSession()
+//        val roleCurrentUser=userViewModel.getUser(userID).roleID
+//        val user=userViewModel.getUser(userID)
+        val currentRole="ADMIN"
+//        bundle.putInt("currentID",userID)
+        bundle.putString("currentRole",currentRole)
         bottomNavigationView.setOnItemSelectedListener { item ->
+
             when (item.itemId) {
                 R.id.userFragment -> {
-                    loadFragment(UserFragment(), "user")
+                    val userFragment=UserFragment()
+                    userFragment.arguments=bundle
+                    loadFragment(userFragment, "user")
                     true
                 }
 
                 R.id.categoryFragment -> {
-                    loadFragment(GenreFragment(), "category")
+                    val genreFragment=GenreFragment()
+                    genreFragment.arguments=bundle
+                    loadFragment(genreFragment, "category")
                     true
                 }
 
                 R.id.storyFragment -> {
-                    loadFragment(StoryFragment(), "story")
+                    val storyFragment=StoryFragment()
+                    storyFragment.arguments=bundle
+                    loadFragment(storyFragment, "story")
                     true
                 }
 
                 R.id.commentFragment -> {
-                    loadFragment(CommentFragment(), "comment")
+                    val commentFragment=CommentFragment()
+                    commentFragment.arguments=bundle
+                    loadFragment(commentFragment, "comment")
                     true
                 }
 

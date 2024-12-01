@@ -6,14 +6,10 @@ import org.mindrot.jbcrypt.BCrypt
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.model.User
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class UserViewModel(val db: DatabaseHelper) : ViewModel() {
@@ -29,11 +25,11 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     }
 
     fun fetchAllUsers() {
-        __users.value=db.getAllUsers()
+        __users.value = db.getAllUsers()
     }
 
 
-    fun onAddUser():Long {
+    fun onAddUser(): Long {
         val hashedpw = hashPassword(password = passWord.value.toString())
         val user = User(
             null,
@@ -63,10 +59,25 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         fetchAllUsers()
     }
 
-    fun updatetUser(user: User) {
-        db.updateUser(user)
-        fetchAllUsers()
-    }
+    fun updatetUser(u: User) {}
+//        val u = User(
+//            userID = id,
+//            userName = userName.value.toString(),
+//            "",
+//            "",
+//            nickName = nickName.value.toString(),
+//            roleID = roleID,
+//            ""
+//        )
+//        val userName = userName.value?: u.userName
+//        val nickName=nickName.value?:u.nickName
+//        val password=passWord?:u.hashedPw
+//        if(password.equals(this.passWord)){
+//            password=hashPassword(password)
+//        }
+//        db.updateUser(u)
+//        fetchAllUsers()
+//    }
 
     fun delUser(user: User) {
         user.userID?.let { db.deleteUser(it) }
@@ -76,6 +87,12 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
+
+    fun getUser(id: Int): User {
+        return db.getUserByUsersId(id)!!
+    }
+
+
 }
 
 class UserViewModelFactory(private val databaseHelper: DatabaseHelper) : ViewModelProvider.Factory {

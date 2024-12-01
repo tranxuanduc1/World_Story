@@ -18,6 +18,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val author = MutableLiveData<String>()
     val decription = MutableLiveData<String>()
     val isText = MutableLiveData(false)
+    val storyBgImg = MutableLiveData<String>()
     val storyImg = MutableLiveData<String>()
     val genreIDList = MutableLiveData<List<Int>>()
     val storyGenreMap = mutableMapOf<Int, Set<Int>>()
@@ -49,7 +50,8 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         isText.value = if (story.isTextStory == 1) true else false
         title.value = story.title
         genreIDList.value = storyGenreMap[story.storyID]?.toList()
-        storyImg.value = story.bgImgUrl
+        storyBgImg.value = story.bgImgUrl
+        storyImg.value=story.imgUrl
     }
 
     fun onAddNewStory(): Long {

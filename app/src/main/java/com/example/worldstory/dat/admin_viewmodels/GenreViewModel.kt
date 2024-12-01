@@ -54,6 +54,11 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         return i
     }
 
+
+    fun deleteGenre(id:Int){
+        db.deleteGenre(id   )
+        fetchAllGenre()
+    }
 }
 
 class GenreViewModelFactory(private val databaseHelper: DatabaseHelper) :

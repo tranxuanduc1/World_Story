@@ -20,9 +20,6 @@ import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducutils.dateTimeNow
-import com.example.worldstory.model.User
 
 class AddUserDialogFragment : DialogFragment() {
     private val userViewModel: UserViewModel by activityViewModels {
@@ -33,13 +30,9 @@ class AddUserDialogFragment : DialogFragment() {
     }
     private lateinit var binding: AddUserDialogBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding=AddUserDialogBinding.inflate(LayoutInflater.from(context))
-    }
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding=AddUserDialogBinding.inflate(layoutInflater)
         binding.userViewModel=userViewModel
         binding.lifecycleOwner  =this
         return activity?.let {
@@ -73,10 +66,17 @@ class AddUserDialogFragment : DialogFragment() {
                         binding.newPassword.error = "Password không được để trống"
                         isValid = false
                     }
-
-                    if (binding.newNickname.text.isNullOrEmpty()) {
+                    if(binding.cfNewPassword.text.isNullOrEmpty()){
+                        binding.cfNewPassword.error = "Password không được để trống"
+                        isValid = false
+                    }
+                    if (binding.newNickname.text.isNullOrEmpty() ) {
                         binding.newNickname.error = "Vui lòng không bỏ trống nickname"
                         isValid = false
+                    }
+                    if(!binding.newPassword.text.toString().equals(binding.cfNewPassword.text.toString())){
+                        binding.cfNewPassword.error="Không khớp mật khẩu"
+                        isValid=false
                     }
                     if (isValid) {
                         userViewModel.onAddUser()

@@ -2,19 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterFragment">
+
     <data>
+
         <variable
             name="storyViewModel"
             type="com.example.worldstory.dat.admin_viewmodels.StoryViewModel" />
+
         <variable
             name="story"
             type="com.example.worldstory.model.Story" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
@@ -65,19 +68,22 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_margin="13dp"/>
+            android:layout_margin="13dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="Background" />
@@ -94,32 +100,79 @@
                 android:id="@+id/up_background_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:tooltipText="Tải hình nền truyện"
-                android:src="@drawable/baseline_upload_24" />
+                android:src="@drawable/baseline_upload_24"
+                android:tooltipText="Tải hình nền truyện" />
+
 
         </LinearLayout>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_margin="13dp"/>
+            android:layout_margin="13dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="Bìa truyện" />
+
+            <ImageView
+                android:id="@+id/avt_story"
+                android:layout_width="140dp"
+                android:layout_height="100dp"
+                android:layout_marginHorizontal="10dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/up_avt_story_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/baseline_upload_24"
+                android:tooltipText="Tải hình nền truyện" />
+
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_margin="13dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/add_chapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/Teal"
+                android:layout_marginHorizontal="30dp"
                 android:text="Thêm chapter" />
+            <Button
+                android:id="@+id/save_changes"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:layout_marginHorizontal="30dp"
+                android:text="Lưu" />
         </LinearLayout>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_margin="13dp"/>
+            android:layout_margin="13dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chapter_list"
             android:layout_width="match_parent"
