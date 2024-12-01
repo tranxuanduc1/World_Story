@@ -42,7 +42,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             SampleDataStory.getExampleImgURL(),
             nickName.value.toString(),
             roleID,
-            dateTimeNow
+            dateTimeNow()
         )
         val l: Long = db.insertUser(user)
         userName.value = ""

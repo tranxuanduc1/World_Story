@@ -9,8 +9,9 @@ import com.example.worldstory.duc.ducviewmodel.DucImageViewModel
 
 class DucImageViewModelFactory(var context: Context): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        var dbHelper= DatabaseHelper(context)
-        var repository= DucDataRepository(dbHelper)
+        var dbHepler= DatabaseHelper.getInstance(context)
+
+        var repository= DucDataRepository(dbHepler)
 
         return DucImageViewModel(repository,context) as T
     }

@@ -34,16 +34,18 @@ object SampleDataStory {
     init {
         generateData()
         generateListOfGenre()
-        generateListOfComment()
+//        generateListOfComment()
         generateListOfParagraph()
         generateListOfChapter()
     }
     fun getExampleImgURL():String{
-        return "https://drive.google.com/uc?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz"
+        return             "https://drive.google.com/uc?id=1OZ0NxlZEq3x2OTgno6DJ8rH6lr1JXv8P"
+
 
     }
     fun getExampleImgURLParagraph():String{
-        return "https://scontent.fhan4-5.fna.fbcdn.net/v/t39.30808-6/467623087_987608846509607_7464989657181579078_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PJhBdDIh8ngQ7kNvgFXOx3O&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=AFd7aN9gB5bxoYEwwsXIv2f&oh=00_AYD0Z_URAyRNGfnjU-LURgA-2gVde9_z-mv0bGN_9BaT5g&oe=67422259"
+        val p5 ="https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y"
+        return p5
 
     }
     fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass{
@@ -307,37 +309,33 @@ object SampleDataStory {
     fun addComment(item: DucCommentDataClass ){
         listOfComment.add(item)
     }
-    fun addUserComment(idStory:Int,content:String,date:String){
-
-        listOfComment.add(DucCommentDataClass(getNextIdComment(),idStory,idUser,content,date))
-    }
 
     fun getListOfComment(context: Context): List<DucCommentDataClass>{
 //        listOfComment.clear()
 //        generateListOfComment()
         return  listOfComment
     }
-    private fun generateListOfComment(){
-
-        for(story in dataList)
-        {
-            for(i in 1..3){
-                var item = DucCommentDataClass(getNextIdComment() ,story.idStory,i, getLoremIpsum(),"11/11/2004")
-
-                addComment(item)
-            }
-            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsumLong(),date))
-
-
-            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsum(),date))
-
-
-            for (i in 6..8) {
-                var item = DucCommentDataClass(getNextIdComment(),story.idStory, i, getLoremIpsumLong(), "11/11/2004")
-                addComment(item)
-            }
-        }
-    }
+//    private fun generateListOfComment(){
+//
+//        for(story in dataList)
+//        {
+//            for(i in 1..3){
+//                var item = DucCommentDataClass(getNextIdComment() ,story.idStory,i, getLoremIpsum(),"11/11/2004")
+//
+//                addComment(item)
+//            }
+//            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsumLong(),date))
+//
+//
+//            addComment(DucCommentDataClass(getNextIdComment(),story.idStory,idUser,getLoremIpsum(),date))
+//
+//
+//            for (i in 6..8) {
+//                var item = DucCommentDataClass(getNextIdComment(),story.idStory, i, getLoremIpsumLong(), "11/11/2004")
+//                addComment(item)
+//            }
+//        }
+//    }
     private fun getNextIdComment():Int{
         sumIdComment=sumIdComment+1
         return sumIdComment
@@ -347,7 +345,7 @@ object SampleDataStory {
     }
     fun getexampleStory(): Story{
         return Story(1,"Khong co du lieu","tac gia","mieu ta",getExampleImgURL(),getExampleImgURL(),0,
-            dateTimeNow,1f,1)
+            dateTimeNow(),1f,1)
 
     }
 }

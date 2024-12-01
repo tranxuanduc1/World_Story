@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:src="@drawable/pa1"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
 
         />
 </LinearLayout>

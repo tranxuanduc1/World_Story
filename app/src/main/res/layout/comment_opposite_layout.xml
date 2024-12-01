@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="10dp"
-    android:backgroundTint="@android:color/transparent"
-    >
+    android:backgroundTint="@android:color/transparent">
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -31,14 +31,21 @@
             android:maxLines="1"
             android:ellipsize="end"
             />
-        <ImageView
-            android:id="@+id/img_avatarUser_commentOppositeLayout"
-
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/cat"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="right"
-            />
+            app:cardCornerRadius="50dp"
+            app:cardElevation="4dp">
+            <ImageView
+                android:id="@+id/img_avatarUser_commentOppositeLayout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/pa1"
+                android:scaleType="centerCrop"
+                />
+        </androidx.cardview.widget.CardView>
+
     </FrameLayout>
     <TextView
         android:id="@+id/txt_content_commentOppositeLayout"

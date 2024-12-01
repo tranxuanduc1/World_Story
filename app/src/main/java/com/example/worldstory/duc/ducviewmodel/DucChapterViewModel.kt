@@ -1,8 +1,6 @@
 package com.example.worldstory.duc.ducviewmodel
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.saveable.listSaver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -63,7 +61,7 @@ class DucChapterViewModel(var repository: DucDataRepository, var context: Contex
 //        }
     }
 
-    fun setChaptersByStory(storyId: Int) {
+    fun fetchChaptersByStory(storyId: Int) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO)
             {
@@ -96,7 +94,7 @@ class DucChapterViewModel(var repository: DucDataRepository, var context: Contex
 //    }
 
     fun getOneExampleChapter(): Chapter {
-        return Chapter(1, getLoremIpsum(context), dateTimeNow, 1)
+        return Chapter(1, getLoremIpsum(context), dateTimeNow(), 1)
 
     }
 

@@ -1,7 +1,6 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.myapplication.databinding.CommentOppositeLayoutBinding
 import com.example.myapplication.databinding.CommentSelfLayoutBinding
-import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.dpToPx
@@ -28,19 +26,21 @@ import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.scrollToBottom
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducviewmodel.DucChapterHistoryViewModel
 import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
 import com.example.worldstory.duc.ducviewmodel.DucImageViewModel
 import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucChapterHistoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucImageViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucParagraphViewModelFactory
 import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Image
 import com.example.worldstory.model.Story
 
 
@@ -61,8 +61,11 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducCommentViewModel: DucCommentViewModel by viewModels {
         DucCommentViewModelFactory(this)
     }
-    private val ducImageViewModel: DucImageViewModel by viewModels{
+    private val ducImageViewModel: DucImageViewModel by viewModels {
         DucImageViewModelFactory(this)
+    }
+    private val ducChapterHistoryViewModel: DucChapterHistoryViewModel by viewModels {
+        DucChapterHistoryViewModelFactory(this)
     }
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
@@ -86,9 +89,18 @@ class DucChapterActivity : AppCompatActivity() {
             //
 
             loadInfoChpater()
-            ducChapterViewModel.chaptersByStory.observe(this, Observer {
+            ducChapterViewModel.chaptersByStory.observe(this, Observer { chapters ->
                 setViewButtonChapter()
                 setConfigButtonChapter()
+                //asign chapter history
+                mainChapter?.let {
+
+                    ducChapterHistoryViewModel.setChapterHistoryUserSession(
+                        mainChapter?.chapterID ?: return@let
+                    )
+
+                }
+
             })
 
             setupViewImageOrParagraph()
@@ -96,8 +108,11 @@ class DucChapterActivity : AppCompatActivity() {
             loadContent()
 
         }
-//        loadComment()
-//        setConfigButtonComment()
+        ducCommentViewModel.commentsByStory.observe(this, Observer { comments ->
+            loadComment(comments)
+            setConfigButtonComment()
+        })
+
 
         //
         setConfigCommentDialog()
@@ -117,8 +132,8 @@ class DucChapterActivity : AppCompatActivity() {
                 bundle.getParcelable(getKey_previousChapter(this))
             storyInfo = bundle.getParcelable(getKeyStoryInfo(this))
             ducChapterViewModel.setPreMainNextChapter(mainChapter, previousChapter, nextChapter)
-            ducChapterViewModel.setChaptersByStory(storyInfo?.storyID ?: numDef)
-
+            ducChapterViewModel.fetchChaptersByStory(storyInfo?.storyID ?: numDef)
+            storyInfo?.let { ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef) }
         }
     }
 
@@ -208,7 +223,8 @@ class DucChapterActivity : AppCompatActivity() {
 
         }
     }
-    private fun prepareDataContenForChapter(){
+
+    private fun prepareDataContenForChapter() {
         if (storyInfo?.isTextStory?.toBoolean() == true) {
             // prepare  paragraphs from view model
             ducParagraphViewModel.setParagraphsByChapter(mainChapter?.chapterID ?: numDef)
@@ -217,10 +233,11 @@ class DucChapterActivity : AppCompatActivity() {
         } else {
 
             // prepare images from view model
-            ducImageViewModel.setImagesByChapter(mainChapter?.chapterID?:numDef)
+            ducImageViewModel.setImagesByChapter(mainChapter?.chapterID ?: numDef)
 
         }
     }
+
     private fun loadContent() {
 
 
@@ -257,9 +274,9 @@ class DucChapterActivity : AppCompatActivity() {
         })
 
     }
+
     private fun loadImage() {
-        ducImageViewModel.imagesByChapter.observe(this, Observer{
-            images->
+        ducImageViewModel.imagesByChapter.observe(this, Observer { images ->
             var adapterViewPage2 = DucViewPaperPhotoViewAdapter(
                 this,
                 images
@@ -272,7 +289,6 @@ class DucChapterActivity : AppCompatActivity() {
         })
 
     }
-
 
 
     fun createContentTextView(textContent: String?): TextView {
@@ -291,15 +307,11 @@ class DucChapterActivity : AppCompatActivity() {
 
     //--------------Comment---------------------
 
-    private fun loadComment() {
+    private fun loadComment(listOfComments: List<DucCommentDataClass>) {
         //lam moi hop thoai scroll view chua cac comment
         binding.linearContainerCommentChapter.removeAllViews()
 
-        var listComments = ducCommentViewModel.getCommentsByStory(
-            mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID
-        )
-
-        for (comment in listComments) {
+        for (comment in listOfComments) {
             var commentLayoutBinding: ViewBinding
 
             if (ducCommentViewModel.checkCommentFromUser(comment)) {
@@ -313,34 +325,36 @@ class DucChapterActivity : AppCompatActivity() {
         }
         binding.scrollViewMainCommentDialogChapter.scrollToBottom()
     }
+
     private fun setConfigButtonComment() {
         binding.btnSendCommentUserChapter.setOnClickListener {
             var content = binding.etxtCommentUserChapter.text.toString()
             if (content.isEmpty()) {
                 return@setOnClickListener
             }
+            mainChapter?.let {
+                ducCommentViewModel.createUserCommnet(
+                    it.storyID, content
+                )
+            }
 
-            ducCommentViewModel.createUserCommnet(
-                mainChapter?.storyID ?: ducChapterViewModel.getOneExampleChapter().storyID, content
-            )
 
             //xoa trang editText de nhap comment moi
             binding.etxtCommentUserChapter.setText("")
             // chay lai comment dialog
-            loadComment()
+            storyInfo?.let { ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef) }
         }
     }
+
     private fun setCommentSelf(
         commentLayoutBinding: CommentSelfLayoutBinding, comment: DucCommentDataClass
     ) {
         setCommentSelfLayoutParams((commentLayoutBinding.root))
 
         commentLayoutBinding.txtDisplayNameCommentSelfLayout.text =
-            ducCommentViewModel.getDisplayNameUserByComment(comment)
+            comment.nameUser
         commentLayoutBinding.txtContentCommentSelfLayout.text = comment.content
-        commentLayoutBinding.imgAvatarUserCommentSelfLayout.setImageResource(
-            ducCommentViewModel.getAvatarUserByComment(comment)
-        )
+        commentLayoutBinding.imgAvatarUserCommentSelfLayout.loadImgURL(this, comment.imgAvatarUrl)
         commentLayoutBinding.txtDateCreatedCommentSelfLayout.text = comment.date
     }
 
@@ -350,13 +364,12 @@ class DucChapterActivity : AppCompatActivity() {
         setCommentOppositeLayoutParams(commentLayoutBinding.root)
 
         commentLayoutBinding.txtDisplayNameCommentOppositeLayout.text =
-            ducCommentViewModel.getDisplayNameUserByComment(comment)
+            comment.nameUser
         commentLayoutBinding.txtContentCommentOppositeLayout.text = comment.content
-        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.setImageResource(
-            ducCommentViewModel.getAvatarUserByComment(comment)
-        )
+        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.loadImgURL(this, comment.imgAvatarUrl)
         commentLayoutBinding.txtDateCreatedCommentOppositeLayout.text = comment.date
     }
+
     fun setCommentSelfLayoutParams(view: View) {
         view.apply {
             //android:layout_width="wrap_content"

@@ -11,7 +11,8 @@ class DucParagraphViewModelFactory (private var context :Context): ViewModelProv
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DucParagraphViewModel::class.java))
         {
-            var dbHepler= DatabaseHelper(context)
+            var dbHepler= DatabaseHelper.getInstance(context)
+
             var repository= DucDataRepository(dbHepler)
             return DucParagraphViewModel(repository,context) as T
         }

@@ -11,8 +11,9 @@ class DucGenreViewModelFactory (private var context :Context): ViewModelProvider
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(DucGenreViewModel::class.java))
         {
-            var dbDatabaseHelper= DatabaseHelper(context)
-            var repository= DucDataRepository(dbDatabaseHelper)
+            var dbHepler= DatabaseHelper.getInstance(context)
+
+            var repository= DucDataRepository(dbHepler)
             return DucGenreViewModel(repository,context) as T
         }
         throw IllegalArgumentException("unknown view model class")

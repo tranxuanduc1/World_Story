@@ -1,6 +1,5 @@
 package com.example.worldstory.dbhelper
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -8,23 +7,7 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.provider.ContactsContract
-import android.util.Log
-import androidx.room.util.query
-
 import com.example.worldstory.dbhelper.Contract.CommentEntry
-import com.example.worldstory.duc.ducdatabase.COL_AUTHOR
-import com.example.worldstory.duc.ducdatabase.COL_BG_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_DATECREATED
-import com.example.worldstory.duc.ducdatabase.COL_DESCRIPTION
-import com.example.worldstory.duc.ducdatabase.COL_ID
-import com.example.worldstory.duc.ducdatabase.COL_IMAGE_URL
-import com.example.worldstory.duc.ducdatabase.COL_IS_COMIC
-import com.example.worldstory.duc.ducdatabase.COL_SCORE
-import com.example.worldstory.duc.ducdatabase.COL_TITLE
-import com.example.worldstory.duc.ducdatabase.TABLE_NAME
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -34,6 +17,7 @@ import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
+import kotlin.concurrent.Volatile
 
 
 object Contract {
@@ -200,10 +184,18 @@ class DatabaseHelper(context: Context) :
         private const val DATABASE_VERSION = 2
         private const val _ID = BaseColumns._ID
 
+
+        @Volatile
+        private var instance: DatabaseHelper?=null
+
+        fun getInstance(context: Context): DatabaseHelper{
+            return instance?:synchronized(this){
+                instance?: DatabaseHelper(context.applicationContext).also { instance=it }
+            }
+        }
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-
         var createStoryTable = """
             create table ${Contract.StoryEntry.TABLE_NAME} (
             ${_ID} integer primary key autoincrement,
@@ -392,19 +384,36 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterMarkEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterHistoryEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ParagraphEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ImageEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ReadHistory.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.UserLoveStory.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.RateEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.CommentEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.StoryGenreEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.GenreEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.StoryEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.UserEntry.TABLE_NAME}")
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.RoleEntry.TABLE_NAME}")
+//
+//        // Recreate the tables
+//        onCreate(db)
 
-        // Tạo lại bảng chapter_table với cấu trúc mới
-        db?.execSQL(
-            """
-        CREATE TABLE ${Contract.ChapterEntry.TABLE_NAME} (
-        ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
-        ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
-        ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
-        FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}))
-    """
-        )
+//        db?.execSQL("DROP TABLE IF EXISTS ${Contract.ChapterEntry.TABLE_NAME}")
+//
+//        // Tạo lại bảng chapter_table với cấu trúc mới
+//        db?.execSQL(
+//            """
+//        CREATE TABLE ${Contract.ChapterEntry.TABLE_NAME} (
+//        ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+//        ${Contract.ChapterEntry.COLUMN_TITLE} TEXT NOT NULL,
+//        ${Contract.ChapterEntry.COLUMN_DATE_CREATED} TEXT NOT NULL,
+//        ${Contract.ChapterEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
+//        FOREIGN KEY (${Contract.ChapterEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}))
+//    """
+//        )
     }
 
 
@@ -649,7 +658,33 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return chapters
     }
+    fun getChaptersByChapterId(chapterId: Int): Chapter? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.ChapterEntry.TABLE_NAME}
+            WHERE ${BaseColumns._ID} = ?
+            """.trimIndent(),
+            arrayOf(chapterId.toString())
+        )
+        var chapter : Chapter?=null
 
+        if (cursor.moveToFirst()) {
+
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_TITLE))
+                val storyID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_STORY_ID_FK))
+                val dateCreate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.ChapterEntry.COLUMN_DATE_CREATED))
+
+                chapter=Chapter(id, title, dateCreate, storyID)
+
+        }
+        cursor.close()
+        return chapter
+    }
     //////////////////////////
     ///---- PARAGRAPH-----////
     //////////////////////////
@@ -811,8 +846,10 @@ class DatabaseHelper(context: Context) :
     fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM ${Contract.UserEntry.TABLE_NAME}" +
-                    "WHERE ${BaseColumns._ID} = ? ", arrayOf(userId.toString())
+          """
+                SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
+                WHERE ${BaseColumns._ID} = ? 
+          """.trimIndent(), arrayOf(userId.toString())
         )
         var user: User? = null
 
@@ -1076,7 +1113,25 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return userLoveStories
     }
+    fun getLoveStoriesIdByUser(userId:Int): List<Int>{
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.UserLoveStory.TABLE_NAME}
+            WHERE ${Contract.UserLoveStory.COLUMN_USER_ID_FK} = ?
+        """.trimIndent(), arrayOf(userId.toString()))
+        val storiesId = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserLoveStory.COLUMN_STORY_ID_FK))
+                storiesId.add(storyId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return storiesId
+    }
 
     //////////////////////////
     ///----  Rate    -----////
@@ -1325,7 +1380,24 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return chapterHistories
     }
+    fun getChapterHistoriesIdByUser(userId: Int): List<Int> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.ChapterHistoryEntry.TABLE_NAME}
+            WHERE ${Contract.ChapterHistoryEntry.COLUMN_USER_ID_FK} = ?
+        """.trimIndent(), arrayOf(userId.toString()))
+        val chapterHistoriesId = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                  val chapterId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterHistoryEntry.COLUMN_CHAPTER_ID_FK))
+                chapterHistoriesId.add( chapterId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapterHistoriesId
+    }
     //////////////////////////
     ///---- Image     -----////
     //////////////////////////

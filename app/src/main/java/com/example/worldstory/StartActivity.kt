@@ -1,6 +1,7 @@
 package com.example.worldstory
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +9,9 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityStartBinding
 import android.os.Looper
 import android.os.Handler
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucUserHomeActivity
@@ -21,55 +24,94 @@ import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
+import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
 class StartActivity : AppCompatActivity() {
 
-
+    companion object {
+        private var isActivityRunning = false
+    }
     private lateinit var binding: ActivityStartBinding
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (isActivityRunning) {
+            // Nếu activity đã chạy, kết thúc activity hiện tại
+            finish()
+            return
+        }
+
+        isActivityRunning = true
         enableEdgeToEdge()
-        binding= ActivityStartBinding.inflate(layoutInflater)
-        val view =binding.root
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        binding = ActivityStartBinding.inflate(layoutInflater)
+        val view = binding.root
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(view)
-        var isCheck =isCheckUserSession()
+
+
+        callLog("=========", "bat dau chay start activity")
+
+
+        var isCheck = isCheckUserSession()
         //testDatabase()
-        val handler= Handler(Looper.getMainLooper())
+
+
+
+
+        val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            if(isCheck==false){
+            if (isCheck == false) {
                 //chua dang nhap ,tao tai khoan guest
 
 
             }
+
+
             // vi du tao tai khioan admin
-            var sharePref=this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
-            with(sharePref.edit()){
-                putInt(getString(R.string.key_user_id_session),1)//id admin
-                putInt(getString(R.string.key_user_role_session),1)//role user, nho thao luan id guest la gi
+            var sharePref =
+                this.getSharedPreferences(
+                    getString(R.string.key_user_session),
+                    Context.MODE_PRIVATE
+                )
+            with(sharePref.edit()) {
+                putInt(getString(R.string.key_user_id_session), 1)//id admin
+                putInt(
+                    getString(R.string.key_user_role_session),
+                    1
+                )//role user, nho thao luan id guest la gi
                 apply()
             }
 
             //--------------------
-            toActivity(DucUserHomeActivity::class.java)
+
+            var intent = Intent(this, DucUserHomeActivity::class.java)
+            this.startActivity(intent)
             finish()
-        },2000)
+        }, 2000)
 
 
     }
-    fun isCheckUserSession(): Boolean{
-        var sharePref=this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
-        val userId=sharePref.getInt(getString(R.string.key_user_id_session),-1)
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Log.d("StartActivity", "onNewIntent called: ${intent?.action}")
+
+    }
+
+    fun isCheckUserSession(): Boolean {
+        var sharePref =
+            this.getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+        val userId = sharePref.getInt(getString(R.string.key_user_id_session), -1)
         return userId != -1
 
     }
+
     private fun testDatabase() {
-        var dataHelper: DatabaseHelper = DatabaseHelper(this)
+        var dataHelper: DatabaseHelper = DatabaseHelper.getInstance(this)
         dataHelper.insertRole(Role(null, "Admin"))
         dataHelper.insertRole(Role(null, "Moderator"))
         dataHelper.insertRole(Role(null, "Member"))
@@ -83,7 +125,7 @@ class StartActivity : AppCompatActivity() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname1",
                 1,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -94,7 +136,7 @@ class StartActivity : AppCompatActivity() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname2",
                 2,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -105,7 +147,7 @@ class StartActivity : AppCompatActivity() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname3",
                 3,
-                dateTimeNow
+                dateTimeNow()
             )
         )
         dataHelper.insertUser(
@@ -116,17 +158,17 @@ class StartActivity : AppCompatActivity() {
                 SampleDataStory.getExampleImgURL(),
                 "nickname4",
                 4,
-                dateTimeNow
+                dateTimeNow()
             )
         )
-        callLog("++++","Action")
+        callLog("++++", "Action")
         dataHelper.insertGenre(Genre(null, "Action", 1))
-        callLog("++++","Romance")
+        callLog("++++", "Romance")
 
         dataHelper.insertGenre(Genre(null, "Romance", 1))
-        callLog("++++","Horror")
+        callLog("++++", "Horror")
         dataHelper.insertGenre(Genre(null, "Horror", 1))
-        callLog("++++","Fantasy")
+        callLog("++++", "Fantasy")
         dataHelper.insertGenre(Genre(null, "Fantasy", 1))
 
 
@@ -150,7 +192,7 @@ class StartActivity : AppCompatActivity() {
                 imgUrl = imgUrlListString[i],
                 bgImgUrl = imgUrlListString[i],
                 author = "Author $i",
-                createdDate = dateTimeNow,
+                createdDate = dateTimeNow(),
                 isTextStory = 0,
                 score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
@@ -166,7 +208,7 @@ class StartActivity : AppCompatActivity() {
                 imgUrl = SampleDataStory.getExampleImgURL(),
                 bgImgUrl = SampleDataStory.getExampleImgURL(),
                 author = "Author $i",
-                createdDate = dateTimeNow,
+                createdDate = dateTimeNow(),
                 isTextStory = 1,
                 score = 4.0f,
                 userID = 1 // Assuming user ID 1 created the stories
@@ -201,6 +243,15 @@ class StartActivity : AppCompatActivity() {
         dataHelper.insertUserLoveStory(3, 3)
         dataHelper.insertUserLoveStory(4, 4)
 
+
+        dataHelper.insertRate(Rate(null, 3, 1, 1))
+        dataHelper.insertRate(Rate(null, 5, 2, 1))
+        dataHelper.insertRate(Rate(null, 2, 3, 1))
+        dataHelper.insertRate(Rate(null, 1, 2, 2))
+        dataHelper.insertRate(Rate(null, 3, 3, 2))
+        dataHelper.insertRate(Rate(null, 4, 4, 2))
+
+
         dataHelper.insertChapterMark(1, 1)
         dataHelper.insertChapterMark(2, 2)
         dataHelper.insertChapterMark(3, 3)
@@ -213,11 +264,11 @@ class StartActivity : AppCompatActivity() {
     }
 
     fun addStoryWithDetails(story: Story, dbHelper: DatabaseHelper) {
-        val p1 ="https://drive.google.com/uc?id=1eFvesLiPiREI8q8B2EAufHPWYv5D_jul"
-        val p2 ="https://drive.google.com/uc?id=1qcKZ_12g0qdq1wO9kSAzjf3vb4geWepj"
-        val p3 ="https://drive.google.com/uc?id=1UZH_gJMCENWPALjWC7--ZFvFoSZUINWZ"
-        val p4 ="https://drive.google.com/uc?id=1Tuc_sSJgZqdT2ip_54xISNXS2xu3nVxv"
-        val p5 ="https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y"
+        val p1 = "https://drive.google.com/uc?id=1eFvesLiPiREI8q8B2EAufHPWYv5D_jul"
+        val p2 = "https://drive.google.com/uc?id=1qcKZ_12g0qdq1wO9kSAzjf3vb4geWepj"
+        val p3 = "https://drive.google.com/uc?id=1UZH_gJMCENWPALjWC7--ZFvFoSZUINWZ"
+        val p4 = "https://drive.google.com/uc?id=1Tuc_sSJgZqdT2ip_54xISNXS2xu3nVxv"
+        val p5 = "https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y"
 
         // Insert the story
         val storyId = dbHelper.insertStory(story)
@@ -226,7 +277,7 @@ class StartActivity : AppCompatActivity() {
             // Add 4 chapters for the story
             for (i in 1..4) {
                 val chapter =
-                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow, storyId.toInt())
+                    Chapter(null, "Chapter $i of ${story.title}", dateTimeNow(), storyId.toInt())
                 val chapterId = dbHelper.insertChapter(chapter)
 
                 if (chapterId != -1L) {
@@ -294,14 +345,15 @@ class StartActivity : AppCompatActivity() {
                 val comment = Comment(
                     null,
                     "Comment $i on ${story.title}",
-                    dateTimeNow,
-                    userId = 1, // Assuming user ID 1 for simplicity
+                    dateTimeNow(),
+                    userId = 2, // Assuming user ID 1 for simplicity
                     storyId = storyId.toInt()
                 )
                 dbHelper.insertComment(comment)
             }
         }
     }
+
     fun convertGoogleDriveLinkToDirectLink(driveLink: String): String {
         val idRegex = Regex("file/d/([a-zA-Z0-9_-]+)")
         val matchResult = idRegex.find(driveLink)

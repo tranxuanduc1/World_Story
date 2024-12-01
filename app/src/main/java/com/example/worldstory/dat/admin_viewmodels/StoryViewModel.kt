@@ -61,7 +61,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             SampleDataStory.getExampleImgURL(),
             SampleDataStory.getExampleImgURLParagraph(),
             isTextStory = isText.value?.toInt() ?: 1,
-            dateTimeNow,
+            dateTimeNow(),
             Float.MAX_VALUE / Float.MAX_VALUE,
             1
         )

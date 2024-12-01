@@ -4,5 +4,13 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DucCommentDataClass(var idComment:Int, var idStory:Int, var idUser:Int, var content:String, var date:String):
+data class DucCommentDataClass(
+    var commentId: Int,
+    var content: String,
+    var imgAvatarUrl: String,
+    var nameUser:String,
+    var date: String,
+    var storyId: Int,
+    var userId: Int,
+) :
     Parcelable

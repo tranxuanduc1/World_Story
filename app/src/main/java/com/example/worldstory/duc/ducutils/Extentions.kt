@@ -40,9 +40,8 @@ import java.time.format.DateTimeFormatter
 fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
-var dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-var dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-var timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+
 var numDef=1
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
@@ -69,6 +68,15 @@ fun getTextDataNotFound(context: Context): String{
 fun callLog(name: String, text: String){
     Log.w(name,text)
 }
+fun dateTimeNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+}
+fun dateNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+}
+fun timeNow():String{
+    return  LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+}
 //--------------------------------------
 fun Int.toBoolean(): Boolean = this == 1
 fun Boolean.toInt(): Int {
@@ -79,7 +87,7 @@ fun Boolean.toInt(): Int {
 }
 
 fun ImageView.loadImgURL(context: Context,imageURL:String){
-    Glide.with(context).load(imageURL).centerCrop().into(this)
+    Glide.with(context).load(imageURL).into(this)
 
 }
 
@@ -199,7 +207,7 @@ fun createGridCardViewStory(
         author.text=i.author
         imgURL.loadImgURL(context,i.imgUrl)
 
-        score.text= (i.score).toString()
+        score.text= String.format("%.1f",i.score)
         idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_start_scene"
+    android:launchMode="singleTask"
     tools:context="com.example.worldstory.StartActivity">
 
     <LinearLayout
