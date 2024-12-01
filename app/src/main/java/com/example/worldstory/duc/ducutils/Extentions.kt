@@ -79,7 +79,7 @@ fun Boolean.toInt(): Int {
 }
 
 fun ImageView.loadImgURL(context: Context,imageURL:String){
-    Glide.with(context).load(imageURL).centerCrop().into(this)
+    Glide.with(context).load(imageURL).into(this)
 
 }
 
