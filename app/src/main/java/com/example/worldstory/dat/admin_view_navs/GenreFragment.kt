@@ -259,7 +259,6 @@ class GenreFragment : Fragment() {
             .setCancelable(false)
             .setPositiveButton("Chấp nhận") { dialog, id ->
                 genreViewModel.deleteGenre(genre.genreID!!)
-                genreAdapter.remove(p)
                 dialog.dismiss()
             }
             .setNegativeButton("Không chấp nhận") { dialog, id ->

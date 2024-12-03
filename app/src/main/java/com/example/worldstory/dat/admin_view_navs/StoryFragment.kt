@@ -87,40 +87,6 @@ class StoryFragment : Fragment(), OnItemClickListener {
             storyAdapter.updateList(storyViewModel.stories.value ?: emptyList())
         }
 
-        //////////////////////////////////////////
-
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val data = withContext(Dispatchers.IO) {
-//                val tempList = mutableListOf<Story>()
-//                for (i in 1..1000) {
-//                    tempList.add(
-//                        Story(
-//                            "T1",
-//                            "Ngao, Sò, Ốc, Hến",
-//                            "Unknow",
-//                            listOf("Hài", "Kịch Tính")
-//                        )
-//                    )
-//                    tempList.add(
-//                        Story(
-//                            "T2",
-//                            "Conan",
-//                            "Unknow",
-//                            listOf("Hài", "Trinh Thám")
-//                        )
-//                    )
-//                }
-//                tempList
-//            }
-//            // Cập nhật danh sách sau khi load xong
-//            storyList.addAll(data)
-//
-//            if (sharedViewModel._selectedChips.isNotEmpty()) {
-//                sharedViewModel._selectedChips.forEach { chip -> storyAdapter.filter.filter(chip.toString()) }
-//            } else
-//                storyAdapter.notifyDataSetChanged()
-//        }
-
 
         //searchview
         binding.searchViewStory.setOnQueryTextListener(object :
@@ -338,7 +304,6 @@ class StoryFragment : Fragment(), OnItemClickListener {
             .setCancelable(false)
             .setPositiveButton("Chấp nhận") { dialog, id ->
                 storyViewModel.deleteStory(story)
-                storyAdapter.delete(p)
                 dialog.dismiss()
             }
             .setNegativeButton("Không chấp nhận") { dialog, id ->

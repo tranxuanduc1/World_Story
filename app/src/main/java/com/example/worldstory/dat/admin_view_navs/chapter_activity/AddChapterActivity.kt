@@ -45,37 +45,25 @@ import java.util.Collections
 
 class AddChapterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddChapterBinding
-    val tempImgs = mutableMapOf<Int, Uri>()
+    private val tempImgs = mutableMapOf<Int, Uri>()
     private lateinit var prvImgAdapter: PreviewUploadedAdapter
     private var index = 0
     private val chapterViewModel: ChapterViewModel by viewModels {
         ChapterViewModelFactory(DatabaseHelper(this))
+//        ChapterViewModelFactory(DatabaseHelper.getInstance(this))
     }
+
     private lateinit var driveService: Drive
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris: List<Uri> ->
             uris.let {
                 for (i in uris) {
                     tempImgs[index++] = i
                     Log.w("size", tempImgs.size.toString())
-
-//                    Log.w("content", uris.toString())
-//                    uploadImageToDrive(i)
                 }
                 prvImgAdapter.updateMap(tempImgs)
-
             }
-
-//            if (uris != null) {
-//                for (uri in uris) {
-//                    chapterViewModel.tempImgs.value = mapOf(index to uri.toString())
-//                    index++
-//                    Log.w("i",index.toString())
-//                    Log.d("l",uri.toString())
-//                }
-//
-//            }
-//            Log.w("index",index.toString())
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,14 +78,18 @@ class AddChapterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        //sự kiến nhấn upload
         binding.uploadImgSrc.setOnClickListener {
             openImagePicker()
         }
-        prvImgAdapter = PreviewUploadedAdapter(tempImgs)
 
+
+        ////recycleview
+        prvImgAdapter = PreviewUploadedAdapter(tempImgs)
         binding.prevUploaded.layoutManager = LinearLayoutManager(this)
         binding.prevUploaded.adapter = prvImgAdapter
 
+        //remove
         binding.removeUploaded.setOnClickListener {
             chapterViewModel.arrID.clear()
             chapterViewModel.imgMap.clear()
@@ -105,6 +97,8 @@ class AddChapterActivity : AppCompatActivity() {
             prvImgAdapter.updateMap(tempImgs)
             index = 0
         }
+
+        //accept
         binding.acceptAddChapter.setOnClickListener {
             val storyID = intent.getIntExtra("storyID", -1)
 
@@ -116,7 +110,7 @@ class AddChapterActivity : AppCompatActivity() {
                     val deferredTasks =
                         tempImgs.map { (k, v) ->
                             async {
-                                uploadImageToDrive(k,v, chapterViewModel.arrID)
+                                uploadImageToDrive(k, v, chapterViewModel.arrID)
                             }
                         }
                     val rs = deferredTasks.awaitAll()
@@ -128,6 +122,8 @@ class AddChapterActivity : AppCompatActivity() {
                         } else {
                             Log.w("khoong thanh cong", "that bai")
                         }
+                        tempImgs.clear()
+                        index=0
                     }
 
                 }
@@ -135,17 +131,13 @@ class AddChapterActivity : AppCompatActivity() {
             }
 
         }
+
+        //lấy drive
         driveService = getDriveService(this)
-
-
-        chapterViewModel.getAllImage().forEach { i ->
-            println(i)
-        }
     }
 
     fun openImagePicker() {
         pickImageLauncher.launch(arrayOf("image/jpeg"))
-
     }
 
 
@@ -167,7 +159,7 @@ class AddChapterActivity : AppCompatActivity() {
             .build()
     }
 
-    fun uploadImageToDrive(order:Int,uri: Uri, arrID: MutableMap<Int, String>): Boolean {
+    fun uploadImageToDrive(order: Int, uri: Uri, arrID: MutableMap<Int, String>): Boolean {
 
         val mediaContent =
             InputStreamContent("image/jpeg", contentResolver.openInputStream(uri))

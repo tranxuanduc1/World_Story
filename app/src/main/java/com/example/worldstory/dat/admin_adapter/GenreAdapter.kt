@@ -64,15 +64,15 @@ class GenreAdapter(private var genreList: List<Genre>, private var color: Int) :
         notifyDataSetChanged()
     }
 
-    fun getGenre(p:Int):Genre{
+    fun getGenre(p: Int): Genre {
         return filteredList[p]
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun remove(p:Int){
-        val newList=genreList.filter { it!= genreList[p] }
-        genreList=newList
-        notifyItemRemoved(p)
-        notifyDataSetChanged()
+    fun remove(p: Int) {
+        if (p >= 0 && p < genreList.size) {
+            (genreList as MutableList).removeAt(p)
+            notifyItemRemoved(p)
+            notifyItemRangeChanged(p,genreList.size)
+        }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.worldstory.dat.admin_viewmodels
 
-import android.net.Uri
-import android.util.Log
-import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.lifecycle.LiveData
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +8,7 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Image
+import com.example.worldstory.model.Paragraph
 
 class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
 
@@ -18,19 +16,15 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     val imgMap = mutableMapOf<Int, String>()
     val name = MutableLiveData<String>()
 
-
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
 
     fun setImgs() {
-        println("trước" + arrID.size)
         val sortedMap = arrID.toSortedMap()
-        println("sau" + arrID.size)
         sortedMap.forEach { (k, v) ->
             imgMap[k] = transform(v)
         }
-        println("map" + imgMap.size)
     }
 
     fun getAllImage(): List<Image> {
@@ -61,6 +55,21 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         return false
     }
 
+    fun onAddTextChapter(storyID: Int, content: Map<Int, String>): Boolean {
+        if (storyID != -1) {
+            val chapter = Chapter(null, name.value.toString(), dateTimeNow().toString(), storyID)
+            val l: Long = db.insertChapter(chapter)
+
+            if(content.isNotEmpty()){
+                for (c in content){
+                    val p= Paragraph(null,c.value,c.key,l.toInt())
+                    val ll=db.insertParagraph(p)
+                }
+            }
+            return true
+        }
+        return false
+    }
 
 }
 

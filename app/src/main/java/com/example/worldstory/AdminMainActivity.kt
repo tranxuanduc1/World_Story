@@ -54,6 +54,7 @@ class AdminMainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+
 //        roleViewModel.deleteAllRole()
 //        roleViewModel.insertRole(Role(null,"ADMIN"))
 //        roleViewModel.insertRole(Role(null,"MANANGER"))

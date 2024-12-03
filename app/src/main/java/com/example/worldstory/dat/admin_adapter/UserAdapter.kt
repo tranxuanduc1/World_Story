@@ -85,9 +85,11 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun removeUser(po: Int) {
-        val newList = userList.filter { it != userList[po] }
-        userList = newList
-        notifyItemRemoved(po)
-        notifyDataSetChanged()
+        if (po >= 0 && po < userList.size) {
+            (userList as MutableList).removeAt(po)
+            notifyItemRemoved(po)
+            notifyItemRangeChanged(po, userList.size)
+        }
     }
+
 }

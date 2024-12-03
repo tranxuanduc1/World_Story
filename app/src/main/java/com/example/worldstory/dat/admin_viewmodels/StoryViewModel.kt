@@ -23,9 +23,8 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val genreIDList = MutableLiveData<List<Int>>()
     val storyGenreMap = mutableMapOf<Int, Set<Int>>()
 
-
     val currentStoryID = MutableLiveData(-1)
-    val chapterListByStory = mutableListOf<Chapter>()
+    val chapterListByStory = MutableLiveData<List<Chapter>>()
 
     init {
         fetchAllStories()
@@ -35,7 +34,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 
     fun fetchAllChapters() {
         if (currentStoryID.value!! >= 0)
-            chapterListByStory.addAll(db.getChaptersByStory(currentStoryID.value!!))
+            chapterListByStory.value=db.getChaptersByStory(currentStoryID.value!!)
     }
 
     fun setIDStory(id: Int?) {

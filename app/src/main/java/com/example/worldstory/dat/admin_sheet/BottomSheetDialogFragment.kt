@@ -75,6 +75,7 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun addChipFromTemplate(gerns: List<Genre>, chipGroup: ChipGroup): Boolean {
+
         if (gerns.isEmpty()) {
             return false
         } else {

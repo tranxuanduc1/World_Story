@@ -225,12 +225,12 @@ fun createGridCardViewStory(
             }
         }
 
-        txtGenre.text=genre.genreName
+
         gridLayout.addView(cardView)
 
     }
 
-
+    txtGenre.text=genre.genreName
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }

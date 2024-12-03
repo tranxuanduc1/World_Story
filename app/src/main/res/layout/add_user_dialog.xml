@@ -13,10 +13,11 @@
     </data>
 
     <LinearLayout
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/new_user_name"
@@ -27,6 +28,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:hint="Tên user"
+            android:singleLine="true"
             android:maxLines="1"
             android:text="@={userViewModel.userName}" />
 
@@ -69,26 +71,6 @@
             android:inputType="textPassword"
             android:maxLines="1" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/add_user_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/voncano"
-                android:text="Add" />
-
-            <Button
-                android:id="@+id/cancel_add_new_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:backgroundTint="@color/voncano"
-                android:text="Cancel" />
-        </LinearLayout>
 
 
     </LinearLayout>

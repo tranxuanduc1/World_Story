@@ -147,9 +147,10 @@ class StoryAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun delete(p:Int){
-        val newList=storyList.filter { it!=storyList[p] }
-        storyList=newList
-        notifyItemRemoved(p)
-        notifyDataSetChanged()
+        if(p>=0 && p < storyList.size){
+            (storyList as MutableList).removeAt(p)
+            notifyItemRemoved(p)
+            notifyItemRangeChanged(p,storyList.size)
+        }
     }
 }

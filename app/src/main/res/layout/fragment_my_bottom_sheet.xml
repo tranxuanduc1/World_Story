@@ -3,13 +3,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"
         style="@style/Widget.Material3.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
@@ -21,19 +21,48 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:chipSpacing="8dp"
-            app:singleSelection="false"
-            app:selectionRequired="true">
-        </com.google.android.material.chip.ChipGroup>
+            app:selectionRequired="true"
+            app:singleSelection="false"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip1"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Truyện chữ"
+                android:layout_marginEnd="8dp"
+                app:chipBackgroundColor="@color/creamwhite"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip2"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                app:chipBackgroundColor="@color/creamwhite"
+                android:text="Truyện tranh" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/filter_btn"
-            android:layout_marginLeft="160dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="160dp"
             android:backgroundTint="@color/voncano"
-            android:textColor="@color/creamwhite"
             android:text="Lọc"
-            />
+            android:textColor="@color/creamwhite" />
     </LinearLayout>
 
 </layout>

@@ -86,13 +86,7 @@ class AddUserDialogFragment : DialogFragment() {
                     }
                 }
             }
-            binding.cancelAddNewUser.setOnClickListener {
-                dialog.dismiss()
-            }
-            binding.addUserBtn.setOnClickListener {
-                userViewModel.onAddUser()
-                dialog.dismiss()
-            }
+           
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")

@@ -29,7 +29,6 @@ class PreviewUploadedAdapter(private val items: MutableMap<Int, Uri>?) :
         if (imgMap != null) {
             items?.putAll(imgMap)
         }
-        Log.d("sdddddddcsdcc",items?.size.toString())
         notifyDataSetChanged()
     }
 }

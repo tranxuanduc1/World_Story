@@ -66,6 +66,9 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.userViewModel=userViewModel
+
         //spinner
         items = roleViewModel.roles.map { it.roleName }
         val adapter = ArrayAdapter(requireContext(), R.layout.user_spinner_item, items)
@@ -122,17 +125,17 @@ class UserFragment : Fragment() {
             ?.setOnClickListener() {
                 hideSearchView()
             }
+        userViewModel.__users.observe(viewLifecycleOwner) {new->
+            userAdapter.update(new?: emptyList())
+
+        }
         //recycleview
         binding.userList.layoutManager = LinearLayoutManager(requireContext())
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        userAdapter = UserAdapter(userViewModel._users.value ?: emptyList(), color1)
-        UserAdapter(emptyList(), color1)
+        userAdapter = UserAdapter(userViewModel.__users.value ?: emptyList(), color1)
         userAdapter.filterByRole(0)
         binding.userList.adapter = userAdapter
-        userViewModel._users.observe(viewLifecycleOwner) {
-            userAdapter.update(userViewModel._users.value ?: emptyList())
 
-        }
         //swipe
         val simpleItemTouchCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -279,6 +282,8 @@ class UserFragment : Fragment() {
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, items)
         binding.autoCompleteTextF.setAdapter(adapter)
+        userAdapter.filterByRole(0)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -305,7 +310,6 @@ class UserFragment : Fragment() {
             .setCancelable(false)
             .setPositiveButton("Chấp nhận") { dialog, id ->
                 userViewModel.delUser(user)
-                userAdapter.removeUser(p)
                 dialog.dismiss()
             }
             .setNegativeButton("Không chấp nhận") { dialog, id ->

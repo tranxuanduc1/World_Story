@@ -13,8 +13,7 @@ import com.example.worldstory.model.User
 
 
 class UserViewModel(val db: DatabaseHelper) : ViewModel() {
-    private val __users = MutableLiveData<List<User>>()
-    val _users: LiveData<List<User>> get() = __users
+    val __users = MutableLiveData<List<User>>()
     val userName = MutableLiveData<String>()
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()

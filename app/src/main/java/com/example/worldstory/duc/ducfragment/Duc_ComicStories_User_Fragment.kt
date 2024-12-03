@@ -90,7 +90,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
         var listBindingGrid: List<ListCardStoriesLayoutBinding>
         ducStoryViewModel.genreAndStoriesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
-
             createGridCardViewStory(
                 requireContext(),
                 inflater,
