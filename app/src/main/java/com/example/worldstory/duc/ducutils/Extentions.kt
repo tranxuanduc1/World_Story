@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.CardStoryItemLayoutBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
+import com.example.worldstory.RoleEnum
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
@@ -29,6 +30,8 @@ import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
+import com.example.worldstory.model_for_test.Role
 
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -292,21 +295,28 @@ fun Context.getUserIdSession(): Int{
     return userId
 
 }
+fun Context.getRoleGenreSession(): String{
+    var sharePref=getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+    val role=sharePref.getString(getString(R.string.key_user_role_session), RoleEnum.GUEST.name)
+    return role?:RoleEnum.GUEST.name
+
+}
+
 fun Context.isUserCurrentGuest(): Boolean{
-    if(getUserIdSession()==4)return true
-    else return false
+
+    return getRoleGenreSession()== RoleEnum.GUEST.name
 }
 fun Context.isUserCurrentAdmin(): Boolean{
-    if(getUserIdSession()==1)return true
-    else return false
+    return getRoleGenreSession()== RoleEnum.ADMIN.name
+
 }
 fun Context.isUserCurrentAuthor(): Boolean{
-    if(getUserIdSession()==2)return true
-    else return false
+    return getRoleGenreSession()== RoleEnum.AUTHOR.name
+
 }
 fun Context.isUserCurrentMember(): Boolean{
-    if(getUserIdSession()==3)return true
-    else return false
+    return getRoleGenreSession()== RoleEnum.MEMBER.name
+
 }
 fun  Context.clearUserSession() {
     val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)

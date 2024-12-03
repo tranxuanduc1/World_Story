@@ -2,17 +2,14 @@ package com.example.worldstory.duc
 
 import android.content.Context
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducdatabase.DucDatabaseHelper
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.dateTimeNow
-import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Story
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -46,6 +43,10 @@ object SampleDataStory {
     fun getExampleImgURLParagraph():String{
         val p5 ="https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y"
         return p5
+
+    }
+    fun getExampleAvatarUrl():String{
+        return "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
 
     }
     fun getExampleEmail(): String{

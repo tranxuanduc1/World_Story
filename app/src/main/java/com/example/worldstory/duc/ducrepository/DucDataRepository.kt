@@ -1,8 +1,10 @@
 package com.example.worldstory.duc.ducrepository
 
+
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -12,6 +14,7 @@ import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Image
 import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Rate
+import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
@@ -118,22 +121,57 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
             )
         )
     }
-    fun checkAccountByUserName(userName: String,password: String): Pair<Boolean, String>{
+    fun addNewUserMember(username: String,password: String,email: String,nickname: String,date: String){
+        var roleIdMember=getRoleIdMember()
+        var newUser = User(
+            null, username, password, email, SampleDataStory.getExampleAvatarUrl(), nickname, roleIdMember,
+            date
+        )
+        dbHelper.insertUser(newUser)
+    }
+    fun checkAccountByUserNameWhenLogin(userName: String, password: String): UserLoginStateEnum{
         var userNameTrim= userName.trim()
         var passwordTrim=password.trim()
         var user=dbHelper.getUserByUsersName(userNameTrim)
         return if (user==null){
-            Pair(false,"Account does not exist")
+            UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST
         }else{
             if(user.hashedPw == passwordTrim){
-                Pair(true,"")
+                UserLoginStateEnum.CORRECT
+
             }else{
-                Pair(false,"Incorrect username or password ")
+                UserLoginStateEnum.INCORRECT_USERNAME_OR_PASSWORD
+
             }
 
 
         }
 
+    }
+    fun checkAccountExist(userName: String):UserLoginStateEnum{
+        var userNameTrim= userName.trim()
+        var user=dbHelper.getUserByUsersName(userNameTrim)
+        return if (user==null){
+            UserLoginStateEnum.CORRECT
+        }else{
+            UserLoginStateEnum.USERNAME_ALREADY_EXISTS
+        }
+
+    }
+    fun getUserByUsername(username: String): User?{
+        return dbHelper.getUserByUsersName(username)
+    }
+
+    //role
+    fun getRoleByRoleId(roleId: Int): Role?{
+        var listOfRoles= dbHelper.getAllRoles()
+        var role=listOfRoles.filter {
+            it.roleID?.let { id -> id == roleId }?:false
+        }.first()
+        return role
+    }
+    fun getRoleIdMember(): Int{
+        return 3
     }
     //rating
     fun getRatingsByStory(storyId: Int): List<Rate> {

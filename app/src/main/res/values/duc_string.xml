@@ -31,10 +31,16 @@
     <string name="createYourAccout">Tạo tài khoản của bạn</string>
     <string name="confirmPassword">Xác nhận mật khẩu</string>
     <string name="email">Email</string>
+    <string name="nickname">Biệt danh</string>
     <string name="storyDataNotFound">Không tìm thấy dữ liệu của truyện</string>
     <string name="dataNotFound">Không tìm thấy dữ liệu</string>
     <string name="loremIpsumLong">Lorem ipsum odor amet, consectetuer adipiscing elit. Acurae conubia habitasse feugiat urna vestibulum dis. Faucibus ultricies leo fusce accumsan suscipit sapien penatibus. Nulla per ad curae erat dolor; eu nisi? Iaculis turpis efficitur ad nascetur quisque commodo justo pharetra. Finibus ultrices gravida condimentum laoreet magna eget. Phasellus inceptos fames nisl nibh nisl rhoncus. Sagittis conubia ornare leo fermentum dapibus mus. Dictum facilisis faucibus curabitur purus nec proin. Torquent dui fringilla class pretium odio tellus at! Turpis ornare gravida metus amet, molestie augue eget. Non ornare vehicula potenti mollis gravida duis nostra. Aliquet tortor semper consectetur enim faucibus tempus, turpis arcu penatibus.</string>
     <string name="loremIpsum">Lorem ipsum odor amet</string>
+    <string name="incorrectUsernameOrPassword">Tên tài khoản hoặc mật khẩu sai</string>
+    <string name="accountDoesNotExist">Tài khoản không tồn tại</string>
+    <string name="comfirmPasswordDoesNotMatchPassword">Mật khẩu xác nhận không trùng với mật khẩu</string>
+    <string name="usernameAlreadyExists">Tên đăng nhập đã tồn tại</string>
+
     //----------------KEY----------------
     <string name="key_storyInfo">STORY_INFO</string>
     <string name="key_storiesByGenre">STORIES_BY_GENRE</string>
