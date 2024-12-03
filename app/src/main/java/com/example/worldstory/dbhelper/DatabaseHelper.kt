@@ -63,7 +63,7 @@ object Contract {
         const val TABLE_NAME = "user_table"
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
-        const val COLUMN_EMAIL = "password"
+        const val COLUMN_EMAIL = "email"
         const val COLUMN_NICKNAME = "nickname"
         const val COLUMN_IMAGE_AVATAR = "imgAvatar"
         const val COLUMN_CREATED_DATE = "created_date"
@@ -182,7 +182,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "app_doc_truyen_db"
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 6
         private const val _ID = BaseColumns._ID
 
 
