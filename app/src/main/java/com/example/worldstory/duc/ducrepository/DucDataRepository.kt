@@ -208,4 +208,31 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         // add history
         dbHelper.insertChapterHistory(userId, chapterId)
     }
+
+    // chapter mark
+    fun getChaptersMarkedByUser(userId: Int): List<Chapter>{
+        var chapterMarksId=dbHelper.getChapterMarksIdByUser(userId)
+        var listOfChapters=mutableListOf<Chapter>()
+        chapterMarksId.forEach{
+            var chapter=dbHelper.getChaptersByChapterId(it)
+            chapter?.let {
+                listOfChapters.add(chapter)
+            }
+        }
+        return listOfChapters
+    }
+    fun getChaptersMarkedByUserAndStory(userId: Int,storyId: Int): List<Chapter>{
+        var listOfChaptersMarkedByUser=getChaptersMarkedByUser(userId)
+        var listOfChapter =listOfChaptersMarkedByUser.filter { it.storyID ==storyId }
+        return listOfChapter
+    }
+    fun setChapterMark(userId: Int,chapterId: Int){
+        //xoa cai cu
+        dbHelper.deleteChapterMark(userId,chapterId)
+        // them cai moi
+        dbHelper.insertChapterMark(userId,chapterId)
+    }
+    fun deleteChapterMark(userId: Int,chapterId: Int){
+        dbHelper.deleteChapterMark(userId,chapterId)
+    }
 }

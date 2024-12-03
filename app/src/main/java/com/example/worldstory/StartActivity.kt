@@ -57,6 +57,8 @@ class StartActivity : AppCompatActivity() {
 
 
         var isCheck = isCheckUserSession()
+
+
         //testDatabase()
 
 

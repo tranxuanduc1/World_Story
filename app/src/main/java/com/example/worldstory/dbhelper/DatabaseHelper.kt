@@ -1357,7 +1357,24 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return chapterMarks
     }
+    fun getChapterMarksIdByUser(userId: Int): List<Int> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.ChapterMarkEntry.TABLE_NAME}
+            WHERE ${Contract.ChapterMarkEntry.COLUMN_USER_ID_FK} = ?
+        """.trimIndent(), arrayOf(userId.toString()))
+        val chapterMarksId = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+               val chapterId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.ChapterMarkEntry.COLUMN_CHAPTER_ID_FK))
+                chapterMarksId.add( chapterId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return chapterMarksId
+    }
 
     //////////////////////////
     ///----ChapterHistory-----////
