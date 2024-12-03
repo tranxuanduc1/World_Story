@@ -31,6 +31,7 @@
         android:paddingHorizontal="20dp"
         />
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_username_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -40,6 +41,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_username_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -48,6 +50,8 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_password_login"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
@@ -58,6 +62,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -65,6 +70,15 @@
             android:hint="@string/password"
 
             />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/txt_warning_login"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="saii"
+            android:textColor="@color/red"
+            android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -79,6 +93,7 @@
         android:layout_gravity="right"
         />
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login_login"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

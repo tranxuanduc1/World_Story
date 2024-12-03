@@ -57,6 +57,8 @@ class StartActivity : AppCompatActivity() {
 
 
         var isCheck = isCheckUserSession()
+
+
         //testDatabase()
 
 
@@ -79,10 +81,11 @@ class StartActivity : AppCompatActivity() {
                 )
             with(sharePref.edit()) {
                 putInt(getString(R.string.key_user_id_session), 1)//id admin
-                putInt(
+                putString(
                     getString(R.string.key_user_role_session),
-                    1
+                    RoleEnum.ADMIN.name
                 )//role user, nho thao luan id guest la gi
+
                 apply()
             }
 
@@ -112,16 +115,17 @@ class StartActivity : AppCompatActivity() {
 
     private fun testDatabase() {
         var dataHelper: DatabaseHelper = DatabaseHelper.getInstance(this)
-        dataHelper.insertRole(Role(null, "Admin"))
-        dataHelper.insertRole(Role(null, "Moderator"))
-        dataHelper.insertRole(Role(null, "Member"))
-        dataHelper.insertRole(Role(null, "Guest"))
+        dataHelper.insertRole(Role(null, RoleEnum.ADMIN.name))
+        dataHelper.insertRole(Role(null, RoleEnum.AUTHOR.name))
+        dataHelper.insertRole(Role(null, RoleEnum.MEMBER.name))
+        dataHelper.insertRole(Role(null, RoleEnum.GUEST.name))
 
         dataHelper.insertUser(
             User(
                 null,
                 "user1",
-                "hashedPassword1",
+                "123",
+                SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname1",
                 1,
@@ -132,7 +136,8 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user2",
-                "hashedPassword2",
+                "123",
+                SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname2",
                 2,
@@ -143,7 +148,8 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user3",
-                "hashedPassword3",
+                "123",
+                SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname3",
                 3,
@@ -154,7 +160,8 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user4",
-                "hashedPassword4",
+                "123",
+                SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname4",
                 4,

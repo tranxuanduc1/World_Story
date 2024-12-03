@@ -17,6 +17,8 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     val userName = MutableLiveData<String>()
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()
+    val email = MutableLiveData<String>()
+
     var roleID: Int = 0
 
     init {
@@ -34,6 +36,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             null,
             userName.value.toString(),
             hashedpw,
+            email.value.toString(),
             SampleDataStory.getExampleImgURL(),
             nickName.value.toString(),
             roleID,
@@ -43,6 +46,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         userName.value = ""
         passWord.value = ""
         nickName.value = ""
+        email.value=""
         Log.i("ham insert", "da insert")
         fetchAllUsers()
         return l

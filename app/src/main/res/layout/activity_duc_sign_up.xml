@@ -30,6 +30,7 @@
         android:paddingHorizontal="20dp"
         />
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout_username_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -37,6 +38,7 @@
         app:hintTextColor="@color/green2"
         >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_username_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -44,6 +46,8 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout_email_signup"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -51,6 +55,8 @@
         app:hintTextColor="@color/green2"
         >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_email_signup"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -58,6 +64,25 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout_nickname_signup"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        app:hintTextColor="@color/green2"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_nickname_signup"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rectangle_stroke_curved"
+            android:hint="@string/nickname"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout_password_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
@@ -68,6 +93,8 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_password_signup"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -77,6 +104,7 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout_comfirmpassword_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
@@ -85,6 +113,8 @@
         app:hintTextColor="@color/green2"
         >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etxt_confirmPassword_signup"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rectangle_stroke_curved"
@@ -92,8 +122,17 @@
             android:hint="@string/confirmPassword"
             />
     </com.google.android.material.textfield.TextInputLayout>
-
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/txt_warning_signup"
+        android:layout_marginHorizontal="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="saii"
+        android:textColor="@color/red"
+        android:textSize="16sp"/>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_signup_signup"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
