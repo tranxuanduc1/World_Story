@@ -17,6 +17,7 @@
             android:id="@+id/tv_add_cate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="New Category"
             android:textSize="50dp" />
 
@@ -28,7 +29,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:text="@={genreViewModel.genreName}"
-            android:hint="Ngôn tình" />
+            android:fontFamily="sans-serif-condensed-medium"
+            android:hint="Ngôn tình"
+            android:singleLine="true"
+            android:text="@={genreViewModel.genreName}" />
     </LinearLayout>
 </layout>

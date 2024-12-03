@@ -32,6 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tên truyện mới"
+            android:singleLine="true"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="@={storyViewModel.title}"
             android:maxLines="1" />
 
@@ -39,16 +41,20 @@
             android:id="@+id/ten_tg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-condensed-medium"
             android:hint="Tên tác giả"
+            android:singleLine="true"
+
             android:text="@={storyViewModel.author}"
             android:maxLines="1" />
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/mo_ta"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:hint="Mô tả nội dung"
+            android:fontFamily="sans-serif-condensed-medium"            android:hint="Mô tả nội dung"
+            android:singleLine="true"
+
             android:text="@={storyViewModel.decription}"
             android:maxLines="1" />
 
@@ -59,6 +65,8 @@
                 android:id="@+id/switch_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:fontFamily="sans-serif-condensed-medium"
                 android:text="Truyện chữ"
                 android:padding="10dp"
                 android:checked="@={storyViewModel.isText()}"/>

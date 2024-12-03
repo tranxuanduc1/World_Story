@@ -18,8 +18,8 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
-
-    var roleID: Int = 0
+    val avtId= mutableListOf<String>()
+    var roleID: Int = -1
 
     init {
         fetchAllUsers()
@@ -31,13 +31,14 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
 
 
     fun onAddUser(): Long {
+        Log.w("id",avtId.get(0).toString())
         val hashedpw = hashPassword(password = passWord.value.toString())
         val user = User(
             null,
             userName.value.toString(),
             hashedpw,
             email.value.toString(),
-            SampleDataStory.getExampleImgURL(),
+            transform(avtId.get(0).toString()),
             nickName.value.toString(),
             roleID,
             dateTimeNow()
@@ -95,6 +96,9 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         return db.getUserByUsersId(id)!!
     }
 
+    fun transform(id: String): String {
+        return "https://drive.usercontent.google.com/download?id=${id}&export=view"
+    }
 
 }
 
