@@ -63,6 +63,7 @@ object Contract {
         const val TABLE_NAME = "user_table"
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
+        const val COLUMN_EMAIL = "password"
         const val COLUMN_NICKNAME = "nickname"
         const val COLUMN_IMAGE_AVATAR = "imgAvatar"
         const val COLUMN_CREATED_DATE = "created_date"
@@ -218,6 +219,7 @@ class DatabaseHelper(context: Context) :
             ${_ID} integer primary key autoincrement,
             ${Contract.UserEntry.COLUMN_USERNAME} text not null,
             ${Contract.UserEntry.COLUMN_PASSWORD} text not null,
+            ${Contract.UserEntry.COLUMN_EMAIL} text not null,
             ${Contract.UserEntry.COLUMN_NICKNAME} text not null,
             ${Contract.UserEntry.COLUMN_IMAGE_AVATAR} text not null,
             ${Contract.UserEntry.COLUMN_CREATED_DATE} text not null,
@@ -796,6 +798,7 @@ class DatabaseHelper(context: Context) :
         val values = ContentValues().apply {
             put(Contract.UserEntry.COLUMN_USERNAME, user.userName)
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+            put(Contract.UserEntry.COLUMN_EMAIL, user.email)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
             put(Contract.UserEntry.COLUMN_IMAGE_AVATAR, user.imgAvatar)
             put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
@@ -816,6 +819,7 @@ class DatabaseHelper(context: Context) :
     fun updateUser(user: User): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_EMAIL, user.email)
             put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
             put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
             put(Contract.UserEntry.COLUMN_IMAGE_AVATAR, user.imgAvatar)
@@ -846,6 +850,8 @@ class DatabaseHelper(context: Context) :
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
                 val hashedPw =
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val email =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
                 val nickName =
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
                 val imgAvatar =
@@ -854,7 +860,7 @@ class DatabaseHelper(context: Context) :
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
                 val createdDate =
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
-                users.add(User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate))
+                users.add(User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -878,6 +884,8 @@ class DatabaseHelper(context: Context) :
                 cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
             val hashedPw =
                 cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+            val email =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
             val nickName =
                 cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
             val imgAvatar =
@@ -886,7 +894,39 @@ class DatabaseHelper(context: Context) :
                 cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
             val createdDate =
                 cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
-            user = User(id, userName, hashedPw, imgAvatar, nickName, roleID, createdDate)
+            user = User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate)
+        }
+        cursor.close()
+        return user
+    }
+    fun getUserByUsersName(userName: String): User? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+                SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
+                WHERE ${Contract.UserEntry.COLUMN_USERNAME} = ? 
+          """.trimIndent(), arrayOf(userName.toString())
+        )
+        var user: User? = null
+
+        if (cursor.moveToFirst()) {
+
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val userName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+            val hashedPw =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+            val email =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
+            val nickName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+            val imgAvatar =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+            val roleID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+            val createdDate =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+            user = User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate)
         }
         cursor.close()
         return user

@@ -113,12 +113,28 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun createGuestUser() {
         dbHelper.insertUser(
             User(
-                null, "guest", "", SampleDataStory.getExampleImgURL(), "Guest", 1,
+                null, "guest", "", SampleDataStory.getExampleEmail(),SampleDataStory.getExampleImgURL(), "Guest", 1,
                 dateTimeNow()
             )
         )
     }
+    fun checkAccountByUserName(userName: String,password: String): Pair<Boolean, String>{
+        var userNameTrim= userName.trim()
+        var passwordTrim=password.trim()
+        var user=dbHelper.getUserByUsersName(userNameTrim)
+        return if (user==null){
+            Pair(false,"Account does not exist")
+        }else{
+            if(user.hashedPw == passwordTrim){
+                Pair(true,"")
+            }else{
+                Pair(false,"Incorrect username or password ")
+            }
 
+
+        }
+
+    }
     //rating
     fun getRatingsByStory(storyId: Int): List<Rate> {
         return dbHelper.getRatesByStory(storyId)

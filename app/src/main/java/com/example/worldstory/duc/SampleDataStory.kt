@@ -48,6 +48,9 @@ object SampleDataStory {
         return p5
 
     }
+    fun getExampleEmail(): String{
+        return "example@gmail.com"
+    }
     fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass{
         return getDataList(context).filter { it.idStory==idStory }.first()
     }
