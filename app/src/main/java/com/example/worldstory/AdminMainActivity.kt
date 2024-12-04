@@ -57,7 +57,7 @@ class AdminMainActivity : AppCompatActivity() {
 
 //        roleViewModel.deleteAllRole()
 //        roleViewModel.insertRole(Role(null,"ADMIN"))
-//        roleViewModel.insertRole(Role(null,"ATHOR"))
+//        roleViewModel.insertRole(Role(null,"AUTHOR"))
 //        roleViewModel.insertRole(Role(null,"MEMBER"))
 //        roleViewModel.insertRole(Role(null,"GUEST"))
 

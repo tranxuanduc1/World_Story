@@ -28,10 +28,10 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = filteredList[position]
-        Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.avt_user_col)
+        Picasso.get().load(user.imgAvatar).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
         holder.column1.text ="Nickname: ${user.nickName}"
-        holder.column3.text ="Created date: ${user.createdDate}"
+        holder.column3.text = user.createdDate
         holder.column4.text ="Username: ${user.userName}"
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(color)

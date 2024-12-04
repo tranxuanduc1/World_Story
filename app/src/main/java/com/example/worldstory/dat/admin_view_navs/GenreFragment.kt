@@ -111,6 +111,7 @@ class GenreFragment : Fragment() {
         Log.i("size","${genreViewModel.genres.value?.size}")
 
 
+        //swipe
         val simpleItemTouchCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -125,22 +126,23 @@ class GenreFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val genre = genreAdapter.getGenre(position)
-                if (direction == ItemTouchHelper.LEFT ) {
-//                    Toast.makeText(requireContext(), "Swipe left $position", Toast.LENGTH_SHORT).show()
-                    showConfirmationDialog(genre,position)
-                } else if (direction == ItemTouchHelper.RIGHT ) {
-                    genreAdapter.notifyItemChanged(position)
-                    Toast.makeText(requireContext(), "Swipe right", Toast.LENGTH_SHORT).show()
-//                    val editDialog = EditUserDialog()
-//                    val bundle = Bundle()
-//                    bundle.putInt("userID", user.userID!!)
-//                    editDialog.arguments = bundle
-//                    editDialog.show(requireActivity().supportFragmentManager, "EditUserDialog")
+                if (direction == ItemTouchHelper.LEFT) {
+
+                    showConfirmationDialog(genre, position)
+
+                } else if (direction == ItemTouchHelper.RIGHT) {
+
+                    showConfirmationDialog(genre, position)
+
                 }
             }
 
+            override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+                return 0.7f
+            }
+
             override fun onChildDraw(
-                c: Canvas,
+                canvas: Canvas,
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 dX: Float,
@@ -148,69 +150,60 @@ class GenreFragment : Fragment() {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    val itemView = viewHolder.itemView
-                    val height = itemView.bottom.toFloat() - itemView.top.toFloat()
-                    val width = height / 3
-                    val p = Paint()
-                    if (dX < 0) {
-                        p.color = Color.RED
-                        val background = RectF(
-                            itemView.right.toFloat() + dX,
-                            itemView.top.toFloat(),
-                            itemView.right.toFloat(),
-                            itemView.bottom.toFloat()
-                        )
-                        c.drawRect(background, p)
-                        // Vẽ biểu tượng xóa
-                        val icon = ContextCompat.getDrawable(
-                            recyclerView.context,
-                            R.drawable.white_outline_delete_24
-                        )!!
-                        val iconMargin = (itemView.height - icon.intrinsicHeight) / 2
-                        val iconTop = itemView.top + iconMargin
-                        val iconBottom = iconTop + icon.intrinsicHeight
-                        val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
-                        val iconRight = itemView.right - iconMargin
-                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
-                        icon.draw(c)
+                val itemView = viewHolder.itemView
+                val context = recyclerView.context
 
-                    }
-                    if (dX > 0) {
-                        // Vẽ biểu tượng xóa
-                        val icon = ContextCompat.getDrawable(
-                            recyclerView.context,
-                            R.drawable.outline_edit_24
-                        )!!
-                        val iconMargin = (itemView.height - icon.intrinsicHeight) / 2
-                        val iconTop = itemView.top + iconMargin
-                        val iconBottom = iconTop + icon.intrinsicHeight
+                // Lấy icon và kích thước
+                val icon = ContextCompat.getDrawable(context, R.drawable.white_outline_delete_24)!!
+                val iconIntrinsicHeight = icon.intrinsicHeight
 
-                        val iconLeft = itemView.left + iconMargin
-                        val iconRight = iconLeft + icon.intrinsicWidth
-                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                // Tính toán vị trí icon
+                val iconMargin = (itemView.height - iconIntrinsicHeight) / 2
 
-                        // Vẽ nền màu xanh khi kéo sang phải
-                        val background = ColorDrawable(Color.GREEN)
-                        background.setBounds(
-                            itemView.left,
-                            itemView.top,
-                            itemView.left + dX.toInt(),
-                            itemView.bottom
-                        )
-                        background.draw(c)
+                // Thêm nền khi vuốt
+                val paint = Paint()
 
-                        // Vẽ icon
-                        icon.draw(c)
-                    }
-                } else {
-                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+                if (dX < 0) { // Vuốt
+                    paint.color = Color.RED
+                    canvas.drawRect(
+                        itemView.right + dX,
+                        itemView.top.toFloat(),
+                        itemView.right.toFloat(),
+                        itemView.bottom.toFloat(),
+                        paint
+                    )
+                    val iconTop = itemView.top + iconMargin
+                    val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
+                    val iconRight = itemView.right - iconMargin
+                    val iconBottom = iconTop + icon.intrinsicHeight
+
+                    // Vẽ icon lên Canvas
+                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                    icon.draw(canvas)
+                }
+                else{
+                    paint.color = Color.RED
+                    canvas.drawRect(
+                        itemView.left.toFloat(),
+                        itemView.top.toFloat(),
+                        itemView.left + dX,
+                        itemView.bottom.toFloat(),
+                        paint
+                    )
+                    val iconTop = itemView.top + iconMargin
+                    val iconLeft = itemView.left + iconMargin
+                    val iconRight = iconLeft + icon.intrinsicWidth
+                    val iconBottom = iconTop + icon.intrinsicHeight
+
+                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                    icon.draw(canvas)
+
                 }
                 super.onChildDraw(
-                    c,
+                    canvas,
                     recyclerView,
                     viewHolder,
-                    dX / 5,
+                    dX,
                     dY,
                     actionState,
                     isCurrentlyActive

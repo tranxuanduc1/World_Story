@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddTextChapterActivity">
 
     <data>
@@ -21,7 +21,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/topAppBar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Light_Beige"
+                android:minHeight="?attr/actionBarSize"
+                app:navigationIcon="@drawable/baseline_arrow_back_24" />
+        </com.google.android.material.appbar.AppBarLayout>
         <androidx.appcompat.widget.AppCompatTextView
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
@@ -29,6 +43,7 @@
             android:textSize="34sp" />
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:layout_marginVertical="10dp"
             android:id="@+id/ten_chap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +53,8 @@
             android:textSize="14sp" />
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -55,14 +71,17 @@
                 android:src="@drawable/baseline_upload_24" />
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
+            android:padding="10dp"
             android:id="@+id/prev_uploaded_txt"
             android:layout_width="match_parent"
 
             android:layout_height="200dp" />
 
         <LinearLayout
+            android:paddingHorizontal="10dp"
+
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

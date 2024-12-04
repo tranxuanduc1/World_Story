@@ -2,6 +2,7 @@ package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,7 @@ class ChapterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chapter)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
@@ -47,6 +48,17 @@ class ChapterActivity : AppCompatActivity() {
                 2 -> tab.text = "About rates"
             }
         }.attach()
+
+        findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.topAppBar)
+            .setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
+
+        onBackPressedDispatcher.addCallback(this) {
+            if(supportFragmentManager.backStackEntryCount>1){
+                supportFragmentManager.popBackStack()
+            }
+            else finish()
+        }
+
     }
 
     override fun onDestroy() {

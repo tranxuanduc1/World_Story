@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -134,6 +135,9 @@ class AddChapterActivity : AppCompatActivity() {
 
         //lấy drive
         driveService = getDriveService(this)
+
+        binding.topAppBar.setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
+
     }
 
     fun openImagePicker() {

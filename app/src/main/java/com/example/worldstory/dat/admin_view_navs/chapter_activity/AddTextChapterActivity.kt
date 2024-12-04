@@ -111,6 +111,9 @@ class AddTextChapterActivity : AppCompatActivity() {
                 Log.w("open", e.message.toString())
             }
         }
+
+        binding.topAppBar.setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
+
     }
 
     fun readTextFromUri(uri: Uri, contentResolver: ContentResolver): String? {

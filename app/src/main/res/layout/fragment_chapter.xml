@@ -20,7 +20,7 @@
 
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.google.android.material.card.MaterialCardView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -49,26 +49,36 @@
                     <ImageButton
                         android:id="@+id/edit_title_btn"
                         android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:foregroundGravity="right"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/voncano"
-                        android:src="@drawable/outline_edit_24" />
+                        android:src="@drawable/outline_edit_12" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@={storyViewModel.author}" />
+                    <ImageButton
+                        android:id="@+id/edit_author_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:foregroundGravity="right"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/voncano"
+                        android:src="@drawable/outline_edit_12" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@={storyViewModel.author}" />
+
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tom_tat"
@@ -89,20 +99,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="40dp"
                 android:fontFamily="sans-serif-condensed-medium"
+                android:layout_gravity="center_vertical"
+
                 android:padding="10dp"
-                android:text="Background" />
+                android:text="Background"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/img_bground"
                 android:layout_width="140dp"
                 android:layout_height="100dp"
-
                 android:layout_marginHorizontal="10dp"
                 android:scaleType="centerInside" />
 
@@ -110,6 +121,7 @@
                 android:id="@+id/up_background_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/baseline_upload_24"
                 android:tooltipText="Tải hình nền truyện" />
 
@@ -127,14 +139,15 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="40dp"
                 android:fontFamily="sans-serif-condensed-medium"
+                android:layout_gravity="center_vertical"
                 android:padding="10dp"
-                android:text="Bìa truyện" />
+                android:text="Bìa truyện"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/avt_story"
@@ -147,7 +160,8 @@
                 android:id="@+id/up_avt_story_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/baseline_upload_24"
                 android:tooltipText="Tải hình nền truyện" />
 
@@ -168,7 +182,7 @@
                 android:id="@+id/add_chapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="15dp"
                 android:backgroundTint="@color/Teal"
                 android:text="Thêm chapter" />
 
@@ -176,7 +190,7 @@
                 android:id="@+id/save_changes"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="15dp"
                 android:backgroundTint="@color/black"
                 android:text="Lưu" />
         </LinearLayout>
@@ -187,6 +201,7 @@
             android:layout_margin="13dp" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:padding="10dp"
             android:id="@+id/chapter_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
