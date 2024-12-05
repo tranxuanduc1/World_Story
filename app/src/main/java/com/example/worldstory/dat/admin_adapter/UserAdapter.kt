@@ -1,19 +1,31 @@
 package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.worldstory.dat.admin_dialog.ChangeRole
+import com.example.worldstory.dat.admin_dialog.ChangeUserAvtDialog
+import com.example.worldstory.dat.admin_dialog.ChangeUserInforDialog
+import com.example.worldstory.dat.admin_dialog.ChangeUserPasswordDialog
 import com.example.worldstory.model.User
 import com.example.worldstory.dat.admin_viewholder.UserViewHolder
-import com.example.worldstory.duc.SampleDataStory
 import com.squareup.picasso.Picasso
 
-class UserAdapter(private var userList: List<User>, private var color: Int) :
+class UserAdapter(
+    private var userList: List<User>,
+    private var color: Int,
+    private val fragmentManager: FragmentManager
+) :
     RecyclerView.Adapter<UserViewHolder>(), Filterable {
     private var filteredList: List<User> = userList
 
@@ -30,13 +42,18 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
         val user = filteredList[position]
         Picasso.get().load(user.imgAvatar).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
-        holder.column1.text ="Nickname: ${user.nickName}"
+        holder.column1.text = "Nickname: ${user.nickName}"
         holder.column3.text = user.createdDate
-        holder.column4.text ="Username: ${user.userName}"
+        holder.column4.text = "Username: ${user.userName}"
+        holder.itemView.setOnLongClickListener {
+            showPopupMenu(holder.itemView, user)
+            true
+        }
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(color)
         } else
             holder.itemView.setBackgroundColor(android.graphics.Color.WHITE)
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -91,5 +108,42 @@ class UserAdapter(private var userList: List<User>, private var color: Int) :
             notifyItemRangeChanged(po, userList.size)
         }
     }
+
+
+    // Hàm hiển thị PopupMenu
+    private fun showPopupMenu(view: View, item: User) {
+        val popupMenu = PopupMenu(view.context, view)
+        popupMenu.menuInflater.inflate(R.menu.options_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.change_password -> {
+                    // Xử lý đổi mật khẩu
+                    val dialog = ChangeUserPasswordDialog.newInstance(item.userID)
+                    dialog.show(fragmentManager, "ChangePassword")
+                }
+
+                R.id.change_info -> {
+                    // Xử lý đổi thông tin
+                    val dialog = ChangeUserInforDialog.newInstance(item.userID)
+                    dialog.show(fragmentManager, "ChangeInfor")
+                }
+
+                R.id.change_avatar -> {
+                    // Xử lý đổi avatar
+                    val dialog = ChangeUserAvtDialog.newInstance(item.userID)
+                    dialog.show(fragmentManager, "ChangeAvatar")
+                }
+
+                R.id.change_role -> {
+                    val dialog = ChangeRole.newInstance(item.userID)
+                    dialog.show(fragmentManager, "ChangeRole")
+                }
+            }
+            true
+        }
+        popupMenu.show()
+    }
+
 
 }

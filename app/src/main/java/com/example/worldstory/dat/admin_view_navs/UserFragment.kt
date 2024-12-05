@@ -131,7 +131,7 @@ class UserFragment : Fragment() {
         //recycleview
         binding.userList.layoutManager = LinearLayoutManager(requireContext())
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        userAdapter = UserAdapter(userViewModel.__users.value ?: emptyList(), color1)
+        userAdapter = UserAdapter(userViewModel.__users.value ?: emptyList(), color1,parentFragmentManager)
         userAdapter.filterByRole(0)
         binding.userList.adapter = userAdapter
 

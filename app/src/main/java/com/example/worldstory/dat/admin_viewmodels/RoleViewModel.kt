@@ -9,7 +9,8 @@ import com.example.worldstory.model.Role
 
 class RoleViewModel(val db: DatabaseHelper) : ViewModel(db) {
     val roles = mutableListOf<Role>()
-    val id_role_map= mutableMapOf<Int?,String>()
+    val id_role_map = mutableMapOf<Int?, String>()
+
     init {
         fetchAllRole()
     }
@@ -17,8 +18,8 @@ class RoleViewModel(val db: DatabaseHelper) : ViewModel(db) {
     fun fetchAllRole() {
         roles.clear()
         roles.addAll(db.getAllRoles())
-        roles.forEach{
-            r-> id_role_map[r.roleID]=r.roleName
+        roles.forEach { r ->
+            id_role_map[r.roleID] = r.roleName
         }
     }
 
@@ -40,6 +41,11 @@ class RoleViewModel(val db: DatabaseHelper) : ViewModel(db) {
     fun deleteAllRole() {
         db.deleteAllRole()
         fetchAllRole()
+    }
+
+    fun getRole(id: Int): String? {
+        val roleId = db.getRoleIdByUserId(id)
+        return db.getRoleNameByRoleId(roleId)
     }
 }
 

@@ -19,7 +19,9 @@ import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
 
 class AddCategoryDialog : DialogFragment() {
+
     private lateinit var binding:AddCategoryDialogBinding
+
     private val genreViewModel: GenreViewModel by activityViewModels {
         GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }

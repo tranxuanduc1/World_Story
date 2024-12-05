@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="userViewModel"
+            type="com.example.worldstory.dat.admin_viewmodels.UserViewModel" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textSize="12sp"
+                android:text="Mật khẩu cũ: " />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/old_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"                android:textSize="11sp"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textSize="12sp"
+                android:text="Mật khẩu mới: " />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/new_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textSize="11sp"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textSize="12sp"
+                android:text="Xác nhận lại: " />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/cf_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textSize="11sp"
+                android:singleLine="true" />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

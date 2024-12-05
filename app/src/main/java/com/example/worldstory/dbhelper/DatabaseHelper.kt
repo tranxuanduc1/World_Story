@@ -1,5 +1,6 @@
 package com.example.worldstory.dbhelper
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -833,6 +834,57 @@ class DatabaseHelper(context: Context) :
         )
     }
 
+    fun updateUserIn4(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_EMAIL, user.email)
+            put(Contract.UserEntry.COLUMN_NICKNAME, user.nickName)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
+
+    fun updateUserPw(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_PASSWORD, user.hashedPw)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
+    fun updateUserAvt(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_IMAGE_AVATAR, user.imgAvatar)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
+
+    fun updateUserRole(user: User): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.UserEntry.COLUMN_ROLE_ID_FK, user.roleID)
+        }
+        return db.update(
+            Contract.UserEntry.TABLE_NAME,
+            values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(user.userID.toString())
+        )
+    }
     fun deleteAllUser() {
         val db = writableDatabase
         db.execSQL("DELETE FROM ${Contract.UserEntry.TABLE_NAME}")
@@ -1131,6 +1183,53 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return roles
     }
+
+
+    fun getRoleNameByRoleId(roleId: Int?): String? {
+        val db = readableDatabase
+
+        // Truy vấn SQL để lấy tên vai trò từ bảng roles
+        val query = """
+        SELECT ${Contract.RoleEntry.COLUMN_NAME}
+        FROM ${Contract.RoleEntry.TABLE_NAME}
+        WHERE ${BaseColumns._ID} = ?
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(roleId.toString()))
+
+        return if (cursor.moveToFirst()) {
+            cursor.getString(cursor.getColumnIndex(Contract.RoleEntry.COLUMN_NAME))
+        } else {
+            null
+        }.also {
+            cursor.close()
+        }
+    }
+
+
+
+    @SuppressLint("Range")
+    fun getRoleIdByUserId(userId: Int): Int? {
+        val db = readableDatabase
+
+        // Truy vấn để lấy khóa ngoại roleId từ bảng users
+        val query = """
+        SELECT ${Contract.UserEntry.COLUMN_ROLE_ID_FK}
+        FROM ${Contract.UserEntry.TABLE_NAME}
+        WHERE ${BaseColumns._ID} = ?
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+
+        return if (cursor.moveToFirst()) {
+            cursor.getInt(cursor.getColumnIndex(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+        } else {
+            null
+        }.also {
+            cursor.close()
+        }
+    }
+
 
 
     //////////////////////////

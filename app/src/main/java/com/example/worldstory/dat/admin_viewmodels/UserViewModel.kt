@@ -18,7 +18,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
-    val avtId= mutableListOf<String>()
+    val avtId = mutableListOf<String>()
     var roleID: Int = -1
 
     init {
@@ -31,7 +31,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
 
 
     fun onAddUser(): Long {
-        Log.w("id",avtId.get(0).toString())
+        Log.w("id", avtId.get(0).toString())
         val hashedpw = hashPassword(password = passWord.value.toString())
         val user = User(
             null,
@@ -44,11 +44,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             dateTimeNow()
         )
         val l: Long = db.insertUser(user)
-        userName.value = ""
-        passWord.value = ""
-        nickName.value = ""
-        email.value=""
-        Log.i("ham insert", "da insert")
+        resetValue()
         fetchAllUsers()
         return l
     }
@@ -63,26 +59,68 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         fetchAllUsers()
     }
 
-    fun updatetUser(u: User) {}
-//        val u = User(
-//            userID = id,
-//            userName = userName.value.toString(),
-//            "",
-//            "",
-//            nickName = nickName.value.toString(),
-//            roleID = roleID,
-//            ""
-//        )
-//        val userName = userName.value?: u.userName
-//        val nickName=nickName.value?:u.nickName
-//        val password=passWord?:u.hashedPw
-//        if(password.equals(this.passWord)){
-//            password=hashPassword(password)
-//        }
-//        db.updateUser(u)
-//        fetchAllUsers()
-//    }
+    fun updatetUserRole(u: User?) {
+        val user = User(
+            userID = u?.userID,
+            userName = u?.userName ?: "",
+            nickName = u?.nickName ?: "",
+            hashedPw = u?.hashedPw ?: "",
+            email = u?.email ?: "",
+            roleID = roleID,
+            createdDate = u?.createdDate ?: "",
+            imgAvatar = u?.imgAvatar ?: ""
+        )
+        db.updateUserRole(user)
+        resetValue()
+        fetchAllUsers()
+    }
 
+    fun updatetUserPw(u: User?) {
+        val user = User(
+            userID = u?.userID,
+            userName = u?.userName ?: "",
+            nickName = u?.nickName ?: "",
+            hashedPw = hashPassword(password = passWord.toString()),
+            email = u?.email ?: "",
+            roleID = u?.roleID?:-1,
+            createdDate = u?.createdDate ?: "",
+            imgAvatar = u?.imgAvatar ?: ""
+        )
+        db.updateUserPw(user)
+        resetValue()
+        fetchAllUsers()
+    }
+    fun updateAvt(u: User?) {
+        val user = User(
+            userID = u?.userID,
+            userName = u?.userName ?: "",
+            nickName = u?.nickName ?: "",
+            hashedPw = u?.hashedPw ?: "",
+            email = u?.email ?: "",
+            roleID = u?.roleID ?: -1,
+            createdDate = u?.createdDate ?: "",
+            imgAvatar = transform(avtId.get(0))
+        )
+        db.updateUserAvt(user)
+        resetValue()
+        fetchAllUsers()
+    }
+
+    fun updateIn4(u:User?){
+        val user = User(
+            userID = u?.userID,
+            userName =u?.userName ?: "",
+            nickName = nickName.value.toString(),
+            hashedPw = u?.hashedPw ?: "",
+            email = email.value.toString(),
+            roleID = u?.roleID ?: -1,
+            createdDate = u?.createdDate ?: "",
+            imgAvatar = u?.imgAvatar?:""
+        )
+        db.updateUserIn4(user)
+        resetValue()
+        fetchAllUsers()
+    }
     fun delUser(user: User) {
         user.userID?.let { db.deleteUser(it) }
         fetchAllUsers()
@@ -91,15 +129,25 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
-
-    fun getUser(id: Int): User {
-        return db.getUserByUsersId(id)!!
+    fun checkPassword(rawPassword: String, hashedPassword: String): Boolean {
+        return BCrypt.checkpw(rawPassword, hashedPassword)
+    }
+    fun getUser(id: Int): User? {
+        return db.getUserByUsersId(id)
     }
 
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
 
+    fun resetValue(){
+        userName.value = ""
+        passWord.value = ""
+        nickName.value = ""
+        email.value = ""
+        roleID=-1
+        avtId.clear()
+    }
 }
 
 class UserViewModelFactory(private val databaseHelper: DatabaseHelper) : ViewModelProvider.Factory {
