@@ -322,7 +322,7 @@ fun Context.isUserCurrentMember(): Boolean{
 
 }
 fun  Context.clearUserSession() {
-    val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+    val sharedPref = getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
     with(sharedPref.edit()) {
         clear()
         apply()

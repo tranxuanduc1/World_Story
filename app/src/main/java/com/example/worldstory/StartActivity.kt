@@ -33,6 +33,7 @@ import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
+import kotlin.apply
 import kotlin.getValue
 
 class StartActivity : AppCompatActivity() {
@@ -80,6 +81,7 @@ class StartActivity : AppCompatActivity() {
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
             this.startActivity(intent)
+                isActivityRunning=false
             finish()
         }, 2000)
         }
@@ -90,28 +92,7 @@ class StartActivity : AppCompatActivity() {
         })
         ducAccountManagerViewModel.userSessionAndRole.observe(this, Observer{
             userAndRole->
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-
-            var sharedPreferences =
-                getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
-            with(sharedPreferences.edit()) {
-                putInt(
-                    getString(R.string.key_user_id_session),
-                    userAndRole.first.userID ?: numDef
-                )//kiem ko dc thi la guest
-                putString(getString(R.string.key_user_role_session), userAndRole.second.roleName)
-                apply()
-            }
-            // di chuyen toi trang chu
-            var intent = Intent(this, DucUserHomeActivity::class.java)
-            //xoa het activity cu
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-
-            this.startActivity(intent)
-            finish()
-            }, 2000)
+           waitThenSaveShareedPreference(userAndRole)
         })
         //testDatabase()
 
@@ -398,6 +379,32 @@ class StartActivity : AppCompatActivity() {
         ducAccountManagerViewModel.fetchNewGuestAccount()
     }
 
+    private fun waitThenSaveShareedPreference(userAndRole: Pair<User, Role>) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
 
+            var sharedPreferences =
+                getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+            with(sharedPreferences.edit()) {
+                putInt(
+                    getString(R.string.key_user_id_session),
+                    userAndRole.first.userID ?: numDef
+                )//kiem ko dc thi la guest
+                putString(getString(R.string.key_user_role_session), userAndRole.second.roleName)
+                apply()
+            }
+            // di chuyen toi trang chu
+            var intent = Intent(this, DucUserHomeActivity::class.java)
+            //xoa het activity cu
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+            this.startActivity(intent)
+            isActivityRunning=false
+            finish()
+        }, 2000)
+    }
 }
+
+
 
