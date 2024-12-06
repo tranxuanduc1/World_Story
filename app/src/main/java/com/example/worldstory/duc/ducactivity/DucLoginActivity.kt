@@ -12,6 +12,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucLoginBinding
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.numDef
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import kotlin.getValue
@@ -33,32 +34,42 @@ class DucLoginActivity : AppCompatActivity() {
         setConfigButton()
 
         // sau khi co du lieu de kiem tra tai khoan
+        setCheckAccount()
+
+        // sau khi co duoc user va role tu database
+        setDataUserAndRoleAfterLogin()
+
+    }
+
+
+    private fun setCheckAccount() {
         ducAccountManagerViewModel.checkAccount.observe(this, Observer { state ->
             if (state == UserLoginStateEnum.CORRECT) {
                 // tai khoan juan, tiep tuc truy cap database lay user va role
-                bindinng.inputLayoutPasswordLogin.error=null
-                bindinng.inputLayoutUsernameLogin.error=null
+                bindinng.inputLayoutPasswordLogin.error = null
+                bindinng.inputLayoutUsernameLogin.error = null
 
                 var username = bindinng.etxtUsernameLogin.text.toString()
                 ducAccountManagerViewModel.fetchUserSessionAndRoleByUsername(username)
-            } else if (state== UserLoginStateEnum.INCORRECT_USERNAME_OR_PASSWORD) {
+            } else if (state == UserLoginStateEnum.INCORRECT_USERNAME_OR_PASSWORD) {
 
                 //tai khoan sai ,thong bao toi nguoi dung
-                bindinng.inputLayoutPasswordLogin.error=getString(R.string.incorrectUsernameOrPassword)
-                bindinng.inputLayoutUsernameLogin.error=null
+                bindinng.inputLayoutPasswordLogin.error =
+                    getString(R.string.incorrectUsernameOrPassword)
+                bindinng.inputLayoutUsernameLogin.error = null
 
 
-            }
-            else if (state== UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST){
+            } else if (state == UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST) {
                 //tai khoan khong ton tai ,thong bao toi nguoi dung
 
-                bindinng.inputLayoutUsernameLogin.error=getString(R.string.accountDoesNotExist)
-                bindinng.inputLayoutPasswordLogin.error=null
+                bindinng.inputLayoutUsernameLogin.error = getString(R.string.accountDoesNotExist)
+                bindinng.inputLayoutPasswordLogin.error = null
 
             }
         })
+    }
 
-        // sau khi co duoc user va role tu database
+    private fun setDataUserAndRoleAfterLogin() {
         ducAccountManagerViewModel.userSessionAndRole.observe(this, Observer { userAndRole ->
             var sharedPreferences =
                 getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
@@ -70,8 +81,15 @@ class DucLoginActivity : AppCompatActivity() {
                 putString(getString(R.string.key_user_role_session), userAndRole.second.roleName)
                 apply()
             }
-        })
+            // di chuyen toi trang chu
+            var intent = Intent(this, DucUserHomeActivity::class.java)
+            //xoa het activity cu
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
+            this.startActivity(intent)
+            finish()
+        })
     }
 
     private fun setConfigButton() {

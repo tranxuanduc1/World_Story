@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.example.worldstory.dbhelper.Contract.CommentEntry
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -983,6 +984,37 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return user
     }
+    fun getLastestUserId(): User?{
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.UserEntry.TABLE_NAME} 
+            ORDER BY ${BaseColumns._ID} DESC LIMIT 1
+        """.trimIndent(), null)
+
+        var lastUser: User? = null
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val userName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+            val hashedPw =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+            val email =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
+            val nickName =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+            val imgAvatar =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+            val roleID =
+                cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+            val createdDate =
+                cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+            lastUser = User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate)
+
+        }
+        cursor.close()
+        db.close()
+        return lastUser
+    }
 //////////////////////////
     ///----   USER SESSION   -----////
     //////////////////////////
@@ -1198,7 +1230,7 @@ class DatabaseHelper(context: Context) :
         val cursor = db.rawQuery(query, arrayOf(roleId.toString()))
 
         return if (cursor.moveToFirst()) {
-            cursor.getString(cursor.getColumnIndex(Contract.RoleEntry.COLUMN_NAME))
+            cursor.getString(cursor.getColumnIndexOrThrow(Contract.RoleEntry.COLUMN_NAME))
         } else {
             null
         }.also {

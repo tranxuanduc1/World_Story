@@ -25,6 +25,8 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     private val _userSessionAndRole= MutableLiveData<Pair<User, Role>>()
     val userSessionAndRole:LiveData<Pair<User, Role>>  get()=_userSessionAndRole
 
+    private val _user= MutableLiveData<User>()
+    val user:LiveData<User>  get()=_user
     fun fetchCheckAccountLogin(userName: String, password: String){
         viewModelScope.launch{
             val resultCheck= withContext(Dispatchers.IO){
@@ -64,5 +66,19 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
 
         repository.addNewUserMember(username,password,email,nickname,dateTimeNow())
     }
+    fun fetchNewGuestAccount(){
+        viewModelScope.launch{
+            var guestUser=repository.createGuestUser()
+            val resultUser= withContext(Dispatchers.IO){
+               repository.getUserByUsername(guestUser.userName)
+            }
 
+            resultUser?.let {
+
+                    _user.value= resultUser
+
+
+            }
+        }
+    }
 }

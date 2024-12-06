@@ -44,7 +44,10 @@ fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
 
-
+var GUEST=4
+var ADMIN=1
+var AUTHOR=2
+var MEMBER=3
 var numDef=1
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)

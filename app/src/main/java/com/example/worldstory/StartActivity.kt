@@ -10,15 +10,20 @@ import com.example.myapplication.databinding.ActivityStartBinding
 import android.os.Looper
 import android.os.Handler
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.Observer
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucUserHomeActivity
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toActivity
+import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -28,11 +33,15 @@ import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
+import kotlin.getValue
 
 class StartActivity : AppCompatActivity() {
 
     companion object {
         private var isActivityRunning = false
+    }
+    private val ducAccountManagerViewModel: DucAccountManagerViewModel by viewModels {
+        DucAccountManagerViewModelFactory(this)
     }
     private lateinit var binding: ActivityStartBinding
 
@@ -57,46 +66,84 @@ class StartActivity : AppCompatActivity() {
 
 
         var isCheck = isCheckUserSession()
+        if (isCheck == false) {
+            //chua dang nhap ,tao tai khoan guest
+            makeUserGuest()
 
+        }else{
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+            // di chuyen toi trang chu
+            var intent = Intent(this, DucUserHomeActivity::class.java)
+            //xoa het activity cu
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
+            this.startActivity(intent)
+            finish()
+        }, 2000)
+        }
+
+        ducAccountManagerViewModel.user.observe(this, Observer{
+            user->
+            ducAccountManagerViewModel.fetchUserSessionAndRoleByUsername(user.userName)
+        })
+        ducAccountManagerViewModel.userSessionAndRole.observe(this, Observer{
+            userAndRole->
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+
+            var sharedPreferences =
+                getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
+            with(sharedPreferences.edit()) {
+                putInt(
+                    getString(R.string.key_user_id_session),
+                    userAndRole.first.userID ?: numDef
+                )//kiem ko dc thi la guest
+                putString(getString(R.string.key_user_role_session), userAndRole.second.roleName)
+                apply()
+            }
+            // di chuyen toi trang chu
+            var intent = Intent(this, DucUserHomeActivity::class.java)
+            //xoa het activity cu
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+            this.startActivity(intent)
+            finish()
+            }, 2000)
+        })
         //testDatabase()
 
 
 
 
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
-            if (isCheck == false) {
-                //chua dang nhap ,tao tai khoan guest
 
 
-            }
 
 
-            // vi du tao tai khioan admin
-            var sharePref =
-                this.getSharedPreferences(
-                    getString(R.string.key_user_session),
-                    Context.MODE_PRIVATE
-                )
-            with(sharePref.edit()) {
-                putInt(getString(R.string.key_user_id_session), 1)//id admin
-                putString(
-                    getString(R.string.key_user_role_session),
-                    RoleEnum.ADMIN.name
-                )//role user, nho thao luan id guest la gi
 
-                apply()
-            }
-
-            //--------------------
-
-            var intent = Intent(this, DucUserHomeActivity::class.java)
-            this.startActivity(intent)
-            finish()
-        }, 2000)
-
-
+//         vi du tao tai khioan admin
+//            var sharePref =
+//                this.getSharedPreferences(
+//                    getString(R.string.key_user_session),
+//                    Context.MODE_PRIVATE
+//                )
+//            with(sharePref.edit()) {
+//                putInt(getString(R.string.key_user_id_session), 1)//id admin
+//                putString(
+//                    getString(R.string.key_user_role_session),
+//                    RoleEnum.ADMIN.name
+//                )//role user, nho thao luan id guest la gi
+//
+//                apply()
+//            }
+//
+//            //--------------------
+//
+//            var intent = Intent(this, DucUserHomeActivity::class.java)
+//            this.startActivity(intent)
+//            finish()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -290,13 +337,6 @@ class StartActivity : AppCompatActivity() {
                 if (chapterId != -1L) {
                     // Add 4 paragraphs for each chapter
                     if (story.isTextStory == 0) {
-
-//                            var image = Image(
-//                                null,
-//                                SampleDataStory.getExampleImgURLParagraph(),
-//                                j,
-//                                chapterId.toInt()
-//                            )
                         var image1 = Image(null, p1, 1, chapterId.toInt())
                         var image2 = Image(null, p2, 2, chapterId.toInt())
                         var image3 = Image(null, p3, 3, chapterId.toInt())
@@ -313,24 +353,6 @@ class StartActivity : AppCompatActivity() {
                     for (j in 1..4) {
 
                         if (story.isTextStory == 0) {
-
-//                            var image = Image(
-//                                null,
-//                                SampleDataStory.getExampleImgURLParagraph(),
-//                                j,
-//                                chapterId.toInt()
-//                            )
-//                            var image1 = Image(null, p1, 1,chapterId.toInt())
-//                            var image2 = Image(null, p2, 2,chapterId.toInt())
-//                            var image3 = Image(null, p3, 3,chapterId.toInt())
-//                            var image4 = Image(null, p4, 4,chapterId.toInt())
-//                            var image5 = Image(null, p5, 5,chapterId.toInt())
-//
-//                            dbHelper.insertImage(image1)
-//                            dbHelper.insertImage(image2)
-//                            dbHelper.insertImage(image3)
-//                            dbHelper.insertImage(image4)
-//                            dbHelper.insertImage(image5)
 
                         } else {
                             var paragraph = Paragraph(
@@ -372,6 +394,10 @@ class StartActivity : AppCompatActivity() {
             "Invalid Google Drive link"
         }
     }
+    private fun makeUserGuest() {
+        ducAccountManagerViewModel.fetchNewGuestAccount()
+    }
 
 
 }
+
