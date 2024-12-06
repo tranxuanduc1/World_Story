@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.myapplication.databinding.FragmentDucSettingUserBinding
 import com.example.worldstory.AdminMainActivity
 import com.example.worldstory.StartActivity
@@ -15,7 +17,10 @@ import com.example.worldstory.duc.ducutils.clearUserSession
 import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
 import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
 import com.example.worldstory.duc.ducutils.isUserCurrentMember
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
+import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +33,9 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Duc_Setting_User_Fragment : Fragment() {
-
+    private val ducAccountManagerViewModel: DucAccountManagerViewModel by viewModels{
+        DucAccountManagerViewModelFactory(requireContext())
+    }
     private lateinit var binding: FragmentDucSettingUserBinding
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -49,6 +56,13 @@ class Duc_Setting_User_Fragment : Fragment() {
         binding= FragmentDucSettingUserBinding.inflate(layoutInflater)
         val view =binding.root
 
+
+        ducAccountManagerViewModel.fetchUserSessionAndRoleByUserSession()
+        ducAccountManagerViewModel.userSessionAndRole.observe(viewLifecycleOwner, Observer{
+            userAndRole->
+            binding.imgAvatarSettingUserFragment.loadImgURL(requireContext(),userAndRole.first.imgAvatar)
+            binding.txtNickanmeSettingUserFragment.text=userAndRole.first.nickName
+        })
         setViewButton()
         setConfigButton()
         return view

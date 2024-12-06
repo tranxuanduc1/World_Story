@@ -156,6 +156,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun getUserByUsername(username: String): User?{
         return dbHelper.getUserByUsersName(username)
     }
+    fun getUserByUserId(userId: Int): User?{
+        return dbHelper.getUserByUsersId(userId)
+    }
     fun getLastestUserId(): User?{
         return dbHelper.getLastestUserId()
     }

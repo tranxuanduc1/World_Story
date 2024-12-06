@@ -16,6 +16,7 @@ import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -52,7 +53,8 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
         }
 
     }
-    private fun fetchStoriesHistory() {
+     fun fetchStoriesHistory() {
+
         viewModelScope.launch {
             var userId=context.getUserIdSession()
             val result = withContext(Dispatchers.IO) {
@@ -62,7 +64,7 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
 
         }
     }
-    private fun fetchStoriesUserSessionLoved() {
+     fun fetchStoriesUserSessionLoved() {
         viewModelScope.launch {
             var userId=context.getUserIdSession()
             val result = withContext(Dispatchers.IO) {

@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.model.User
 import com.example.worldstory.model.Role
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +26,12 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     private val _userSessionAndRole= MutableLiveData<Pair<User, Role>>()
     val userSessionAndRole:LiveData<Pair<User, Role>>  get()=_userSessionAndRole
 
-    private val _user= MutableLiveData<User>()
-    val user:LiveData<User>  get()=_user
+    private val _newGuestUser= MutableLiveData<User>()
+    val newGuestUser:LiveData<User>  get()=_newGuestUser
+
+//    private val _userSession= MutableLiveData<User>()
+//    val userSession:LiveData<User>  get()=_userSession
+
     fun fetchCheckAccountLogin(userName: String, password: String){
         viewModelScope.launch{
             val resultCheck= withContext(Dispatchers.IO){
@@ -62,6 +67,24 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
             }
         }
     }
+    fun fetchUserSessionAndRoleByUserSession(){
+        viewModelScope.launch{
+            val userSessionId=context.getUserIdSession()
+            val resultUser= withContext(Dispatchers.IO){
+                repository.getUserByUserId(userSessionId)
+            }
+
+            resultUser?.let {
+                val resultRole= withContext(Dispatchers.IO){
+                    repository.getRoleByRoleId(it.roleID)
+                }
+                resultRole?.let {
+                    _userSessionAndRole.value= Pair(resultUser,resultRole)
+
+                }
+            }
+        }
+    }
     fun SignUpNewAccount(username: String,password: String,email: String,nickname: String){
 
         repository.addNewUserMember(username,password,email,nickname,dateTimeNow())
@@ -75,7 +98,7 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
 
             resultUser?.let {
 
-                    _user.value= resultUser
+                    _newGuestUser.value= resultUser
 
 
             }

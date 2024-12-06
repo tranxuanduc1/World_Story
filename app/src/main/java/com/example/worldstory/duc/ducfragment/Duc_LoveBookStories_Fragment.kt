@@ -53,7 +53,9 @@ class Duc_LoveBookStories_Fragment : Fragment() {
         binding = FragmentDucLoveBookStoriesBinding.inflate(layoutInflater)
         val view = binding.root
         storyViewModel.storiesUserSessionLoved.observe(viewLifecycleOwner, Observer { stories ->
-
+            //ket thuc hieu ung load
+            binding.swipeRefreshLoveBookStoryFragment.isRefreshing = false
+            //
             var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
             binding.recyclerCardStoryLoveBookFragment.apply {
                 adapter = cardStoryAdapter
@@ -65,9 +67,15 @@ class Duc_LoveBookStories_Fragment : Fragment() {
 
         })
 
-
+        setSwipeRefresh()
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun setSwipeRefresh() {
+        binding.swipeRefreshLoveBookStoryFragment.setOnRefreshListener {
+            storyViewModel.fetchStoriesUserSessionLoved()
+        }
     }
 
     companion object {

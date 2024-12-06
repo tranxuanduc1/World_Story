@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.worldstory.duc.SampleDataStory
 import com.example.myapplication.databinding.FragmentDucReadBookStoriesBinding
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.showTestToast
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
@@ -55,7 +56,9 @@ class Duc_ReadBookStories_Fragment : Fragment() {
         val view = binding.root
         //____________________________________________
         storyViewModel.storiesHistory.observe(viewLifecycleOwner, Observer { stories ->
-
+            //ket thuc hieu ung load
+            binding.swipeRefreshReadBookStoryFragment.isRefreshing=false
+            //
             var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
             binding.recyclerCardStoryReadBookFragment.apply {
                 adapter = cardStoryAdapter
@@ -66,10 +69,16 @@ class Duc_ReadBookStories_Fragment : Fragment() {
 
 
         })
-
+        setSwipeRefresh()
 
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun setSwipeRefresh() {
+        binding.swipeRefreshReadBookStoryFragment.setOnRefreshListener{
+            storyViewModel.fetchStoriesHistory()
+        }
     }
 
     companion object {

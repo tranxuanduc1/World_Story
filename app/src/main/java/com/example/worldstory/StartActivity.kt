@@ -11,8 +11,6 @@ import android.os.Looper
 import android.os.Handler
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.Observer
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
@@ -21,7 +19,6 @@ import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.numDef
-import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.model.Chapter
@@ -33,7 +30,6 @@ import com.example.worldstory.model.Rate
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
-import kotlin.apply
 import kotlin.getValue
 
 class StartActivity : AppCompatActivity() {
@@ -86,7 +82,7 @@ class StartActivity : AppCompatActivity() {
         }, 2000)
         }
 
-        ducAccountManagerViewModel.user.observe(this, Observer{
+        ducAccountManagerViewModel.newGuestUser.observe(this, Observer{
             user->
             ducAccountManagerViewModel.fetchUserSessionAndRoleByUsername(user.userName)
         })
