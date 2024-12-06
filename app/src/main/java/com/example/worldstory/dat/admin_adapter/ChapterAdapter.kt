@@ -19,7 +19,7 @@ class ChapterAdapter(private var chapterList: List<Chapter>?) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ChapterViewHolder, position: Int) {
         val chapter = chapterList?.get(position)
-        holder.col1.text = "Tập $position"
+        holder.col1.text = "$position"
         holder.col2.text = chapter?.title
         holder.col3.text = chapter?.dateCreated
     }

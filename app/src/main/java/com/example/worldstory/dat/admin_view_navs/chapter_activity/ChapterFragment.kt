@@ -17,6 +17,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentChapterBinding
@@ -27,6 +28,7 @@ import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.model.Story
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.InputStreamContent
@@ -66,9 +68,7 @@ class ChapterFragment() : Fragment() {
         StoryViewModelFactory(DatabaseHelper(requireActivity()))
     }
 
-    private val chapterViewModel: ChapterViewModel by viewModels {
-        StoryViewModelFactory(DatabaseHelper(requireContext()))
-    }
+
     private lateinit var chapterAdapter: ChapterAdapter
 
     private lateinit var binding: FragmentChapterBinding
@@ -78,6 +78,9 @@ class ChapterFragment() : Fragment() {
     private lateinit var uribg: Uri
     private lateinit var uriav: Uri
 
+    private lateinit var story: Story
+
+    // chọn hình bground cho truyện
     private val pickImageForBgLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
@@ -87,6 +90,8 @@ class ChapterFragment() : Fragment() {
 
 
         }
+
+    // Chọn hình đại dện cho truyện
     private val pickImageForAvtLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
@@ -108,19 +113,25 @@ class ChapterFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        idStory = arguments?.getInt("idStory")
 
 
         binding.storyViewModel = storyViewModel
         binding.lifecycleOwner = this
-        storyViewModel.setStoryByID(idStory)
 
+        // gán thuộc tính truyện hiện tại
+        idStory = arguments?.getInt("idStory")
+        storyViewModel.setStoryByID(idStory)
+        storyViewModel.setIDStory(idStory)
+
+        story = storyViewModel.getStoryById(idStory ?: -1)!!
+        // sk thêm truyện
         binding.addChapter.setOnClickListener {
             onClickAddChapter()
         }
 
-        Picasso.get().load(storyViewModel.storyBgImg.value).into(binding.imgBground)
-        Picasso.get().load(storyViewModel.storyImg.value).into(binding.avtStory)
+        // load hình
+        Picasso.get().load(storyViewModel.storyBgImg.first()).into(binding.imgBground)
+        Picasso.get().load(storyViewModel.storyImg.first()).into(binding.avtStory)
 
 
         chapterAdapter = ChapterAdapter(storyViewModel.chapterListByStory.value)
@@ -128,18 +139,81 @@ class ChapterFragment() : Fragment() {
         binding.chapterList.layoutManager = LinearLayoutManager(requireContext())
         binding.chapterList.adapter = chapterAdapter
 
-        storyViewModel.chapterListByStory.observe(viewLifecycleOwner){newChapterList->
+        storyViewModel.chapterListByStory.observe(viewLifecycleOwner) { newChapterList ->
             chapterAdapter.updateList(newChapterList)
         }
 
-        storyViewModel.setIDStory(idStory)
 
+        // edit description
+        binding.editDes.setOnClickListener {
+            if (binding.tomTat.visibility == View.VISIBLE) {
+                binding.tomTat.visibility = View.GONE
+                binding.editDes.visibility = View.VISIBLE
+            } else {
+                binding.tomTat.visibility = View.GONE
+                binding.editDes.visibility = View.VISIBLE
+            }
 
+        }
+
+        // edit tên tryện
         binding.editTitleBtn.setOnClickListener {
-            EditTitleDialog().show(parentFragmentManager, "Edit")
+            if (binding.titleStory.visibility == View.VISIBLE) {
+                binding.titleStory.visibility = View.GONE
+                binding.editTitle.visibility = View.VISIBLE
+            } else {
+                binding.editTitle.visibility = View.GONE
+                binding.titleStory.visibility = View.VISIBLE
+            }
+
+        }
+        // edit author
+        binding.editAuthorBtn.setOnClickListener {
+            if (binding.authorName.visibility == View.VISIBLE) {
+                binding.authorName.visibility = View.GONE
+                binding.editAuthor.visibility = View.VISIBLE
+            } else {
+                binding.editAuthor.visibility = View.GONE
+                binding.authorName.visibility = View.VISIBLE
+            }
         }
 
 
+
+        binding.saveChanges.setOnClickListener {
+            storyViewModel.storyBgImg.clear()
+            storyViewModel.storyImg.clear()
+            lifecycleScope.launch {
+                try {
+                    val upload = uploadImageAsynce(uribg, storyViewModel.storyBgImg)
+                    val uploadAvt = uploadImageAsynce(uriav, storyViewModel.storyImg)
+
+
+                    if (upload && uploadAvt) {
+                        storyViewModel.updateStory(story)
+                        Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
+                            .show()
+                        storyViewModel.setStoryByID(idStory)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Lưu không thành công",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        storyViewModel.resetValue()
+                        storyViewModel.setStoryByID(idStory)
+                    }
+
+                } catch (e: Exception) {
+                    storyViewModel.setStoryByID(idStory)
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "Đã xảy ra lỗi", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+        //
         binding.upBackgroundBtn.setOnClickListener {
             pickImageForBgLauncher.launch("image/*")
 
@@ -185,29 +259,43 @@ class ChapterFragment() : Fragment() {
     }
 
 
-    fun uploadImageToDrive(uri: Uri, id: MutableLiveData<String>): Boolean {
+    fun uploadImageToDrive(uri: Uri, idImg: MutableList<String>): Boolean {
 
         val mediaContent =
             InputStreamContent("image/jpeg", context?.contentResolver?.openInputStream(uri))
 
         val fileMetadata = File()
-        // Tên file sẽ lưu trên Drive
+        fileMetadata.name = storyViewModel.title.value.toString() // Tên file sẽ lưu trên Drive
 
         fileMetadata.parents =
-            listOf("1oGZqzVFyIrvOIXB36ybsJuW81-ppjIsp")  // Tải lên thư mục gốc của Drive
+            listOf("1HEIAysZ_8pFCRNBsQGbDm0XDDXKdLyJn")  // Tải lên thư mục gốc của Drive
 
 
         try {
             val file = driveService.files().create(fileMetadata, mediaContent)
                 .setFields("id, webViewLink")
                 .execute()
-            id.value = file.id
+            idImg.add(file.id)
             return true
-
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("k up dc", "hythtyht")
             return false
+        }
+
+
+    }
+
+    suspend fun uploadImageAsynce(uri: Uri, idAvt: MutableList<String>): Boolean {
+
+        return withContext(Dispatchers.IO) {
+            try {
+                uploadImageToDrive(uri, idAvt)
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
         }
     }
 }

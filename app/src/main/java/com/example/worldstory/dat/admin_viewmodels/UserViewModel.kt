@@ -38,7 +38,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             userName.value.toString(),
             hashedpw,
             email.value.toString(),
-            transform(avtId.get(0).toString()),
+            transform(avtId.first().toString()),
             nickName.value.toString(),
             roleID,
             dateTimeNow()
@@ -99,8 +99,9 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             email = u?.email ?: "",
             roleID = u?.roleID ?: -1,
             createdDate = u?.createdDate ?: "",
-            imgAvatar = transform(avtId.get(0))
+            imgAvatar = transform(avtId.first())
         )
+        Log.w("idimg",avtId.first().toString())
         db.updateUserAvt(user)
         resetValue()
         fetchAllUsers()
