@@ -30,6 +30,7 @@ touchimageview = "1.4.1"
 emoji2 = "1.5.0"
 picasso = "2.8"
 emoji2Bundled = "1.5.0"
+swiperefreshlayout = "1.1.0"
 
 
 [libraries]
@@ -65,6 +66,7 @@ v3-rev305-x-x5-x = { module = "com.google.api-services-drive:v3-rev305-1.25.0" }
 androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2", version.ref = "emoji2" }
 picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
 androidx-emoji2-bundled = { group = "androidx.emoji2", name = "emoji2-bundled", version.ref = "emoji2Bundled" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 
 [plugins]

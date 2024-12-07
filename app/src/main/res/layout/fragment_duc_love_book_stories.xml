@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.worldstory.duc.ducfragment.Duc_LoveBookStories_Fragment"
-    android:orientation="vertical">
+    android:id="@+id/swipeRefresh_loveBookStoryFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:backgroundTint="@color/white"
-        android:padding="15dp"
-        android:id="@+id/recycler_cardStory_loveBookFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:orientation="vertical"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:backgroundTint="@color/white"
+            android:padding="15dp"
+            android:id="@+id/recycler_cardStory_loveBookFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
 
-</LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

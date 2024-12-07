@@ -62,6 +62,7 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.filament.android)
+    implementation(libs.androidx.swiperefreshlayout)
 
     val nav_version = "2.8.3"
     // Jetpack Compose integration

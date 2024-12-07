@@ -44,7 +44,10 @@ fun getDataNotFound(context: Context): String {
     return context.getString(R.string.dataNotFound)
 }
 
-
+var GUEST=4
+var ADMIN=1
+var AUTHOR=2
+var MEMBER=3
 var numDef=1
 fun getLoremIpsum(context: Context): String = context.getString(R.string.loremIpsum)
 fun getLoremIpsumLong(context: Context): String = context.getString(R.string.loremIpsumLong)
@@ -319,7 +322,7 @@ fun Context.isUserCurrentMember(): Boolean{
 
 }
 fun  Context.clearUserSession() {
-    val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+    val sharedPref = getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
     with(sharedPref.edit()) {
         clear()
         apply()

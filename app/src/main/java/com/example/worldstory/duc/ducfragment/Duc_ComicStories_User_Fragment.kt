@@ -114,22 +114,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 ducStoryViewModel.fetchGenreAndStoriesByGenre(genre, isText)
             }
 
-
-            //card view stories
-//            ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer { stories ->
-//                for (genre in genres) {
-//                    createGridCardViewStory(
-//                        requireContext(),
-//                        inflater,
-//                        linearLayout,
-//                        genre,
-//                        ducStoryViewModel.getStoriesByGenre(genre.genreID ?: 1, isText)
-//                    )
-//
-//                }
-//                //set image banner
-//                setImageBanner()
-//            })
         })
 
         //set image banner

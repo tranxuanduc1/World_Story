@@ -10,6 +10,7 @@ import com.example.myapplication.databinding.ActivityDucSignUpBinding
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.model.User
@@ -53,7 +54,8 @@ class DucSignUpActivity : AppCompatActivity() {
                     saveDataUserSignup()
 
                     //chuyen huong ve man hinh dang nhap
-                    //toActivity(DucLoginActivity::class.java)
+                    toActivity(DucLoginActivity::class.java)
+                    finish()
                 }
             }
         })

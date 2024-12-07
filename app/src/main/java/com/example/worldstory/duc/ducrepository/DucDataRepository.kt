@@ -4,6 +4,8 @@ package com.example.worldstory.duc.ducrepository
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducutils.GUEST
+import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.numDef
@@ -113,14 +115,7 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         dbHelper.insertComment(comment)
     }
     //user
-    fun createGuestUser() {
-        dbHelper.insertUser(
-            User(
-                null, "guest", "", SampleDataStory.getExampleEmail(),SampleDataStory.getExampleImgURL(), "Guest", 1,
-                dateTimeNow()
-            )
-        )
-    }
+
     fun addNewUserMember(username: String,password: String,email: String,nickname: String,date: String){
         var roleIdMember=getRoleIdMember()
         var newUser = User(
@@ -161,7 +156,27 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun getUserByUsername(username: String): User?{
         return dbHelper.getUserByUsersName(username)
     }
+    fun getUserByUserId(userId: Int): User?{
+        return dbHelper.getUserByUsersId(userId)
+    }
+    fun getLastestUserId(): User?{
+        return dbHelper.getLastestUserId()
+    }
+    fun createGuestUser(): User{
+        var lastUser=getLastestUserId()
+        var step=1
+        var lasId=lastUser?.userID
+        var id= lasId?.plus(step)
 
+        var user = User(
+            null,
+            "guest" + id,
+            "123",
+            SampleDataStory.getExampleEmail(),
+            SampleDataStory.getExampleAvatarUrl(),"guest"+id, GUEST,dateTimeNow())
+        dbHelper.insertUser(user)
+        return user
+    }
     //role
     fun getRoleByRoleId(roleId: Int): Role?{
         var listOfRoles= dbHelper.getAllRoles()
@@ -171,7 +186,7 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return role
     }
     fun getRoleIdMember(): Int{
-        return 3
+        return MEMBER
     }
     //rating
     fun getRatingsByStory(storyId: Int): List<Rate> {

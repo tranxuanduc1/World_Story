@@ -6,10 +6,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.myapplication.databinding.FragmentDucSettingUserBinding
 import com.example.worldstory.AdminMainActivity
+import com.example.worldstory.StartActivity
 import com.example.worldstory.duc.ducactivity.DucLoginActivity
+import com.example.worldstory.duc.ducutils.callLog
+import com.example.worldstory.duc.ducutils.clearUserSession
+import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
+import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
+import com.example.worldstory.duc.ducutils.isUserCurrentMember
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
+import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,7 +33,9 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Duc_Setting_User_Fragment : Fragment() {
-
+    private val ducAccountManagerViewModel: DucAccountManagerViewModel by viewModels{
+        DucAccountManagerViewModelFactory(requireContext())
+    }
     private lateinit var binding: FragmentDucSettingUserBinding
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -42,20 +55,53 @@ class Duc_Setting_User_Fragment : Fragment() {
     ): View? {
         binding= FragmentDucSettingUserBinding.inflate(layoutInflater)
         val view =binding.root
-        binding.btnLogoutSettingUserFragment.setOnClickListener{
-            var intent= Intent(view.context, DucLoginActivity::class.java)
-            startActivity(intent)
-        }
 
+
+        ducAccountManagerViewModel.fetchUserSessionAndRoleByUserSession()
+        ducAccountManagerViewModel.userSessionAndRole.observe(viewLifecycleOwner, Observer{
+            userAndRole->
+            binding.imgAvatarSettingUserFragment.loadImgURL(requireContext(),userAndRole.first.imgAvatar)
+            binding.txtNickanmeSettingUserFragment.text=userAndRole.first.nickName
+        })
+        setViewButton()
         setConfigButton()
         return view
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_setting_user, container, false)
     }
 
+    private fun setViewButton() {
+        if(requireContext().isUserCurrentAdmin() || requireContext().isUserCurrentAuthor()){
+            binding.btnSwitchToAdminSettingUserFragment.visibility= View.VISIBLE
+            binding.btnLogoutSettingUserFragment.visibility= View.VISIBLE
+            binding.btnLoginSettingUserFragment.visibility= View.GONE
+        }else if(requireContext().isUserCurrentMember()){
+            binding.btnSwitchToAdminSettingUserFragment.visibility= View.GONE
+            binding.btnLogoutSettingUserFragment.visibility= View.VISIBLE
+            binding.btnLoginSettingUserFragment.visibility= View.GONE
+
+        }else{
+            binding.btnSwitchToAdminSettingUserFragment.visibility= View.GONE
+            binding.btnLogoutSettingUserFragment.visibility= View.GONE
+            binding.btnLoginSettingUserFragment.visibility= View.VISIBLE
+
+        }
+    }
+
     private fun setConfigButton() {
+        binding.btnLoginSettingUserFragment.setOnClickListener{
+            var intent= Intent(context, DucLoginActivity::class.java)
+            startActivity(intent)
+        }
         binding.btnSwitchToAdminSettingUserFragment.setOnClickListener{
             requireContext().toActivity(AdminMainActivity::class.java)
+        }
+        binding.btnLogoutSettingUserFragment.setOnClickListener{
+            requireContext().clearUserSession()
+            //quay cho ve man hinh chinh
+            callLog("========","da clear")
+            requireContext().toActivity(StartActivity::class.java)
+
         }
     }
 

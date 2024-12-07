@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.worldstory.duc.ducfragment.Duc_Setting_User_Fragment"
     android:orientation="vertical"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -16,16 +16,24 @@
         android:orientation="vertical"
         >
 
-
-    <ImageButton
+    <androidx.cardview.widget.CardView
         android:layout_margin="20dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/cat"
-        android:scaleType="centerInside"
-        android:background="@android:color/transparent"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="50dp"
+        >
+        <ImageButton
+            android:id="@+id/img_avatar_settingUserFragment"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/a1"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
+            />
+    </androidx.cardview.widget.CardView>
+
 <TextView
+    android:id="@+id/txt_nickanme_settingUserFragment"
     android:textSize="22sp"
     android:textStyle="bold"
     android:layout_width="match_parent"
@@ -87,7 +95,19 @@
             android:gravity="start|center_vertical"
             />
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLogout_settingUserFragment"
+            android:id="@+id/btnLogin_settingUserFragment"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/image_button_search_slector"
+            android:text="@string/login"
+            android:drawableLeft="@drawable/icon_setting"
+
+            android:paddingStart="20dp"
+            android:drawablePadding="20dp"
+            android:gravity="start|center_vertical"
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_logout_settingUserFragment"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@drawable/image_button_search_slector"
@@ -98,6 +118,5 @@
             android:drawablePadding="20dp"
             android:gravity="start|center_vertical"
             />
-
     </LinearLayout>
 </ScrollView>
