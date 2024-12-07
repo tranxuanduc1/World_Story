@@ -10,22 +10,29 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Rate
 import com.example.worldstory.model.User
 
-class RateViewModel(private val db: DatabaseHelper) : ViewModel(db) {
+class RateViewModel(private val db: DatabaseHelper,private val id:Int?) : ViewModel(db) {
 
     private val _rateList = MutableLiveData<List<Rate>>()
     val rateList: LiveData<List<Rate>> get() = _rateList
     private val _rateListByScore = MutableLiveData<List<Rate>>()
     val rateListByScore: LiveData<List<Rate>> get() = _rateListByScore
 
-    private val _userList=MutableLiveData<List<User>>()
-    val users:LiveData<List<User>>get() = _userList
+    private val _userList = MutableLiveData<List<User>>()
+    val users: LiveData<List<User>> get() = _userList
+
     init {
         fetch()
         setRateListBtScore(1)
     }
 
     fun fetch() {
-        _rateList.value = db.getAllRates()
+        try {
+            if (id!! > 0)
+                _rateList.value = db.getRatesByStory(id)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
     }
 
     fun setRateListBtScore(score: Int) {
@@ -38,14 +45,13 @@ class RateViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         setUserList()
     }
 
-    private fun setUserList(){
+    private fun setUserList() {
         try {
-            _userList.value=rateListByScore.value?.map { db.getUserByUsersId(it.userID)!! }
-        }catch (e:Exception){
+            _userList.value = rateListByScore.value?.map { db.getUserByUsersId(it.userID)!! }
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
 
 
     fun delete(rate: Rate): Int {
@@ -94,11 +100,11 @@ class RateViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 }
 
 
-class RateViewModelFactory(private val databaseHelper: DatabaseHelper) : ViewModelProvider.Factory {
+class RateViewModelFactory(private val databaseHelper: DatabaseHelper ,private val id:Int?) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RateViewModel::class.java)) {
-            return RateViewModel(databaseHelper) as T
+            return RateViewModel(databaseHelper,id) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

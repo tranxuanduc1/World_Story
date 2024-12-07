@@ -2,6 +2,7 @@ package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,28 +31,49 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 
 class RateFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    companion object {
+        fun newInstance(idStory: Int): RateFragment {
+            val fragment = RateFragment()
+            val args = Bundle()
+            args.putInt("idStory1", idStory)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+
+    private var idStory: Int? = -1
     private lateinit var rateAdapter: RateAdapter
     private val rateRatioList = mutableListOf<Float>()
-    private val rateViewModel: RateViewModel by viewModels {
-        RateViewModelFactory(DatabaseHelper(requireContext()))
-    }
+    private lateinit var rateViewModel: RateViewModel
     private lateinit var binding: FragmentRateLayoutBinding
 
+
     private val maxScore = 5
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRateLayoutBinding.inflate(layoutInflater)
-        binding.rateViewModel = rateViewModel
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+        idStory = arguments?.getInt("idStory1")
+        rateViewModel = RateViewModelFactory(
+            DatabaseHelper(requireContext()),
+            idStory
+        ).create(RateViewModel::class.java)
+
         binding.rateViewModel = rateViewModel
+        binding.lifecycleOwner = this
+
+        Log.w("id", idStory.toString())
         val pieChart = binding.pieChart
 
         updatePieChart(pieChart)
@@ -82,13 +104,13 @@ class RateFragment : Fragment() {
         binding.rateList.layoutManager = LinearLayoutManager(requireContext())
 
         rateAdapter = RateAdapter(
-            rateViewModel.users.value ?: emptyList(),requireContext()
+            rateViewModel.users.value ?: emptyList(), requireContext()
         )
 
         binding.rateList.adapter = rateAdapter
 
         rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
-            rateAdapter.update(rateViewModel.users.value?: emptyList())
+            rateAdapter.update(rateViewModel.users.value ?: emptyList())
         }
     }
 

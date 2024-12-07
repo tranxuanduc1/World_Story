@@ -18,8 +18,8 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity,private val idStory:In
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> ChapterFragment.newInstance(idStory)
-            1 -> CommentFragment()
-            else -> RateFragment()
+            1 -> CommentFragment.newInstance(idStory)
+            else -> RateFragment.newInstance(idStory)
         }
     }
 }
