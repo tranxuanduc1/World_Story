@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentRateLayoutBinding
 import com.example.worldstory.dat.admin_adapter.RateAdapter
+import com.example.worldstory.dat.admin_viewmodels.RateViewModel
+import com.example.worldstory.dat.admin_viewmodels.RateViewModelFactory
+import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model_for_test.Rate
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieDataSet
@@ -17,19 +22,24 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.data.PieData
 
 
-
 class RateFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var rateAdapter: RateAdapter
     private val rateList = mutableListOf<Rate>()
-
+    private val rateRatioList = mutableListOf<Float>()
+    private val rateViewModel: RateViewModel by viewModels {
+        RateViewModelFactory(DatabaseHelper(requireContext()))
+    }
+    private lateinit var binding: FragmentRateLayoutBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_rate_layout, container, false)
+    ): View {
+        binding = FragmentRateLayoutBinding.inflate(layoutInflater)
+        binding.rateViewModel = rateViewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,33 +48,11 @@ class RateFragment : Fragment() {
 
         val pieChart = view.findViewById<PieChart>(R.id.pieChart)
 
-// Dữ liệu cho biểu đồ
-        val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(40f, "Red"))
-        entries.add(PieEntry(30f, "Blue"))
-        entries.add(PieEntry(20f, "Green"))
-        entries.add(PieEntry(10f, "Yellow"))
+        updatePieChart(pieChart)
 
-// Tạo dataset và thiết lập các thuộc tính
-        val dataSet = PieDataSet(entries, "Colors")
-        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-        dataSet.sliceSpace = 3f // Khoảng cách giữa các phần
-
-// Tạo PieData
-        val pieData = PieData(dataSet)
-        pieData.setValueTextSize(12f)
-        pieData.setValueTextColor(android.graphics.Color.WHITE)
-
-// Gắn dữ liệu vào biểu đồ
-        pieChart.data = pieData
-        pieChart.setUsePercentValues(true) // Hiển thị theo phần trăm
-        pieChart.description.isEnabled = false // Tắt phần mô tả
-        pieChart.animateY(1000) // Hiệu ứng
-        pieChart.invalidate() // Cập nhật lại biểu đồ
-
-
-
-
+        rateViewModel.rateList.observe(viewLifecycleOwner ){
+            updatePieChart(pieChart)
+        }
 
         //nạp rates
         recyclerView = view.findViewById<RecyclerView>(R.id.rate_list)
@@ -78,4 +66,34 @@ class RateFragment : Fragment() {
         recyclerView.adapter = rateAdapter
     }
 
+    fun updatePieChart(pieChart:PieChart) {
+
+        // Dữ liệu cho biểu đồ
+        val entries = ArrayList<PieEntry>()
+
+        for (i in 1 until 6) {
+            rateRatioList.add(rateViewModel.getRatio(i))
+
+            entries.add(PieEntry(rateRatioList[i-1],"$i sao"))
+        }
+
+        // Tạo dataset và thiết lập các thuộc tính
+        val dataSet = PieDataSet(entries, "Colors")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        dataSet.sliceSpace = 3f // Khoảng cách giữa các phần
+
+        // Tạo PieData
+        val pieData = PieData(dataSet)
+        pieData.setValueTextSize(12f)
+        pieData.setValueTextColor(android.graphics.Color.WHITE)
+
+
+        // Gắn dữ liệu vào biểu đồ
+        pieChart.data = pieData
+        pieChart.setUsePercentValues(true) // Hiển thị theo phần trăm
+        pieChart.description.isEnabled = false // Tắt phần mô tả
+        pieChart.setDrawEntryLabels(false)
+        pieChart.animateY(1000) // Hiệu ứng
+        pieChart.invalidate() // Cập nhật lại biểu đồ
+    }
 }

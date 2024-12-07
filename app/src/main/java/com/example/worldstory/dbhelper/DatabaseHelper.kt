@@ -1185,6 +1185,7 @@ class DatabaseHelper(context: Context) :
     }
 
 
+    @SuppressLint("Range")
     fun getRoleNameByRoleId(roleId: Int?): String? {
         val db = readableDatabase
 
@@ -1328,7 +1329,7 @@ class DatabaseHelper(context: Context) :
 
     fun getAllRates(): List<Rate> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM ${Contract.RateEntry.TABLE_NAME}", null)
+        val cursor = db.rawQuery("SELECT * FROM ${Contract.RateEntry.TABLE_NAME} ORDER BY ${Contract.RateEntry.COLUMN_RATE}", null)
         val rates = mutableListOf<Rate>()
 
         if (cursor.moveToFirst()) {

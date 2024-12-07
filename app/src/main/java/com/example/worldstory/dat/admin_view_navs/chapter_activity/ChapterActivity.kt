@@ -18,7 +18,7 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class ChapterActivity : AppCompatActivity() {
+class   ChapterActivity : AppCompatActivity() {
     private val storyViewModel: StoryViewModel by viewModels {
         StoryViewModelFactory(DatabaseHelper(this))
     }
