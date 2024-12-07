@@ -393,7 +393,7 @@ class StartActivity : AppCompatActivity() {
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
             this.startActivity(intent)
-            isActivityRunning=false
+            //isActivityRunning=false
             finish()
         }, 2000)
     }
