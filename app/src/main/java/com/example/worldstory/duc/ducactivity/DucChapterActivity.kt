@@ -36,12 +36,14 @@ import com.example.worldstory.duc.ducviewmodel.DucChapterViewModel
 import com.example.worldstory.duc.ducviewmodel.DucCommentViewModel
 import com.example.worldstory.duc.ducviewmodel.DucImageViewModel
 import com.example.worldstory.duc.ducviewmodel.DucParagraphViewModel
+import com.example.worldstory.duc.ducviewmodel.DucSwipeRefreshViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterHistoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterMarkViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucCommentViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucImageViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucParagraphViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucSwipeRefreshViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
 
@@ -72,10 +74,13 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducChapterMarkViewModel: DucChapterMarkViewModel by viewModels {
         DucChapterMarkViewModelFactory(this)
     }
+    private val ducSwipeRefreshViewModel: DucSwipeRefreshViewModel by viewModels {
+        DucSwipeRefreshViewModelFactory(this)
+    }
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
     private var storyInfo: Story? = null
-    private var listOfChapterMarks=mutableListOf<Chapter>()
+    private var listOfChapterMarks = mutableListOf<Chapter>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucChapterBinding.inflate(layoutInflater)
@@ -119,9 +124,14 @@ class DucChapterActivity : AppCompatActivity() {
         })
 
         // da lay duoc chuong danh dau tu database
-        ducChapterMarkViewModel.chaptersMarkedByStory.observe(this, Observer{
-            chapterMarks->
+        ducChapterMarkViewModel.chaptersMarkedByStory.observe(this, Observer { chapterMarks ->
             setButtonChapterMark(chapterMarks)
+        })
+        //lam moi
+        ducSwipeRefreshViewModel.refreshView.observe(this, Observer { refresh ->
+            // xoa hieu ung load
+            binding.swipeRefreshChapter.isRefreshing = false
+            loadContent()
         })
 
         //
@@ -147,7 +157,9 @@ class DucChapterActivity : AppCompatActivity() {
             storyInfo?.let {
                 ducChapterViewModel.fetchChaptersByStory(it.storyID ?: numDef)
                 ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef)
-                ducChapterMarkViewModel.fetchChaptersMarkedByUserSessionAndStory(it.storyID?:numDef)
+                ducChapterMarkViewModel.fetchChaptersMarkedByUserSessionAndStory(
+                    it.storyID ?: numDef
+                )
             }
         }
     }
@@ -213,7 +225,7 @@ class DucChapterActivity : AppCompatActivity() {
 
         //reset chapter mark
         storyInfo?.let {
-            ducChapterMarkViewModel.fetchChaptersMarkedByUserSessionAndStory(it.storyID?:numDef)
+            ducChapterMarkViewModel.fetchChaptersMarkedByUserSessionAndStory(it.storyID ?: numDef)
         }
         //asign chapter history
         mainChapter?.let {
@@ -230,35 +242,35 @@ class DucChapterActivity : AppCompatActivity() {
         nextChapter = ducChapterViewModel.nextChapter
 
     }
-    private fun setButtonChapterMark(chapters: List<Chapter>){
 
-        var isMark=false
+    private fun setButtonChapterMark(chapters: List<Chapter>) {
+
+        var isMark = false
         //chapter is mark or not
-        mainChapter?.let { main->
-            var chapterMark=chapters.find { it.chapterID==main.chapterID }
-            if(chapterMark!=null)
-            {
+        mainChapter?.let { main ->
+            var chapterMark = chapters.find { it.chapterID == main.chapterID }
+            if (chapterMark != null) {
                 // co danh dau chuong
-                isMark=true
+                isMark = true
                 binding.btnMarkChapterChapter.setImageResource(com.example.myapplication.R.drawable.icon_mark_fill)
 
-            }else{
+            } else {
                 // chua danh dau
-                isMark=false
+                isMark = false
                 binding.btnMarkChapterChapter.setImageResource(com.example.myapplication.R.drawable.icon_mark_outline)
             }
 
         }
         // set even mark chapter button
-        binding.btnMarkChapterChapter.setOnClickListener{
-            mainChapter?.let { main->
-                isMark=!isMark
-                if(isMark){
+        binding.btnMarkChapterChapter.setOnClickListener {
+            mainChapter?.let { main ->
+                isMark = !isMark
+                if (isMark) {
                     binding.btnMarkChapterChapter.setImageResource(com.example.myapplication.R.drawable.icon_mark_fill)
-                    ducChapterMarkViewModel.addChapterMarkByUserSession(main.chapterID?:numDef)
-                }else{
+                    ducChapterMarkViewModel.addChapterMarkByUserSession(main.chapterID ?: numDef)
+                } else {
                     binding.btnMarkChapterChapter.setImageResource(com.example.myapplication.R.drawable.icon_mark_outline)
-                    ducChapterMarkViewModel.deleteChapterMarkByUserSession(main.chapterID?:numDef)
+                    ducChapterMarkViewModel.deleteChapterMarkByUserSession(main.chapterID ?: numDef)
 
                 }
 
@@ -267,6 +279,7 @@ class DucChapterActivity : AppCompatActivity() {
 
         }
     }
+
     private fun setupViewImageOrParagraph() {
 
         if (storyInfo?.isTextStory?.toBoolean() == true) {
@@ -301,15 +314,16 @@ class DucChapterActivity : AppCompatActivity() {
 
     private fun loadContent() {
 
+        storyInfo?.let {storyReal->
+            if (storyReal.isTextStory.toBoolean() == true) {
 
-        if (storyInfo?.isTextStory?.toBoolean() == true) {
+                loadParagraph()
 
-            loadParagraph()
+            } else {
 
-        } else {
+                loadImage()
 
-            loadImage()
-
+            }
         }
 
     }
@@ -427,7 +441,10 @@ class DucChapterActivity : AppCompatActivity() {
         commentLayoutBinding.txtDisplayNameCommentOppositeLayout.text =
             comment.nameUser
         commentLayoutBinding.txtContentCommentOppositeLayout.text = comment.content
-        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.loadImgURL(this, comment.imgAvatarUrl)
+        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.loadImgURL(
+            this,
+            comment.imgAvatarUrl
+        )
         commentLayoutBinding.txtDateCreatedCommentOppositeLayout.text = comment.date
     }
 
@@ -509,6 +526,8 @@ class DucChapterActivity : AppCompatActivity() {
             binding.frameContainerCommentDialogChapter.visibility = View.VISIBLE
             binding.scrollViewMainCommentDialogChapter.scrollToBottom()
         }
-
+        binding.swipeRefreshChapter.setOnRefreshListener {
+            ducSwipeRefreshViewModel.fetchRefreshView()
+        }
     }
 }

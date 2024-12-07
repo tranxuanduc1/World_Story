@@ -84,6 +84,9 @@ class Duc_TextStories_User_Fragment : Fragment() {
 
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer{ genres->
+            // tat hieu ung load
+            binding.swipeRefreshTextStoriesUser.isRefreshing=false
+
             recyclerViewGenreButton.layoutManager = GridLayoutManager(
                 view.context,
                 1,
@@ -93,6 +96,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
                 requireContext(), ArrayList(genres),
                 isText
             )
+            //xoa view con
+            linearContainerGridCardStory.removeAllViews()
            for(genre in genres){
                ducStoryViewModel.fetchGenreAndStoriesByGenre(genre,isText)
            }
@@ -113,6 +118,9 @@ class Duc_TextStories_User_Fragment : Fragment() {
         var searchImgBtn = binding.searchButtonTextStoriesUser
         searchImgBtn.setOnClickListener {
             toSearchActivity()
+        }
+        binding.swipeRefreshTextStoriesUser.setOnRefreshListener{
+            ducGenreViewModel.fetchGenres()
         }
     }
 
