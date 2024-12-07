@@ -18,6 +18,7 @@ import com.example.worldstory.duc.ducactivity.DucUserHomeActivity
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.duc.ducutils.hashPassword
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
@@ -148,7 +149,7 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user1",
-                "123",
+                hashPassword(SampleDataStory.getExamplePassword()),
                 SampleDataStory.getExampleEmail(),
                 "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",
                 "nickname1",
@@ -160,7 +161,7 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user2",
-                "123",
+                hashPassword(SampleDataStory.getExamplePassword()),
                 SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname2",
@@ -172,7 +173,7 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user3",
-                "123",
+                hashPassword(SampleDataStory.getExamplePassword()),
                 SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname3",
@@ -184,7 +185,7 @@ class StartActivity : AppCompatActivity() {
             User(
                 null,
                 "user4",
-                "123",
+                hashPassword(SampleDataStory.getExamplePassword()),
                 SampleDataStory.getExampleEmail(),
                 SampleDataStory.getExampleImgURL(),
                 "nickname4",
@@ -192,14 +193,10 @@ class StartActivity : AppCompatActivity() {
                 dateTimeNow()
             )
         )
-        callLog("++++", "Action")
         dataHelper.insertGenre(Genre(null, "Action", 1))
-        callLog("++++", "Romance")
 
         dataHelper.insertGenre(Genre(null, "Romance", 1))
-        callLog("++++", "Horror")
         dataHelper.insertGenre(Genre(null, "Horror", 1))
-        callLog("++++", "Fantasy")
         dataHelper.insertGenre(Genre(null, "Fantasy", 1))
 
 

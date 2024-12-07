@@ -1,6 +1,7 @@
 package com.example.worldstory.duc.ducrepository
 
 
+import android.provider.CallLog
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
@@ -8,7 +9,9 @@ import com.example.worldstory.duc.ducutils.GUEST
 import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.callLog
+import com.example.worldstory.duc.ducutils.checkHashPassword
 import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.hashPassword
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Chapter
@@ -96,9 +99,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var listOfDucComments = mutableListOf<DucCommentDataClass>()
         listOfComments.forEach {
             var user = dbHelper.getUserByUsersId(it.userId)
-            if (user!=null){
+            if (user != null) {
                 var ducComment = DucCommentDataClass(
-                    it.commentId?: numDef,
+                    it.commentId ?: numDef,
                     it.content,
                     user.imgAvatar,
                     user.userName,
@@ -112,87 +115,122 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         }
         return listOfDucComments
     }
-    fun createComment(comment: Comment){
+
+    fun createComment(comment: Comment) {
         dbHelper.insertComment(comment)
     }
     //user
 
-    fun addNewUserMember(username: String,password: String,email: String,nickname: String,date: String){
-        var roleIdMember=getRoleIdMember()
+    fun addNewUserMember(
+        username: String,
+        password: String,
+        email: String,
+        nickname: String,
+        date: String
+    ) {
+        var roleIdMember = getRoleIdMember()
         var newUser = User(
-            null, username, password, email, SampleDataStory.getExampleAvatarUrl(), nickname, roleIdMember,
+            null,
+            username,
+            hashPassword(password),
+            email,
+            SampleDataStory.getExampleAvatarUrl(),
+            nickname,
+            roleIdMember,
             date
         )
         dbHelper.insertUser(newUser)
     }
-    fun checkAccountByUserNameWhenLogin(userName: String, password: String): UserLoginStateEnum{
-        var userNameTrim= userName.trim()
-        var passwordTrim=password.trim()
-        var user=dbHelper.getUserByUsersName(userNameTrim)
-        return if (user==null){
-            UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST
-        }else{
-            if(user.hashedPw == passwordTrim){
-                UserLoginStateEnum.CORRECT
 
-            }else{
-                UserLoginStateEnum.INCORRECT_USERNAME_OR_PASSWORD
+    fun checkAccountByUserNameWhenLogin(userName: String, password: String): UserLoginStateEnum {
+        var userNameTrim = userName.trim()
+        var passwordTrim = password.trim()
+        var user = dbHelper.getUserByUsersName(userNameTrim)
+        try {
+
+            return if (user == null) {
+                UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST
+            } else {
+
+                //so sanh mat khau user cung cap voi mat khau da duoc ma hoa trong database
+                if (checkHashPassword(passwordTrim, user.hashedPw)) {
+                    UserLoginStateEnum.CORRECT
+
+                } else {
+                    UserLoginStateEnum.INCORRECT_USERNAME_OR_PASSWORD
+
+                }
+
 
             }
-
-
+        } catch (e: Exception) {
+            callLog("repoaaa", e.toString())
+            return UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST
         }
 
+
     }
-    fun checkAccountExist(userName: String):UserLoginStateEnum{
-        var userNameTrim= userName.trim()
-        var user=dbHelper.getUserByUsersName(userNameTrim)
-        return if (user==null){
+
+    fun checkAccountExist(userName: String): UserLoginStateEnum {
+        var userNameTrim = userName.trim()
+        var user = dbHelper.getUserByUsersName(userNameTrim)
+        return if (user == null) {
             UserLoginStateEnum.CORRECT
-        }else{
+        } else {
             UserLoginStateEnum.USERNAME_ALREADY_EXISTS
         }
 
     }
-    fun getUserByUsername(username: String): User?{
+
+    fun getUserByUsername(username: String): User? {
         return dbHelper.getUserByUsersName(username)
     }
-    fun getUserByUserId(userId: Int): User?{
+
+    fun getUserByUserId(userId: Int): User? {
         return dbHelper.getUserByUsersId(userId)
     }
-    fun getLastestUserId(): User?{
+
+    fun getLastestUserId(): User? {
         return dbHelper.getLastestUserId()
     }
-    fun createGuestUser(): User{
-        var lastUser=getLastestUserId()
-        var step=1
-        var lasId=lastUser?.userID
-        var id= lasId?.plus(step)
+
+    fun createGuestUser(): User {
+        var lastUser = getLastestUserId()
+        var step = 1
+        var lasId = lastUser?.userID
+        var id = lasId?.plus(step) ?: numDef
 
         var user = User(
             null,
-            "guest" + id,
-            "123",
+            "guest$id",
+            hashPassword(SampleDataStory.getExamplePassword()),
             SampleDataStory.getExampleEmail(),
-            SampleDataStory.getExampleAvatarUrl(),"guest"+id, GUEST,dateTimeNow())
+            SampleDataStory.getExampleAvatarUrl(),
+            SampleDataStory.generateGuestNameWithId(id),
+            GUEST,
+            dateTimeNow()
+        )
         dbHelper.insertUser(user)
-        callLog("dbhelper..",user.toString())
         return user
     }
-    fun deleteUser(userId:Int){
+
+    fun deleteUser(userId: Int) {
         dbHelper.deleteUser(userId)
     }
+
     //role
-    fun getRoleByRoleId(roleId: Int): Role?{
-        var listOfRoles= dbHelper.getAllRoles()
-        var role=listOfRoles.filter {
-            it.roleID?.let { id -> id == roleId }?:false
+    fun getRoleByRoleId(roleId: Int): Role? {
+        var listOfRoles = dbHelper.getAllRoles()
+        var role = listOfRoles.filter {
+            it.roleID?.let { id -> id == roleId } ?: false
         }.first()
         return role
     }
-    fun getRoleIdMember(): Int{
+
+    fun getRoleIdMember(): Int {
         return MEMBER
     }
+
     //rating
     fun getRatingsByStory(storyId: Int): List<Rate> {
         return dbHelper.getRatesByStory(storyId)
@@ -284,29 +322,32 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     }
 
     // chapter mark
-    fun getChaptersMarkedByUser(userId: Int): List<Chapter>{
-        var chapterMarksId=dbHelper.getChapterMarksIdByUser(userId)
-        var listOfChapters=mutableListOf<Chapter>()
-        chapterMarksId.forEach{
-            var chapter=dbHelper.getChaptersByChapterId(it)
+    fun getChaptersMarkedByUser(userId: Int): List<Chapter> {
+        var chapterMarksId = dbHelper.getChapterMarksIdByUser(userId)
+        var listOfChapters = mutableListOf<Chapter>()
+        chapterMarksId.forEach {
+            var chapter = dbHelper.getChaptersByChapterId(it)
             chapter?.let {
                 listOfChapters.add(chapter)
             }
         }
         return listOfChapters
     }
-    fun getChaptersMarkedByUserAndStory(userId: Int,storyId: Int): List<Chapter>{
-        var listOfChaptersMarkedByUser=getChaptersMarkedByUser(userId)
-        var listOfChapter =listOfChaptersMarkedByUser.filter { it.storyID ==storyId }
+
+    fun getChaptersMarkedByUserAndStory(userId: Int, storyId: Int): List<Chapter> {
+        var listOfChaptersMarkedByUser = getChaptersMarkedByUser(userId)
+        var listOfChapter = listOfChaptersMarkedByUser.filter { it.storyID == storyId }
         return listOfChapter
     }
-    fun setChapterMark(userId: Int,chapterId: Int){
+
+    fun setChapterMark(userId: Int, chapterId: Int) {
         //xoa cai cu
-        dbHelper.deleteChapterMark(userId,chapterId)
+        dbHelper.deleteChapterMark(userId, chapterId)
         // them cai moi
-        dbHelper.insertChapterMark(userId,chapterId)
+        dbHelper.insertChapterMark(userId, chapterId)
     }
-    fun deleteChapterMark(userId: Int,chapterId: Int){
-        dbHelper.deleteChapterMark(userId,chapterId)
+
+    fun deleteChapterMark(userId: Int, chapterId: Int) {
+        dbHelper.deleteChapterMark(userId, chapterId)
     }
 }
