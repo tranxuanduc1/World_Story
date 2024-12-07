@@ -32,6 +32,7 @@ import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 import com.example.worldstory.model_for_test.Role
+import org.mindrot.jbcrypt.BCrypt
 
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -327,4 +328,10 @@ fun  Context.clearUserSession() {
         clear()
         apply()
     }
+}
+fun hashPassword(password: String): String {
+    return BCrypt.hashpw(password, BCrypt.gensalt())
+}
+fun checkHashPassword(rawPassword: String, hashedPassword: String): Boolean {
+    return BCrypt.checkpw(rawPassword, hashedPassword)
 }

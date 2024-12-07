@@ -52,6 +52,14 @@ object SampleDataStory {
     fun getExampleEmail(): String{
         return "example@gmail.com"
     }
+    fun getExamplePassword(): String{
+        var password="123"
+        return password
+    }
+    fun generateGuestNameWithId(id: Int): String{
+        var name="guest$id"
+        return name
+    }
     fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass{
         return getDataList(context).filter { it.idStory==idStory }.first()
     }

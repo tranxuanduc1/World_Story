@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.worldstory.duc.ducfragment.Duc_ComicStories_User_Fragment">
+    tools:context="com.example.worldstory.duc.ducfragment.Duc_ComicStories_User_Fragment"
+    android:id="@+id/swipeRefresh_comicStoriesUser"
+    >
 
     <!-- TODO: Update blank fragment layout -->
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
 
     <LinearLayout
         android:id="@+id/linearLayout_fragment_comicStoryUser"
@@ -37,13 +44,14 @@
             android:background="@color/green1"/>
 
         <com.denzcoskun.imageslider.ImageSlider
-            android:id="@+id/imgTestComicUserstory"
+            android:id="@+id/imgBannerComicUserstory"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             app:iss_auto_cycle="true"
 
             app:iss_text_align="CENTER"
             />
+
         <TextView
             android:id="@+id/txt_test_comicUserstory"
             android:layout_width="wrap_content"
@@ -71,5 +79,5 @@
 
 
 
-
 </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
