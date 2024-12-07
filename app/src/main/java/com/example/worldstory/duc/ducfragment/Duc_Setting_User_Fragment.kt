@@ -60,6 +60,7 @@ class Duc_Setting_User_Fragment : Fragment() {
         ducAccountManagerViewModel.fetchUserSessionAndRoleByUserSession()
         ducAccountManagerViewModel.userSessionAndRole.observe(viewLifecycleOwner, Observer{
             userAndRole->
+
             binding.imgAvatarSettingUserFragment.loadImgURL(requireContext(),userAndRole.first.imgAvatar)
             binding.txtNickanmeSettingUserFragment.text=userAndRole.first.nickName
         })
@@ -100,6 +101,7 @@ class Duc_Setting_User_Fragment : Fragment() {
             requireContext().clearUserSession()
             //quay cho ve man hinh chinh
             callLog("========","da clear")
+            StartActivity.isActivityRunning=false
             requireContext().toActivity(StartActivity::class.java)
 
         }

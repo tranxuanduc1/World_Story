@@ -7,6 +7,7 @@ import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducutils.GUEST
 import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
@@ -175,7 +176,11 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
             SampleDataStory.getExampleEmail(),
             SampleDataStory.getExampleAvatarUrl(),"guest"+id, GUEST,dateTimeNow())
         dbHelper.insertUser(user)
+        callLog("dbhelper..",user.toString())
         return user
+    }
+    fun deleteUser(userId:Int){
+        dbHelper.deleteUser(userId)
     }
     //role
     fun getRoleByRoleId(roleId: Int): Role?{

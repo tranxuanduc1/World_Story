@@ -9,6 +9,7 @@ import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.duc.ducutils.isUserCurrentGuest
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.model.User
 import com.example.worldstory.model.Role
@@ -103,5 +104,14 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
 
             }
         }
+    }
+    fun deleteGuestUserSession(){
+        var userId=context.getUserIdSession()
+        viewModelScope.launch{
+            if(context.isUserCurrentGuest()){
+                repository.deleteUser(userId)
+            }
+        }
+
     }
 }

@@ -35,7 +35,7 @@ import kotlin.getValue
 class StartActivity : AppCompatActivity() {
 
     companion object {
-        private var isActivityRunning = false
+         var isActivityRunning = false
     }
     private val ducAccountManagerViewModel: DucAccountManagerViewModel by viewModels {
         DucAccountManagerViewModelFactory(this)
@@ -57,7 +57,7 @@ class StartActivity : AppCompatActivity() {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(view)
-
+        //testDatabase()
 
         callLog("=========", "bat dau chay start activity")
 
@@ -77,7 +77,7 @@ class StartActivity : AppCompatActivity() {
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
             this.startActivity(intent)
-                isActivityRunning=false
+                //isActivityRunning=false
             finish()
         }, 2000)
         }
@@ -90,7 +90,7 @@ class StartActivity : AppCompatActivity() {
             userAndRole->
            waitThenSaveShareedPreference(userAndRole)
         })
-        //testDatabase()
+
 
 
 
@@ -150,7 +150,7 @@ class StartActivity : AppCompatActivity() {
                 "user1",
                 "123",
                 SampleDataStory.getExampleEmail(),
-                SampleDataStory.getExampleImgURL(),
+                "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",
                 "nickname1",
                 1,
                 dateTimeNow()

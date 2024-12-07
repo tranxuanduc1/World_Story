@@ -70,7 +70,11 @@ class DucLoginActivity : AppCompatActivity() {
     }
 
     private fun setDataUserAndRoleAfterLogin() {
+
         ducAccountManagerViewModel.userSessionAndRole.observe(this, Observer { userAndRole ->
+            //xoa du lieu nguoi dung khach
+            ducAccountManagerViewModel.deleteGuestUserSession()
+
             var sharedPreferences =
                 getSharedPreferences(getString(R.string.key_user_session), Context.MODE_PRIVATE)
             with(sharedPreferences.edit()) {
@@ -84,7 +88,7 @@ class DucLoginActivity : AppCompatActivity() {
             // di chuyen toi trang chu
             var intent = Intent(this, DucUserHomeActivity::class.java)
             //xoa het activity cu
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK )
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
             this.startActivity(intent)

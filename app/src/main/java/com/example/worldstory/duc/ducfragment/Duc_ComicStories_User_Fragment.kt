@@ -26,6 +26,7 @@ import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
@@ -38,6 +39,7 @@ import com.example.worldstory.model.Paragraph
 import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
+import com.squareup.picasso.Picasso
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -129,7 +131,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
 
         //testDatabase()
-
+//
+        //Picasso.get().load(url2).fit().into(binding.imgTestComicUserFragment)
 
 //       ---------------------------------------------------------------------------------
         // Inflate the layout for this fragment
@@ -138,16 +141,16 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
     private fun setImageBanner() {
         var imgURL: String =
-            "https://storage-ct.lrclib.net/file/cuutruyen/uploads/manga/2478/cover/processed-4079ee6ed3b108490e33fca63589c35e.jpg"
+            "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
         var imgURL2: String =
             "https://drive.usercontent.google.com/download?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz&authuser=0"
         val imageList = ArrayList<SlideModel>() // Create image list
 
-        imageList.add(SlideModel(imgURL2))
+        imageList.add(SlideModel(imgURL))
         imageList.add(SlideModel(imgURL2))
         imageList.add(SlideModel(imgURL2))
 
-        val imageSlider = binding.imgTestComicUserstory
+        val imageSlider = binding.imgBannerComicUserstory
         imageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
         imageSlider.startSliding(3000)
     }
