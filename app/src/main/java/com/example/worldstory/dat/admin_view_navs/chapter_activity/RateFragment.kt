@@ -1,9 +1,12 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,24 +17,28 @@ import com.example.worldstory.dat.admin_adapter.RateAdapter
 import com.example.worldstory.dat.admin_viewmodels.RateViewModel
 import com.example.worldstory.dat.admin_viewmodels.RateViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.model_for_test.Rate
+import com.example.worldstory.model.Rate
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 
 
 class RateFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var rateAdapter: RateAdapter
-    private val rateList = mutableListOf<Rate>()
     private val rateRatioList = mutableListOf<Float>()
     private val rateViewModel: RateViewModel by viewModels {
         RateViewModelFactory(DatabaseHelper(requireContext()))
     }
     private lateinit var binding: FragmentRateLayoutBinding
+
+    private val maxScore = 5
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,42 +51,67 @@ class RateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        val pieChart = view.findViewById<PieChart>(R.id.pieChart)
+        binding.rateViewModel = rateViewModel
+        val pieChart = binding.pieChart
 
         updatePieChart(pieChart)
 
-        rateViewModel.rateList.observe(viewLifecycleOwner ){
+        pieChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                Toast.makeText(requireContext(), "No slice selected", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                if (e is PieEntry) {
+                    val label = e.label
+                    for (i in 1 until maxScore + 1) {
+                        if (label.contains("$i")) {
+                            rateViewModel.setRateListBtScore(i)
+                            break
+                        }
+                    }
+                }
+            }
+        })
+
+        rateViewModel.rateList.observe(viewLifecycleOwner) {
             updatePieChart(pieChart)
         }
 
         //nạp rates
-        recyclerView = view.findViewById<RecyclerView>(R.id.rate_list)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        for (i in 1..20) {
-            rateList.add(Rate("Lee Sin", 5, "12/09/2019"))
-            rateList.add(Rate("Yasou", 1, "20/11/2024"))
-            rateList.add(Rate("Garen", 3, "01/01/2034"))
+        binding.rateList.layoutManager = LinearLayoutManager(requireContext())
+
+        rateAdapter = RateAdapter(
+            rateViewModel.users.value ?: emptyList(),requireContext()
+        )
+
+        binding.rateList.adapter = rateAdapter
+
+        rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
+            rateAdapter.update(rateViewModel.users.value?: emptyList())
         }
-        rateAdapter = RateAdapter(rateList)
-        recyclerView.adapter = rateAdapter
     }
 
-    fun updatePieChart(pieChart:PieChart) {
+    fun updatePieChart(pieChart: PieChart) {
 
         // Dữ liệu cho biểu đồ
         val entries = ArrayList<PieEntry>()
 
-        for (i in 1 until 6) {
+        for (i in 1 until maxScore + 1) {
             rateRatioList.add(rateViewModel.getRatio(i))
 
-            entries.add(PieEntry(rateRatioList[i-1],"$i sao"))
+            entries.add(PieEntry(rateRatioList[i - 1], "$i sao"))
         }
 
         // Tạo dataset và thiết lập các thuộc tính
         val dataSet = PieDataSet(entries, "Colors")
-        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        dataSet.colors = listOf(
+            Color.RED,
+            ContextCompat.getColor(requireContext(), R.color.flame),
+            Color.YELLOW,
+            Color.GREEN,
+            Color.BLUE
+        )
         dataSet.sliceSpace = 3f // Khoảng cách giữa các phần
 
         // Tạo PieData
@@ -93,6 +125,8 @@ class RateFragment : Fragment() {
         pieChart.setUsePercentValues(true) // Hiển thị theo phần trăm
         pieChart.description.isEnabled = false // Tắt phần mô tả
         pieChart.setDrawEntryLabels(false)
+        pieChart.isHighlightPerTapEnabled = true  // Cho phép chọn slice khi bấm
+        pieChart.setTouchEnabled(true)           // Cho phép tương tác với PieChart
         pieChart.animateY(1000) // Hiệu ứng
         pieChart.invalidate() // Cập nhật lại biểu đồ
     }

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
@@ -23,7 +24,10 @@ class PickCateNewStoryDialog : DialogFragment() {
         StoryViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private lateinit var binding: PickingCategoriesForNewStoryBinding
+    private val checkedGenreId= mutableListOf<Int>()
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding=PickingCategoriesForNewStoryBinding.inflate(layoutInflater)
+
         return activity?.let {
             val builder = Builder(it)
             //
@@ -32,10 +36,15 @@ class PickCateNewStoryDialog : DialogFragment() {
             val falseArr = BooleanArray(genreViewModel.genres.value?.size ?: 0) { false }
             val genreList: List<String> =
                 genreViewModel.genres.value?.map { it.genreName } ?: emptyList()
-            val checkedGenres = mutableListOf<Int>()
+            val checkedGenres = mutableListOf<String>()
             builder.setTitle("Chọn thể loại cho truyện")
                 .setMultiChoiceItems(genreList.toTypedArray(), falseArr) { _, which, ischecked ->
-                    checkedGenres.add(genreViewModel.getIDbyName(genreList.get(which)))
+                    if(ischecked){
+                        checkedGenres.add(genreList.get(which))
+                    }else
+                    {
+                        checkedGenres.remove(genreList.get(which))
+                    }
                 }
             builder.setPositiveButton("Add", null)
                 .setNegativeButton("Cancel") { dialog, _ ->
@@ -46,14 +55,17 @@ class PickCateNewStoryDialog : DialogFragment() {
             dialog.setOnShowListener {
                 val addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 addButton.setOnClickListener {
-                    var isValid = true
-                    if (genreList.isEmpty()) {
-                        Snackbar.make(
-                            binding.root.findViewById(android.R.id.content),
+                    storyViewModel.genreIDList.value = setIdList(checkedGenres)
+
+                    if (storyViewModel.genreIDList.value?.isEmpty() == true) {
+                        val sb=Snackbar.make(
+                            dialog?.window?.decorView?.rootView ?: binding.root,
                             "Vui lòng chọn ít nhất 1 thể loại!",
                             Snackbar.LENGTH_LONG
-                        ).show()
-                        isValid = false
+                        )
+                        sb.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.flame)) // Màu nền
+                        sb.duration=500
+                        sb.show()
                     } else {
                         storyViewModel.onAddNewStory()
                         dialog.dismiss()
@@ -64,5 +76,14 @@ class PickCateNewStoryDialog : DialogFragment() {
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+
+    fun setIdList(genreNameList:List<String>):List<Int>{
+        val genreIds= mutableListOf<Int>()
+        genreNameList.forEach{
+            g->genreIds.add(genreViewModel.genres.value?.filter {it.genreName==g  }?.first()?.genreID?:-1)
+        }
+        return genreIds
     }
 }
