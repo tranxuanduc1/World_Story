@@ -181,7 +181,7 @@ class AddUserDialogFragment : DialogFragment() {
         val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
 
         // Đọc tệp credentials (service account)
-        val serviceAccountStream: InputStream = resources.openRawResource(R.raw.cred)
+        val serviceAccountStream: InputStream = resources.openRawResource(R.gitraw.cred)
 
         // Tạo xác thực với tệp credentials JSON
         val credentials = GoogleCredential.fromStream(serviceAccountStream)
