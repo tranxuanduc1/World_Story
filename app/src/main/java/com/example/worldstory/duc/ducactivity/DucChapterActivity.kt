@@ -10,13 +10,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.myapplication.databinding.CommentOppositeLayoutBinding
 import com.example.myapplication.databinding.CommentSelfLayoutBinding
 import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
+import com.example.worldstory.duc.ducadapter.Duc_Comment_Adapter
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_chapterInfo
@@ -26,6 +31,7 @@ import com.example.worldstory.duc.ducutils.getKey_previousChapter
 import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.scrollToBottom
@@ -77,10 +83,14 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducSwipeRefreshViewModel: DucSwipeRefreshViewModel by viewModels {
         DucSwipeRefreshViewModelFactory(this)
     }
+    private var isReply=false
     private var isTopFrameVisible = true
     private var isBottomFrameVisible = true
     private var storyInfo: Story? = null
     private var listOfChapterMarks = mutableListOf<Chapter>()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucChapterBinding.inflate(layoutInflater)
@@ -137,7 +147,10 @@ class DucChapterActivity : AppCompatActivity() {
         //
         setConfigCommentDialog()
         setConfigButton()
+        setConfigView()
     }
+
+
 
     private fun isCheckLoadData(key: String): Boolean {
         return (intent.hasExtra(key))
@@ -314,7 +327,7 @@ class DucChapterActivity : AppCompatActivity() {
 
     private fun loadContent() {
 
-        storyInfo?.let {storyReal->
+        storyInfo?.let { storyReal ->
             if (storyReal.isTextStory.toBoolean() == true) {
 
                 loadParagraph()
@@ -381,32 +394,57 @@ class DucChapterActivity : AppCompatActivity() {
     }
 
     //--------------Comment---------------------
-
     private fun loadComment(listOfComments: List<DucCommentDataClass>) {
-        //lam moi hop thoai scroll view chua cac comment
-        binding.linearContainerCommentChapter.removeAllViews()
+        var adapterComment = Duc_Comment_Adapter(
+            this,
+            listOfComments,
+            binding,
+            getUserIdSession()
+        )
+        binding.recyclerContainerCommentChapter.apply {
+            adapter = adapterComment
+            layoutManager =
+                LinearLayoutManager(this@DucChapterActivity, LinearLayoutManager.VERTICAL, false)
+            setHasFixedSize(true)
 
-        for (comment in listOfComments) {
-            var commentLayoutBinding: ViewBinding
-
-            if (ducCommentViewModel.checkCommentFromUser(comment)) {
-                commentLayoutBinding = CommentSelfLayoutBinding.inflate(layoutInflater)
-                setCommentSelf(commentLayoutBinding, comment)
-            } else {
-                commentLayoutBinding = CommentOppositeLayoutBinding.inflate(layoutInflater)
-                setCommentOpposite(commentLayoutBinding, comment)
-            }
-            binding.linearContainerCommentChapter.addView(commentLayoutBinding.root)
         }
-        binding.scrollViewMainCommentDialogChapter.scrollToBottom()
+        // cuon den vi tri cuoi
+        binding.recyclerContainerCommentChapter.smoothScrollToPosition(
+            adapterComment.itemCount-1
+        )
+        val itemTouchHelper = ItemTouchHelper(adapterComment.getCommentSimpleCallBack())
+        itemTouchHelper.attachToRecyclerView(binding.recyclerContainerCommentChapter)
+
     }
+//    private fun loadComment(listOfComments: List<DucCommentDataClass>) {
+//
+//        //lam moi hop thoai scroll view chua cac comment
+//        binding.linearContainerCommentChapter.removeAllViews()
+//
+//        for (comment in listOfComments) {
+//            var commentLayoutBinding: ViewBinding
+//
+//            if (ducCommentViewModel.checkCommentFromUser(comment)) {
+//                commentLayoutBinding = CommentSelfLayoutBinding.inflate(layoutInflater)
+//                setCommentSelf(commentLayoutBinding, comment)
+//            } else {
+//                commentLayoutBinding = CommentOppositeLayoutBinding.inflate(layoutInflater)
+//                setCommentOpposite(commentLayoutBinding, comment)
+//            }
+//            binding.linearContainerCommentChapter.addView(commentLayoutBinding.root)
+//        }
+//        binding.scrollViewMainCommentDialogChapter.scrollToBottom()
+//    }
 
     private fun setConfigButtonComment() {
         binding.btnSendCommentUserChapter.setOnClickListener {
+
+
             var content = binding.etxtCommentUserChapter.text.toString()
             if (content.isEmpty()) {
                 return@setOnClickListener
             }
+            // co noi dung
             mainChapter?.let {
                 ducCommentViewModel.createUserCommnet(
                     it.storyID, content
@@ -414,10 +452,17 @@ class DucChapterActivity : AppCompatActivity() {
             }
 
 
+
             //xoa trang editText de nhap comment moi
             binding.etxtCommentUserChapter.setText("")
             // chay lai comment dialog
             storyInfo?.let { ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef) }
+
+
+        }
+        binding.btnCommentReplyInInputKeyboardChapter.setOnClickListener{
+            binding.frameContainerCommentReplyInInputKeyboardChapter.visibility= View.GONE
+            isReply=false
         }
     }
 
@@ -467,7 +512,7 @@ class DucChapterActivity : AppCompatActivity() {
             }
             //android:orientation="vertical"
             if (view is LinearLayout) {
-                (view as LinearLayout).orientation = LinearLayout.VERTICAL
+                view.orientation = LinearLayout.VERTICAL
             }
 
         }
@@ -514,6 +559,10 @@ class DucChapterActivity : AppCompatActivity() {
         }
 
     }
+    private fun setConfigView() {
+        //callLog("chapterAcivity",binding.frameContainerCommentReplyInInputKeyboardChapter.visibility.toString())
+        binding.frameContainerCommentReplyInInputKeyboardChapter.visibility=View.GONE
+    }
 
     //--------------button---------------------
     private fun setConfigButton() {
@@ -524,7 +573,7 @@ class DucChapterActivity : AppCompatActivity() {
         }
         btnOpenCommentDialog.setOnClickListener {
             binding.frameContainerCommentDialogChapter.visibility = View.VISIBLE
-            binding.scrollViewMainCommentDialogChapter.scrollToBottom()
+//
         }
         binding.swipeRefreshChapter.setOnRefreshListener {
             ducSwipeRefreshViewModel.fetchRefreshView()
