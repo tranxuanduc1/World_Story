@@ -1,5 +1,6 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -83,12 +84,15 @@ class RateFragment : Fragment() {
                 Toast.makeText(requireContext(), "No slice selected", Toast.LENGTH_SHORT).show()
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 if (e is PieEntry) {
                     val label = e.label
                     for (i in 1 until maxScore + 1) {
                         if (label.contains("$i")) {
                             rateViewModel.setRateListBtScore(i)
+                            binding.sao.text="$i sao"
+                            binding.numberUserRate.text="Số người đánh giá $i sao:"
                             break
                         }
                     }
@@ -112,6 +116,18 @@ class RateFragment : Fragment() {
         rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
             rateAdapter.update(rateViewModel.users.value ?: emptyList())
         }
+
+//        rateViewModel.isLoading.observe(viewLifecycleOwner){
+//            it.let {
+//                if(it){
+//                    binding.progressBar.visibility=View.VISIBLE
+//                    binding.rateList.visibility=View.GONE
+//                }else{
+//                    binding.progressBar.visibility=View.GONE
+//                    binding.rateList.visibility=View.VISIBLE
+//                }
+//            }
+//        }
     }
 
     fun updatePieChart(pieChart: PieChart) {
@@ -139,7 +155,7 @@ class RateFragment : Fragment() {
         // Tạo PieData
         val pieData = PieData(dataSet)
         pieData.setValueTextSize(12f)
-        pieData.setValueTextColor(android.graphics.Color.WHITE)
+        pieData.setValueTextColor(Color.WHITE)
 
 
         // Gắn dữ liệu vào biểu đồ

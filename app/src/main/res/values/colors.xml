@@ -15,4 +15,8 @@
     <color name="sweetheart">#FFF9F6</color>
     <color name="flame">#E64F1D</color>
     <color name="blue">#4CC9FE</color>
+    <color name="smog_blue">#607D8B</color>
+    <color name="white_smog">#ECEFF1</color>
+    <color name="lgt_white"> #F5F5F5</color>
+    <color name="hard_black">#212121</color>
 </resources>

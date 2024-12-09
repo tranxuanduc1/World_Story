@@ -1,5 +1,6 @@
 package com.example.worldstory.duc.ducviewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -74,6 +75,7 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
 
         }
     }
+    @SuppressLint("DefaultLocale")
     fun fetchGenreAndStoriesByGenre(genre: Genre, isText: Boolean){
         viewModelScope.launch{
             val resultStoriesByGenre=withContext(Dispatchers.IO){
@@ -86,7 +88,7 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
                 if(ratings.isNullOrEmpty()){
                     story.score=5f
                 }else{
-                    var averageScore= String.format("%.1f", ratings.map { it.score }.average()).toFloat()
+                    var averageScore= String.format("%.1f", ratings.map { it.score }.average()).replace(",",".").toFloat()
 
                     story.score=averageScore
 

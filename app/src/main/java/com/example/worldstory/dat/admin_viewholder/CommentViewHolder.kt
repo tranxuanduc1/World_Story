@@ -6,17 +6,17 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
 import com.example.myapplication.R.*
 import com.example.myapplication.R.id.*
 
 
 class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val cmt: TextView = itemView.findViewById(id.cmt)
-    val userName: TextView = itemView.findViewById(comment_user_name)
-    val cmtDate: TextView = itemView.findViewById(cmt_date)
-    val avatarImage: ImageView = itemView.findViewById(avatar_image)
-    val rplBtn: Button = itemView.findViewById(rpl_btn)
-    val hideBtn: Button = itemView.findViewById(hide_btn)
-    val deleteBtn: ImageButton = itemView.findViewById(id.del_cmt)
+    val id=itemView.findViewById<TextView>(id_user_cmt)
+    val nickname=itemView.findViewById<TextView>(nickname_cmt)
+    val username=itemView.findViewById<TextView>(username_cmt)
+    val content=itemView.findViewById<TextView>(content_cmt)
+    val date=itemView.findViewById<TextView>(date_cmt)
+
 }
 
