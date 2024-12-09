@@ -83,7 +83,10 @@ class DucChapterActivity : AppCompatActivity() {
     private val ducSwipeRefreshViewModel: DucSwipeRefreshViewModel by viewModels {
         DucSwipeRefreshViewModelFactory(this)
     }
-    private var isReply=false
+
+    val checkReply: MutableList<Any> =mutableListOf(false,-1)
+    private var commentReplyId=-1
+
     private var storyInfo: Story? = null
     private var listOfChapterMarks = mutableListOf<Chapter>()
     private var oldItemTouchHelper:ItemTouchHelper?=null
@@ -392,12 +395,14 @@ class DucChapterActivity : AppCompatActivity() {
 
     //--------------Comment---------------------
     private fun loadComment(listOfComments: List<DucCommentDataClass>) {
-        callLog("chapterActivityaa","zo")
+        callLog("Chapteraa",listOfComments.toString())
+
         var adapterComment = Duc_Comment_Adapter(
             this,
             listOfComments,
             binding,
-            getUserIdSession()
+            getUserIdSession(),
+            checkReply
         )
         binding.recyclerContainerCommentChapter.apply {
             adapter = adapterComment
@@ -424,29 +429,11 @@ class DucChapterActivity : AppCompatActivity() {
         oldItemTouchHelper=itemTouchHelper
 
     }
-//    private fun loadComment(listOfComments: List<DucCommentDataClass>) {
-//
-//        //lam moi hop thoai scroll view chua cac comment
-//        binding.linearContainerCommentChapter.removeAllViews()
-//
-//        for (comment in listOfComments) {
-//            var commentLayoutBinding: ViewBinding
-//
-//            if (ducCommentViewModel.checkCommentFromUser(comment)) {
-//                commentLayoutBinding = CommentSelfLayoutBinding.inflate(layoutInflater)
-//                setCommentSelf(commentLayoutBinding, comment)
-//            } else {
-//                commentLayoutBinding = CommentOppositeLayoutBinding.inflate(layoutInflater)
-//                setCommentOpposite(commentLayoutBinding, comment)
-//            }
-//            binding.linearContainerCommentChapter.addView(commentLayoutBinding.root)
-//        }
-//        binding.scrollViewMainCommentDialogChapter.scrollToBottom()
-//    }
+
 
     private fun setConfigButtonComment() {
+        //nguoi dung bam gui
         binding.btnSendCommentUserChapter.setOnClickListener {
-
 
             var content = binding.etxtCommentUserChapter.text.toString()
             if (content.isEmpty()) {
@@ -454,9 +441,21 @@ class DucChapterActivity : AppCompatActivity() {
             }
             // co noi dung
             mainChapter?.let {
-                ducCommentViewModel.createUserCommnet(
-                    it.storyID, content
-                )
+                //neu co reply
+                if((checkReply[0]as Boolean)==true){
+                    // chuyen id cua comment reply
+                    ducCommentViewModel.createUserCommnetWithReply(
+                        it.storyID, content,checkReply[1]as Int
+                    )
+                }else{
+                    ducCommentViewModel.createUserCommnet(
+                        it.storyID, content
+                    )
+                }
+                //khong reply comment
+                checkReply[0]=false
+                //tat commentReplyInKeyboard
+                binding.frameContainerCommentReplyInInputKeyboardChapter.visibility=View.GONE
             }
 
 
@@ -468,89 +467,15 @@ class DucChapterActivity : AppCompatActivity() {
 
 
         }
-        binding.btnCommentReplyInInputKeyboardChapter.setOnClickListener{
-            binding.frameContainerCommentReplyInInputKeyboardChapter.visibility= View.GONE
-            isReply=false
+        binding.btnCancelCommentReplyInInputKeyboardChapter.setOnClickListener{
+            //khong reply comment
+            checkReply[0]=false
+            //tat commentReplyInKeyboard
+            binding.frameContainerCommentReplyInInputKeyboardChapter.visibility=View.GONE
         }
     }
 
-    private fun setCommentSelf(
-        commentLayoutBinding: CommentSelfLayoutBinding, comment: DucCommentDataClass
-    ) {
-        setCommentSelfLayoutParams((commentLayoutBinding.root))
 
-        commentLayoutBinding.txtDisplayNameCommentSelfLayout.text =
-            comment.nameUser
-        commentLayoutBinding.txtContentCommentSelfLayout.text = comment.content
-        commentLayoutBinding.imgAvatarUserCommentSelfLayout.loadImgURL(this, comment.imgAvatarUrl)
-        commentLayoutBinding.txtDateCreatedCommentSelfLayout.text = comment.date
-    }
-
-    private fun setCommentOpposite(
-        commentLayoutBinding: CommentOppositeLayoutBinding, comment: DucCommentDataClass
-    ) {
-        setCommentOppositeLayoutParams(commentLayoutBinding.root)
-
-        commentLayoutBinding.txtDisplayNameCommentOppositeLayout.text =
-            comment.nameUser
-        commentLayoutBinding.txtContentCommentOppositeLayout.text = comment.content
-        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.loadImgURL(
-            this,
-            comment.imgAvatarUrl
-        )
-        commentLayoutBinding.txtDateCreatedCommentOppositeLayout.text = comment.date
-    }
-
-    fun setCommentSelfLayoutParams(view: View) {
-        view.apply {
-            //android:layout_width="wrap_content"
-            //android:layout_height="wrap_content"
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-
-            //android:layout_margin="10dp"
-            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
-                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
-            }
-
-            //android:layout_gravity="end"
-            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
-                gravity = Gravity.END
-            }
-            //android:orientation="vertical"
-            if (view is LinearLayout) {
-                view.orientation = LinearLayout.VERTICAL
-            }
-
-        }
-    }
-
-    fun setCommentOppositeLayoutParams(view: View) {
-        view.apply {
-            //android:layout_width="wrap_content"
-            //android:layout_height="wrap_content"
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-
-            //android:layout_margin="10dp"
-            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
-                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
-            }
-
-            //android:layout_gravity="start"
-            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
-                gravity = Gravity.START
-            }
-
-            //android:orientation="vertical"
-            if (view is LinearLayout) {
-                (view as LinearLayout).orientation = LinearLayout.VERTICAL
-            }
-
-        }
-    }
 
     private fun setConfigCommentDialog() {
         binding.frameContainerCommentDialogChapter.visibility = View.GONE
@@ -597,3 +522,80 @@ class DucChapterActivity : AppCompatActivity() {
         }
     }
 }
+//    private fun setCommentSelf(
+//        commentLayoutBinding: CommentSelfLayoutBinding, comment: DucCommentDataClass
+//    ) {
+//        setCommentSelfLayoutParams((commentLayoutBinding.root))
+//
+//        commentLayoutBinding.txtDisplayNameCommentSelfLayout.text =
+//            comment.nameUser
+//        commentLayoutBinding.txtContentCommentSelfLayout.text = comment.content
+//        commentLayoutBinding.imgAvatarUserCommentSelfLayout.loadImgURL(this, comment.imgAvatarUrl)
+//        commentLayoutBinding.txtDateCreatedCommentSelfLayout.text = comment.date
+//    }
+//
+//    private fun setCommentOpposite(
+//        commentLayoutBinding: CommentOppositeLayoutBinding, comment: DucCommentDataClass
+//    ) {
+//        setCommentOppositeLayoutParams(commentLayoutBinding.root)
+//
+//        commentLayoutBinding.txtDisplayNameCommentOppositeLayout.text =
+//            comment.nameUser
+//        commentLayoutBinding.txtContentCommentOppositeLayout.text = comment.content
+//        commentLayoutBinding.imgAvatarUserCommentOppositeLayout.loadImgURL(
+//            this,
+//            comment.imgAvatarUrl
+//        )
+//        commentLayoutBinding.txtDateCreatedCommentOppositeLayout.text = comment.date
+//    }
+
+//    fun setCommentSelfLayoutParams(view: View) {
+//        view.apply {
+//            //android:layout_width="wrap_content"
+//            //android:layout_height="wrap_content"
+//            layoutParams = ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//
+//            //android:layout_margin="10dp"
+//            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
+//                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+//            }
+//
+//            //android:layout_gravity="end"
+//            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
+//                gravity = Gravity.END
+//            }
+//            //android:orientation="vertical"
+//            if (view is LinearLayout) {
+//                view.orientation = LinearLayout.VERTICAL
+//            }
+//
+//        }
+//    }
+//
+//    fun setCommentOppositeLayoutParams(view: View) {
+//        view.apply {
+//            //android:layout_width="wrap_content"
+//            //android:layout_height="wrap_content"
+//            layoutParams = ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//
+//            //android:layout_margin="10dp"
+//            layoutParams = ViewGroup.MarginLayoutParams(layoutParams).apply {
+//                setMargins(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+//            }
+//
+//            //android:layout_gravity="start"
+//            layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
+//                gravity = Gravity.START
+//            }
+//
+//            //android:orientation="vertical"
+//            if (view is LinearLayout) {
+//                (view as LinearLayout).orientation = LinearLayout.VERTICAL
+//            }
+//
+//        }
+//    }

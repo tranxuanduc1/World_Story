@@ -98,7 +98,14 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var listOfComments = dbHelper.getCommentsByStory(storyId)
         var listOfDucComments = mutableListOf<DucCommentDataClass>()
         listOfComments.forEach {
+            var commentReply: Comment?=null
             var user = dbHelper.getUserByUsersId(it.userId)
+            //kiem comment reply
+            if (it.commentReplyId!=null) {
+                var listCommentReply=listOfComments.filter { commentR->commentR.commentId==it.commentReplyId }
+                commentReply= if (listCommentReply.isNotEmpty()) listCommentReply.first() else null
+                callLog("reposityaahave",commentReply.toString())
+            }
             if (user != null) {
                 var ducComment = DucCommentDataClass(
                     it.commentId ?: numDef,
@@ -107,8 +114,12 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
                     user.userName,
                     it.time,
                     it.storyId,
-                    it.userId
+                    it.userId,
+                    commentReplyId = commentReply?.commentId,
+                    contentReply = commentReply?.content
                 )
+                callLog("reposityaa",ducComment.toString())
+
                 listOfDucComments.add(ducComment)
 
             }
@@ -223,8 +234,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var listOfRoles = dbHelper.getAllRoles()
         var role = listOfRoles.filter {
             it.roleID?.let { id -> id == roleId } ?: false
-        }.first()
-        return role
+        }
+        return if (role.isNotEmpty()) role.first()
+        else null
     }
 
     fun getRoleIdMember(): Int {
