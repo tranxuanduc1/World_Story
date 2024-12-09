@@ -84,12 +84,9 @@ class DucChapterActivity : AppCompatActivity() {
         DucSwipeRefreshViewModelFactory(this)
     }
     private var isReply=false
-    private var isTopFrameVisible = true
-    private var isBottomFrameVisible = true
     private var storyInfo: Story? = null
     private var listOfChapterMarks = mutableListOf<Chapter>()
-
-
+    private var oldItemTouchHelper:ItemTouchHelper?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,7 +166,7 @@ class DucChapterActivity : AppCompatActivity() {
             //lay data tu database
             storyInfo?.let {
                 ducChapterViewModel.fetchChaptersByStory(it.storyID ?: numDef)
-                ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef)
+                //ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef)
                 ducChapterMarkViewModel.fetchChaptersMarkedByUserSessionAndStory(
                     it.storyID ?: numDef
                 )
@@ -395,6 +392,7 @@ class DucChapterActivity : AppCompatActivity() {
 
     //--------------Comment---------------------
     private fun loadComment(listOfComments: List<DucCommentDataClass>) {
+        callLog("chapterActivityaa","zo")
         var adapterComment = Duc_Comment_Adapter(
             this,
             listOfComments,
@@ -412,8 +410,15 @@ class DucChapterActivity : AppCompatActivity() {
         binding.recyclerContainerCommentChapter.smoothScrollToPosition(
             adapterComment.itemCount-1
         )
+        //xoa cai itemtouch cu , vi no co the dan den xung dot
+        oldItemTouchHelper?.attachToRecyclerView(null)
+
         val itemTouchHelper = ItemTouchHelper(adapterComment.getCommentSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.recyclerContainerCommentChapter)
+
+        //gan lai recyclerView vao itemtouche
+
+        oldItemTouchHelper=itemTouchHelper
 
     }
 //    private fun loadComment(listOfComments: List<DucCommentDataClass>) {
@@ -559,6 +564,9 @@ class DucChapterActivity : AppCompatActivity() {
         }
 
     }
+    private fun detachItemTouchHelper(itemTouch: ItemTouchHelper.SimpleCallback) {
+        //itemTouch?.attachToRecyclerView(null)
+    }
     private fun setConfigView() {
         //callLog("chapterAcivity",binding.frameContainerCommentReplyInInputKeyboardChapter.visibility.toString())
         binding.frameContainerCommentReplyInInputKeyboardChapter.visibility=View.GONE
@@ -573,6 +581,12 @@ class DucChapterActivity : AppCompatActivity() {
         }
         btnOpenCommentDialog.setOnClickListener {
             binding.frameContainerCommentDialogChapter.visibility = View.VISIBLE
+
+
+            //lay comment tu database khi nut mo comment dialog duoc kich hoat
+            storyInfo?.let {
+                ducCommentViewModel.fetchCommentsByStory(it.storyID ?: numDef)
+            }
 //
         }
         binding.swipeRefreshChapter.setOnRefreshListener {

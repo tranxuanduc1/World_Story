@@ -117,6 +117,7 @@ object Contract {
         //Foreign key
         const val COLUMN_USER_ID_FK = "user_id"
         const val COLUMN_STORY_ID_FK = "story_id"
+        const val COLUMN_COMMENT_REPLY_ID_FK="comment_reply_id"
     }
 
     //Chapter table
@@ -296,8 +297,12 @@ class DatabaseHelper(context: Context) :
         ${CommentEntry.COLUMN_TIME} TEXT NOT NULL,
         ${CommentEntry.COLUMN_USER_ID_FK} INTEGER NOT NULL,
         ${CommentEntry.COLUMN_STORY_ID_FK} INTEGER NOT NULL,
+        ${CommentEntry.COLUMN_COMMENT_REPLY_ID_FK} INTEGER DEFAULT NULL,
+        
         FOREIGN KEY (${CommentEntry.COLUMN_USER_ID_FK}) REFERENCES ${Contract.UserEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
-        FOREIGN KEY (${CommentEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
+        FOREIGN KEY (${CommentEntry.COLUMN_STORY_ID_FK}) REFERENCES ${Contract.StoryEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE,
+        FOREIGN KEY (${CommentEntry.COLUMN_COMMENT_REPLY_ID_FK}) REFERENCES ${Contract.CommentEntry.TABLE_NAME}(${BaseColumns._ID}) ON DELETE CASCADE
+    
     )
 """.trimIndent()
         //////////////////////////
