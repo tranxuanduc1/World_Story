@@ -2,39 +2,31 @@ package com.example.worldstory.dat.admin_view_navs
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentCommentBinding
 import com.example.worldstory.dat.admin_adapter.CommentAdapter
-import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterFragment
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModel
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModelFactory
-import com.example.worldstory.dat.admin_viewmodels.RateViewModel
-import com.example.worldstory.dat.admin_viewmodels.RateViewModelFactory
-import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.User
-//import com.example.worldstory.model.Comment
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import java.time.LocalDate
-import java.time.temporal.WeekFields
-import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class CommentFragment : Fragment() {
 
@@ -51,18 +43,11 @@ class CommentFragment : Fragment() {
     private var idStory: Int? = -1
     private lateinit var binding: FragmentCommentBinding
     private lateinit var commentViewModel: CommentViewModel
-    private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var recyclerView: RecyclerView
     private lateinit var commentAdapter: CommentAdapter
-    private val commentList = mutableListOf<Comment>()
-    private val userList = mutableListOf<User>()
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentCommentBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -70,6 +55,7 @@ class CommentFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
 
@@ -92,16 +78,28 @@ class CommentFragment : Fragment() {
 
         // Khởi tạo RecyclerView
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
-        // Khởi tạo dữ liệu mẫu
-
-        // Gán adapter cho RecyclerView
 
         commentAdapter = CommentAdapter(
-            commentViewModel.commentUserMap.value ?: emptyMap(),
-            commentViewModel.comments.value ?: emptyList(),
-            requireContext()
+            commentViewModel.commentUserMap.value?.toMutableMap()?: mutableMapOf(),
+            commentViewModel.comments.value?.toMutableList()?: mutableListOf(),
+            requireContext(),
+            commentViewModel
         )
         binding.recycleView.adapter = commentAdapter
+        // Gán adapter cho RecyclerView
+
+
+        commentViewModel.comments.observe(viewLifecycleOwner)
+        {
+
+            commentAdapter.updateList(
+                commentViewModel.commentUserMap.value?.toMutableMap()?: mutableMapOf(),
+                commentViewModel.comments.value?.toMutableList()?: mutableListOf()
+            )
+
+            updateBarChart(barChart)
+        }
+
 
     }
 

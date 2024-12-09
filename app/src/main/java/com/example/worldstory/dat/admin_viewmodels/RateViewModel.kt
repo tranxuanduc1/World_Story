@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Rate
 import com.example.worldstory.model.User
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
     private val tempRateList = mutableListOf<Rate>()
     private val tempRateListByScore = mutableListOf<Rate>()
     private val tempUserListByScore = mutableListOf<User>()
-
+    private var currentScore=1
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -38,13 +39,16 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
 
     init {
         fetch()
-        setRateListBtScore(1)
+        setRateListBtScore(currentScore)
     }
 
     fun fetch() {
+        tempUserListByScore.clear()
+        tempRateList.clear()
         try {
             if (id != null) {
                 tempRateList.addAll(db.getRatesByStory(id))
+
             }
             _rateList.value = tempRateList
             s.value = count.toString()
@@ -53,11 +57,14 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
         }
     }
 
+
+
     fun setCount(score: Int): Int {
         return rateListByScore.value?.size ?: 0
     }
 
     fun setRateListBtScore(score: Int) {
+        currentScore=score
         _isLoading.value = true
         tempRateListByScore.clear()
         tempUserListByScore.clear()
@@ -98,15 +105,18 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
 
     fun delete(rate: Rate): Int {
         try {
+
             val i = db.deleteRate(rate)
             fetch()
+            Log.w("del",rateList.value?.size.toString())
+            setRateListBtScore(currentScore )
             return i
         } catch (e: Exception) {
             e.printStackTrace()
             fetch()
+            setRateListBtScore(currentScore )
             return -1
         }
-
     }
 
     fun getRatio(i: Int): Float {

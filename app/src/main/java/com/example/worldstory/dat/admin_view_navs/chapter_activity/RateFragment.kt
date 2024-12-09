@@ -91,8 +91,8 @@ class RateFragment : Fragment() {
                     for (i in 1 until maxScore + 1) {
                         if (label.contains("$i")) {
                             rateViewModel.setRateListBtScore(i)
-                            binding.sao.text="$i sao"
-                            binding.numberUserRate.text="Số người đánh giá $i sao:"
+                            binding.sao.text = "$i sao"
+                            binding.numberUserRate.text = "Số người đánh giá $i sao:"
                             break
                         }
                     }
@@ -100,38 +100,35 @@ class RateFragment : Fragment() {
             }
         })
 
-        rateViewModel.rateList.observe(viewLifecycleOwner) {
-            updatePieChart(pieChart)
-        }
 
         //nạp rates
         binding.rateList.layoutManager = LinearLayoutManager(requireContext())
 
         rateAdapter = RateAdapter(
-            rateViewModel.users.value ?: emptyList(), requireContext()
+            rateViewModel.users.value?.toMutableList() ?: mutableListOf(),
+            rateViewModel.rateListByScore.value?.toMutableList() ?: mutableListOf(),
+            rateViewModel,
+            requireContext()
         )
 
         binding.rateList.adapter = rateAdapter
 
-        rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
-            rateAdapter.update(rateViewModel.users.value ?: emptyList())
+        rateViewModel.rateList.observe(viewLifecycleOwner) {
+            Log.w("del1",rateViewModel.rateList.value?.size.toString())
+            updatePieChart(pieChart)
         }
 
-//        rateViewModel.isLoading.observe(viewLifecycleOwner){
-//            it.let {
-//                if(it){
-//                    binding.progressBar.visibility=View.VISIBLE
-//                    binding.rateList.visibility=View.GONE
-//                }else{
-//                    binding.progressBar.visibility=View.GONE
-//                    binding.rateList.visibility=View.VISIBLE
-//                }
-//            }
-//        }
+        rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
+            rateAdapter.update(
+                rateViewModel.users.value?.toMutableList() ?: mutableListOf(),
+                rateViewModel.rateListByScore.value?.toMutableList() ?: mutableListOf()
+            )
+        }
+
     }
 
     fun updatePieChart(pieChart: PieChart) {
-
+rateRatioList.clear()
         // Dữ liệu cho biểu đồ
         val entries = ArrayList<PieEntry>()
 

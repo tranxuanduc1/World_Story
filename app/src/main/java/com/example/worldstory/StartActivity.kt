@@ -58,7 +58,7 @@ class StartActivity : AppCompatActivity() {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(view)
-        //testDatabase()
+        //njtestDatabase()
 
         callLog("=========", "bat dau chay start activity")
 

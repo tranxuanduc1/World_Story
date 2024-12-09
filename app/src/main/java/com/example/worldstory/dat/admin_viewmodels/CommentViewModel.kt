@@ -2,6 +2,7 @@ package com.example.worldstory.dat.admin_viewmodels
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -57,7 +58,7 @@ class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : V
 
             tempCommentUserMap.forEach { (k, v) -> tempUserList.add(v) }
 
-            _userList.value=tempUserList
+            _userList.value = tempUserList
             _commentUserMap.value = tempCommentUserMap
             _comments.value = tempComments
             sumComments.value = comments.value?.size.toString()
@@ -109,6 +110,22 @@ class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : V
             entry.value.size // Đếm số lượng bình luận trong quý
         }
     }
+
+    fun delComment(commentId: Int) {
+        if (commentId > 0)
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    db.deleteComment(commentId)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                withContext(Dispatchers.Main) {
+                    fetch()
+                }
+            }
+
+    }
+
 }
 
 
