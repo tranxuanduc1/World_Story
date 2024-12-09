@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_commentOpposite_conmmentContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/linear_reply_opposite_conmmentContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_comment_reply"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="30dp"
+                android:visibility="visible">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxWidth="200dp"
+                    android:maxLines="1"
+                    android:minWidth="140dp"
+                    android:text="asjhf asjdh akjsd kashd aksjdajshd kajshd"
+                    android:textColor="@color/duc_opacity50"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/linear_contentCommentOpposite_CommentContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/shape_comment_opposite"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_displayName_commentOppositeLayout_conmmentContainer"
+
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="40dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Ten User as as a sd asd"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        app:cardCornerRadius="50dp"
+                        app:cardElevation="4dp">
+
+                        <ImageView
+                            android:id="@+id/img_avatarUser_commentOppositeLayout_conmmentContainer"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/pa1" />
+                    </androidx.cardview.widget.CardView>
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/txt_content_commentOppositeLayout_conmmentContainer"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:minWidth="140dp"
+                    android:text="binh luan ne "
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txt_dateCreated_commentOppositeLayout_conmmentContainer"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="11/01/2011"
+            android:textColor="@color/green3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_commentSelf_conmmentContainer"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_marginStart="2000dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/linear_reply_self_conmmentContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_comment_reply"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="30dp"
+                android:visibility="visible">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxWidth="200dp"
+                    android:maxLines="1"
+                    android:minWidth="140dp"
+                    android:text="asjhf asjdh akjsd kashd aksjdajshd kajshd"
+                    android:textColor="@color/duc_opacity50"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_contentCommentSelf_CommentContainer"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/shape_comment_self"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_displayName_commentSelfLayout_conmmentContainer"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Ten User as as a sd asd"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        app:cardCornerRadius="50dp"
+                        app:cardElevation="4dp"
+
+                        >
+
+                        <ImageView
+                            android:id="@+id/img_avatarUser_commentSelfLayout_conmmentContainer"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/pa1" />
+                    </androidx.cardview.widget.CardView>
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/txt_content_commentSelfLayout_conmmentContainer"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:minWidth="140dp"
+                    android:text="binh luan ne ád d ád áda á a d á dá d d á  d  ád a á dá"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txt_dateCreated_commentSelfLayout_conmmentContainer"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="11/01/2011"
+            android:textColor="@color/green3" />
+    </LinearLayout>
+
+</LinearLayout>

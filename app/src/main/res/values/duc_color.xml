@@ -11,6 +11,8 @@
     <color name="duc_red">#FF4141</color>
     <color name="duc_yellow">#FFE500</color>
     <color name="duc_opacity20">#27000000</color>
+    <color name="duc_opacity50">#6D000000</color>
+    <color name="duc_opacity70">#BA000000</color>
     <color name="duc_gray">#656464</color>1
 
 </resources>
