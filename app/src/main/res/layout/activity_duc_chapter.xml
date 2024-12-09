@@ -273,7 +273,7 @@
                 android:layout_marginBottom="40dp"
                 android:paddingTop="10dp"
                 android:paddingStart="10dp"
-                android:paddingBottom="30dp"
+                android:paddingBottom="40dp"
                 android:paddingEnd="10dp"
                 >
                 <TextView

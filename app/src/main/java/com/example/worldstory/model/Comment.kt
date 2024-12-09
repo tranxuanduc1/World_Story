@@ -8,5 +8,6 @@ data class Comment(
     val content: String,
     val time: String,
     val userId: Int,
-    val storyId: Int
+    val storyId: Int,
+    val commentReplyId: Int?=null,
   ): Parcelable
