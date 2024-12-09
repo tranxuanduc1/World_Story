@@ -407,9 +407,12 @@ class DucChapterActivity : AppCompatActivity() {
 
         }
         // cuon den vi tri cuoi
-        binding.recyclerContainerCommentChapter.smoothScrollToPosition(
-            adapterComment.itemCount-1
-        )
+        if(adapterComment.itemCount>1) {
+
+            binding.recyclerContainerCommentChapter.smoothScrollToPosition(
+                adapterComment.itemCount - 1
+            )
+        }
         //xoa cai itemtouch cu , vi no co the dan den xung dot
         oldItemTouchHelper?.attachToRecyclerView(null)
 
