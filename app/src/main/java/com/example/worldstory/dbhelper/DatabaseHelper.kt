@@ -185,7 +185,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "app_doc_truyen_db"
-        private const val DATABASE_VERSION = 6
+        private const val DATABASE_VERSION = 7
         private const val _ID = BaseColumns._ID
 
 
@@ -1419,6 +1419,8 @@ class DatabaseHelper(context: Context) :
             put(Contract.CommentEntry.COLUMN_STORY_ID_FK, comment.storyId)
             put(Contract.CommentEntry.COLUMN_CONTENT, comment.content)
             put(Contract.CommentEntry.COLUMN_TIME, comment.time)
+            put(Contract.CommentEntry.COLUMN_COMMENT_REPLY_ID_FK, comment.commentReplyId)
+
         }
         return db.insert(Contract.CommentEntry.TABLE_NAME, null, values)
     }
@@ -1461,7 +1463,9 @@ class DatabaseHelper(context: Context) :
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
                 val storyId =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
-                comments.add(Comment(id, content, time, userId, storyId))
+                val commentReplyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_COMMENT_REPLY_ID_FK))
+                comments.add(Comment(id, content, time, userId, storyId, commentReplyId = commentReplyId))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -1489,7 +1493,9 @@ class DatabaseHelper(context: Context) :
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_USER_ID_FK))
                 val storyId =
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
-                comments.add(Comment(id, content, time, userId, storyId))
+                val commentReplyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_COMMENT_REPLY_ID_FK))
+                comments.add(Comment(id, content, time, userId, storyId, commentReplyId = commentReplyId))
             } while (cursor.moveToNext())
         }
         cursor.close()

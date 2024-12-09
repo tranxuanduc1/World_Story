@@ -24,7 +24,8 @@ class Duc_Comment_Adapter(
     var context: Context,
     var dataList: List<DucCommentDataClass>,
     var bindingCommentReplyInInputKeyboard: ActivityDucChapterBinding,
-    var userSessionId: Int
+    var userSessionId: Int,
+    var checkReply: MutableList<Any>
 ) : RecyclerView.Adapter<Duc_Comment_Adapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -45,6 +46,7 @@ class Duc_Comment_Adapter(
 
         //comment cua nguoi dung hien tai
         if (comment.userId == userSessionId) {
+            callLog("Adapteraa",comment.toString())
 
            setViewCommentSelf(holder,comment)
         } else {
@@ -66,14 +68,26 @@ class Duc_Comment_Adapter(
         RecyclerView.ViewHolder(binding.root) {
     }
     private fun setViewCommentOposite(holder: ViewHolder,comment: DucCommentDataClass) {
+
         holder.binding.linearCommentOppositeConmmentContainer.visibility = View.VISIBLE
         holder.binding.linearCommentSelfConmmentContainer.visibility = View.GONE
         holder.binding.linearReplyOppositeConmmentContainer.visibility = View.GONE
-        var param = holder.binding.linearContentCommentOppositeCommentContainer.layoutParams
-        if (param is ViewGroup.MarginLayoutParams) {
-            param.topMargin = 0
+
+        //du lieu comment phu
+        if(comment.commentReplyId!=null){
+            holder.binding.linearReplyOppositeConmmentContainer.visibility = View.VISIBLE
+            holder.binding.txtReplyOppositeCommentContainer.text=comment.contentReply
+        }else{
+            holder.binding.linearReplySelfConmmentContainer.visibility = View.GONE
+            var param = holder.binding.linearContentCommentOppositeCommentContainer.layoutParams
+            if (param is ViewGroup.MarginLayoutParams) {
+                param.topMargin = 0
+            }
+            holder.binding.linearContentCommentOppositeCommentContainer.layoutParams=param
+
         }
-        holder.binding.linearContentCommentOppositeCommentContainer.layoutParams=param
+
+        //du lieu cho comment chinh
 
         holder.binding.txtDisplayNameCommentOppositeLayoutConmmentContainer.text =
             comment.nameUser
@@ -89,15 +103,28 @@ class Duc_Comment_Adapter(
         holder: ViewHolder,
         comment: DucCommentDataClass
     ) {
+        callLog("Adapteraa",comment.commentReplyId.toString())
+
         holder.binding.linearCommentOppositeConmmentContainer.visibility = View.GONE
         holder.binding.linearCommentSelfConmmentContainer.visibility = View.VISIBLE
-        holder.binding.linearReplySelfConmmentContainer.visibility = View.GONE
-        var param = holder.binding.linearContentCommentSelfCommentContainer.layoutParams
-        if (param is ViewGroup.MarginLayoutParams) {
-            param.topMargin = 0
-        }
-        holder.binding.linearContentCommentSelfCommentContainer.layoutParams=param
 
+
+        //du lieu comment phu
+        if(comment.commentReplyId!=null){
+            callLog("Adapteraa",comment.contentReply.toString())
+
+            holder.binding.linearReplySelfConmmentContainer.visibility = View.VISIBLE
+            holder.binding.txtReplySelfCommentContainer.text=comment.contentReply
+        }else{
+            holder.binding.linearReplySelfConmmentContainer.visibility = View.GONE
+            var param = holder.binding.linearContentCommentSelfCommentContainer.layoutParams
+            if (param is ViewGroup.MarginLayoutParams) {
+                param.topMargin = 0
+            }
+            holder.binding.linearContentCommentSelfCommentContainer.layoutParams=param
+            
+        }
+        //du lieu cho comment chinh
         holder.binding.txtDisplayNameCommentSelfLayoutConmmentContainer.text =
             comment.nameUser
         holder.binding.txtContentCommentSelfLayoutConmmentContainer.text = comment.content
@@ -135,48 +162,17 @@ class Duc_Comment_Adapter(
             return 0.1f
         }
 
-//        override fun onChildDraw(
-//            canvas: Canvas,
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            dX: Float,
-//            dY: Float,
-//            actionState: Int,
-//            isCurrentlyActive: Boolean
-//        ) {
-//            super.onChildDraw(
-//                canvas,
-//                recyclerView,
-//                viewHolder,
-//                dX,
-//                dY,
-//                actionState,
-//                isCurrentlyActive
-//            )
-//            val limitedDx = dX.coerceIn(-maxSwipeDistance, maxSwipeDistance)
-//            callLog("commentadapter",isCurrentlyActive.toString())
-//            callLog("commentadapter",limitedDx.toString())
-//
-//            // Kiểm tra nếu thả tay và đã đạt đến ngưỡng kích hoạt
-//            if (actionState== ItemTouchHelper.ACTION_STATE_SWIPE && !isCurrentlyActive) {
-//                callLog("commentadapter","tha tay")
-//
-//                if (Math.abs(limitedDx) >= activationThreshold) {
-//                    triggerAction(viewHolder.adapterPosition)
-//                } else {
-//                    notifyItemChanged(viewHolder.adapterPosition)
-//                }
-//            }
-//
-//
-//        }
+
 
         private fun triggerAction(position: Int) {
 
-
             // Kích hoạt sự kiện khi kéo đến ngưỡng
             bindingCommentReplyInInputKeyboard.frameContainerCommentReplyInInputKeyboardChapter.visibility = View.VISIBLE
+            //hien thi comment reply
             bindingCommentReplyInInputKeyboard.txtCommentReplyInInputKeyboardChapter.text = dataList[position].content
+            //flag co reply
+            checkReply[0]=true
+            checkReply[1]=dataList[position].commentId
             notifyItemChanged(position) // Reset lại vị trí sau khi kích hoạt
         }
     }

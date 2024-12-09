@@ -51,5 +51,14 @@ class DucCommentViewModel(var repository: DucDataRepository, var context: Contex
         }
 
     }
+    fun createUserCommnetWithReply(storyId: Int, content: String,commentReplyId: Int) {
+        var userIdSession = context.getUserIdSession()
+        var comment = Comment(null, content, dateTimeNow(), userIdSession, storyId,commentReplyId=commentReplyId)
+        viewModelScope.launch {
+            repository.createComment(comment)
+
+        }
+
+    }
 
 }

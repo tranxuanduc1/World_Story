@@ -12,5 +12,7 @@ data class DucCommentDataClass(
     var date: String,
     var storyId: Int,
     var userId: Int,
+    var commentReplyId:Int?=null,
+    var contentReply:String?=null
 ) :
     Parcelable
