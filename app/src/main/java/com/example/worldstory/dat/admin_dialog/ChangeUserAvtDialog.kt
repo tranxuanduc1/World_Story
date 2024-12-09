@@ -7,6 +7,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
@@ -18,6 +20,7 @@ import com.example.myapplication.databinding.ChangeAvtDialogBinding
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.User
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.InputStreamContent
@@ -40,7 +43,7 @@ class ChangeUserAvtDialog : DialogFragment() {
         UserViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private lateinit var binding: ChangeAvtDialogBinding
-    private var id=-1
+    private var id = -1
 
     private lateinit var driveService: Drive
 
@@ -53,35 +56,38 @@ class ChangeUserAvtDialog : DialogFragment() {
             }
         }
 
+    private lateinit var user: User
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        driveService=getDriveService(requireContext())
+        driveService = getDriveService(requireContext())
         binding = ChangeAvtDialogBinding.inflate(layoutInflater)
         id = arguments?.getInt("id") ?: -1
-        val user=userViewModel.getUser(id)
+        user = userViewModel.getUser(id)!!
         Picasso.get().load(user?.imgAvatar).into(binding.avtUserByAdmin)
         return activity?.let {
             val builder = Builder(it)
 
-            builder.setTitle("Đổi avatar của ${user?.nickName}").
-            setView(binding.root)
-                .setPositiveButton("Accept"){
-                    dialog,_->
+            builder.setTitle("Đổi avatar của ${user?.nickName}").setView(binding.root)
+                .setPositiveButton("Accept") { dialog, _ ->
                 }
-                .setNegativeButton("Cancel"){
-                    dialog,_->dialog.dismiss()
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
                 }
-            binding.pickImgBtn.setOnClickListener{
+            binding.pickImgBtn.setOnClickListener {
                 pickImageLauncher.launch(arrayOf("image/jpeg"))
             }
             binding.removeAvtBtn.setOnClickListener {
                 Picasso.get().load(user?.imgAvatar).into(binding.avtUserByAdmin)
-                uriAvt="".toUri()
+                uriAvt = "".toUri()
             }
             val dialog = builder.create()
+
+
+            val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+
             dialog.setOnShowListener {
                 val acceptButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                acceptButton.setOnClickListener{
-                    if(uriAvt!="".toUri()){
+                acceptButton.setOnClickListener {
+                    if (uriAvt != "".toUri()) {
                         lifecycleScope.launch {
                             try {
                                 val isUploadAvt = uploadImageAsynce(uriAvt, userViewModel.avtId)
@@ -143,7 +149,7 @@ class ChangeUserAvtDialog : DialogFragment() {
             InputStreamContent("image/jpeg", context?.contentResolver?.openInputStream(uri))
 
         val fileMetadata = File()
-        fileMetadata.name = userViewModel.userName.value.toString() // Tên file sẽ lưu trên Drive
+        fileMetadata.name = user.userName  // Tên file sẽ lưu trên Drive
 
         fileMetadata.parents =
             listOf("1HEIAysZ_8pFCRNBsQGbDm0XDDXKdLyJn")  // Tải lên thư mục gốc của Drive

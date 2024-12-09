@@ -11,11 +11,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_adapter.CommentAdapter
+import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterFragment
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.example.worldstory.model_for_test.Comment
 
 
 class CommentFragment : Fragment() {
+
+    companion object {
+        fun newInstance(idStory: Int): CommentFragment {
+            val fragment = CommentFragment()
+            val args = Bundle()
+            args.putInt("idStory", idStory)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var commentAdapter: CommentAdapter

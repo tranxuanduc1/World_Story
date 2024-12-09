@@ -49,6 +49,8 @@ android {
 
 dependencies {
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation ("androidx.activity:activity-ktx:1.7.0") // ActivityResult API

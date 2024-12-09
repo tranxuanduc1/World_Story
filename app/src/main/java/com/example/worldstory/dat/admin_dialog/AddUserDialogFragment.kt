@@ -78,7 +78,7 @@ class AddUserDialogFragment : DialogFragment() {
 
             builder.setView(binding.root)
                 .setSingleChoiceItems(arr, -1) { dialog, which ->
-                    userViewModel.roleID = which
+                    userViewModel.roleID = which+1
                 }
                 .setPositiveButton("Add") { dialog, _ ->
                 }
@@ -89,11 +89,11 @@ class AddUserDialogFragment : DialogFragment() {
 
             val dialog = builder.create()
             dialog.setOnShowListener {
-                val addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                val addButton = dialog.getButton(BUTTON_POSITIVE)
                 addButton.setOnClickListener {
                     // Kiểm tra các trường khi nhấn nút Add
                     var isValid = true
-                    if (userViewModel.roleID == -1) {
+                    if (userViewModel.roleID<1 || userViewModel.roleID>4) {
                         Toast.makeText(
                             requireContext(),
                             "Chọn 1 vai trò cho user",

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
@@ -18,8 +19,8 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val author = MutableLiveData<String>()
     val decription = MutableLiveData<String>()
     val isText = MutableLiveData(false)
-    val storyBgImg = MutableLiveData<String>()
-    val storyImg = MutableLiveData<String>()
+    val storyBgImg = mutableListOf<String>()
+    val storyImg = mutableListOf<String>()
     val genreIDList = MutableLiveData<List<Int>>()
     val storyGenreMap = mutableMapOf<Int, Set<Int>>()
 
@@ -34,7 +35,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 
     fun fetchAllChapters() {
         if (currentStoryID.value!! >= 0)
-            chapterListByStory.value=db.getChaptersByStory(currentStoryID.value!!)
+            chapterListByStory.value = db.getChaptersByStory(currentStoryID.value!!)
     }
 
     fun setIDStory(id: Int?) {
@@ -49,8 +50,8 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         isText.value = if (story.isTextStory == 1) true else false
         title.value = story.title
         genreIDList.value = storyGenreMap[story.storyID]?.toList()
-        storyBgImg.value = story.bgImgUrl
-        storyImg.value=story.imgUrl
+        storyBgImg.add( story.bgImgUrl)
+        storyImg.add( story.imgUrl)
     }
 
     fun onAddNewStory(): Long {
@@ -79,7 +80,8 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         isText.value = false
         author.value = ""
         title.value = ""
-        storyImg.value = ""
+        storyImg.clear()
+        storyBgImg.clear()
     }
 
     fun fetchAllStories() {
@@ -99,9 +101,6 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         return db.insertStoryGenre(sID, gID)
     }
 
-    fun getStoryByGenre() {
-
-    }
 
     fun deleteStory(story: Story): Int {
         val i: Int = db.deleteStory(story.storyID)
@@ -109,10 +108,38 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         return i
     }
 
-    fun updateStory(story: Story): Int {
-        val i: Int = db.updateStory(story)
-        fetchAllStories()
-        return i
+    fun updateStory(story: Story?): Int {
+        val s = Story(
+            storyID = story?.storyID,
+            title = title.value.toString(),
+            isTextStory = story?.isTextStory ?: 1,
+            createdDate = story?.createdDate ?: "",
+            userID = story?.userID ?: -1,
+            description = decription.value.toString(),
+            score = story?.score ?: 0f,
+            author = author.value.toString(),
+            imgUrl =transform( storyImg.first()),
+            bgImgUrl = transform(storyBgImg.first())
+        )
+        try {
+            val i: Int = db.updateStory(s)
+            fetchAllStories()
+            resetValue()
+            return i
+        } catch (e: Exception) {
+            resetValue()
+            e.printStackTrace()
+            return -1
+        }
+
+    }
+
+    fun getStoryById(id: Int): Story? {
+        return stories.value?.first{it->it.storyID==id}
+    }
+
+    fun transform(id: String): String {
+        return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
 }
 
