@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.myapplication.databinding.ActivityChapterBinding
 import com.example.myapplication.databinding.ActivityDucChapterBinding
 import com.example.worldstory.duc.ducutils.callLog
+import com.example.worldstory.duc.ducutils.dpToPx
 
 
 class Duc_Comment_Adapter(
@@ -77,6 +78,11 @@ class Duc_Comment_Adapter(
         if(comment.commentReplyId!=null){
             holder.binding.linearReplyOppositeConmmentContainer.visibility = View.VISIBLE
             holder.binding.txtReplyOppositeCommentContainer.text=comment.contentReply
+            var param = holder.binding.linearContentCommentOppositeCommentContainer.layoutParams
+            if (param is ViewGroup.MarginLayoutParams) {
+                param.topMargin = 40.dpToPx()
+            }
+            holder.binding.linearContentCommentOppositeCommentContainer.layoutParams=param
         }else{
             holder.binding.linearReplySelfConmmentContainer.visibility = View.GONE
             var param = holder.binding.linearContentCommentOppositeCommentContainer.layoutParams
@@ -115,6 +121,11 @@ class Duc_Comment_Adapter(
 
             holder.binding.linearReplySelfConmmentContainer.visibility = View.VISIBLE
             holder.binding.txtReplySelfCommentContainer.text=comment.contentReply
+            var param = holder.binding.linearContentCommentSelfCommentContainer.layoutParams
+            if (param is ViewGroup.MarginLayoutParams) {
+                param.topMargin = 40.dpToPx()
+            }
+            holder.binding.linearContentCommentSelfCommentContainer.layoutParams=param
         }else{
             holder.binding.linearReplySelfConmmentContainer.visibility = View.GONE
             var param = holder.binding.linearContentCommentSelfCommentContainer.layoutParams
@@ -122,7 +133,7 @@ class Duc_Comment_Adapter(
                 param.topMargin = 0
             }
             holder.binding.linearContentCommentSelfCommentContainer.layoutParams=param
-            
+
         }
         //du lieu cho comment chinh
         holder.binding.txtDisplayNameCommentSelfLayoutConmmentContainer.text =

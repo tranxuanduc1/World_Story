@@ -234,8 +234,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         var listOfRoles = dbHelper.getAllRoles()
         var role = listOfRoles.filter {
             it.roleID?.let { id -> id == roleId } ?: false
-        }.first()
-        return role
+        }
+        return if (role.isNotEmpty()) role.first()
+        else null
     }
 
     fun getRoleIdMember(): Int {

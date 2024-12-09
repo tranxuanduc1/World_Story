@@ -8,6 +8,7 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import com.example.worldstory.createDataFirstTime
 import com.example.worldstory.dbhelper.Contract.CommentEntry
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.model.Chapter
@@ -390,6 +391,8 @@ class DatabaseHelper(context: Context) :
         p0?.execSQL(createStoryGernTable)
         p0?.execSQL(createUserSessionTable)
 
+        //khoi tao du lieu ban dau
+        createDataFirstTime(p0)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {

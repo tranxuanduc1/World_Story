@@ -58,6 +58,8 @@ class StartActivity : AppCompatActivity() {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(view)
+        var dataHelper: DatabaseHelper = DatabaseHelper.getInstance(this)
+
         //testDatabase()
 
         callLog("=========", "bat dau chay start activity")
