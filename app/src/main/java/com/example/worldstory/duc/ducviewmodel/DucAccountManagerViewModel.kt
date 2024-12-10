@@ -30,6 +30,7 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     private val _newGuestUser= MutableLiveData<User>()
     val newGuestUser:LiveData<User>  get()=_newGuestUser
 
+
 //    private val _userSession= MutableLiveData<User>()
 //    val userSession:LiveData<User>  get()=_userSession
 

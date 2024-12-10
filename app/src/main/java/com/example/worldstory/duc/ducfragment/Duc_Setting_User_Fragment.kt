@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.example.myapplication.databinding.FragmentDucSettingUserBinding
 import com.example.worldstory.AdminMainActivity
 import com.example.worldstory.StartActivity
+import com.example.worldstory.duc.ducactivity.DucChapterMarkedActivity
 import com.example.worldstory.duc.ducactivity.DucLoginActivity
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.clearUserSession
@@ -96,6 +97,9 @@ class Duc_Setting_User_Fragment : Fragment() {
         }
         binding.btnSwitchToAdminSettingUserFragment.setOnClickListener{
             requireContext().toActivity(AdminMainActivity::class.java)
+        }
+        binding.btnToChaptermarkedSettingUserFragment.setOnClickListener{
+            requireContext().toActivity(DucChapterMarkedActivity::class.java)
         }
         binding.btnLogoutSettingUserFragment.setOnClickListener{
             requireContext().clearUserSession()

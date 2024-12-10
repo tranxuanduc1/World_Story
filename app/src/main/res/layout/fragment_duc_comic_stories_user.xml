@@ -68,6 +68,114 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/green1"/>
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/txt_titleHotStories_ComicStoriesUser"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hotStories"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+
+                />
+            <TextView
+                android:id="@+id/txt_seeMoreHotStories_ComicStoriesUser"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seeMore"
+                android:textSize="15dp"
+                android:textStyle="normal"
+                android:padding="15dp"
+                android:textColor="@color/green2"
+                android:clickable="true"
+                android:background="@drawable/image_button_search_slector"
+                />
+        </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="15dp"
+            android:id="@+id/rv_hotStories_ComicStoriesUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green1"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/txt_titleHotusers_ComicStoriesUser"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hotUsers"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+
+                />
+
+        </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="15dp"
+            android:id="@+id/rv_hotUsers_ComicStoriesUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green1"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/txt_titleHighScoreStories_ComicStoriesUser"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/highScoreStories"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+
+                />
+<!--            <TextView-->
+<!--                android:id="@+id/txt_seeMoreHighScoreStories_ComicStoriesUser"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/seeMore"-->
+<!--                android:textSize="15dp"-->
+<!--                android:textStyle="normal"-->
+<!--                android:padding="15dp"-->
+<!--                android:textColor="@color/green2"-->
+<!--                />-->
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_highScoreStories_ComicStoriesUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
         <LinearLayout
             android:id="@+id/linear_containerGridCardStory_fragmentComicStoriesUser"
             android:layout_width="match_parent"

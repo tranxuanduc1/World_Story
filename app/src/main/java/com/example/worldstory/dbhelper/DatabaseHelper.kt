@@ -685,6 +685,56 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return story
     }
+    fun getStoriesByIsText(isText: Int): List<Story> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.StoryEntry.TABLE_NAME}
+            WHERE ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} = ?
+        """.trimIndent(), arrayOf(isText.toString())
+        )
+        val stories = mutableListOf<Story>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+                val author =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+                val description =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+                val imgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+                val bgImgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+                val score =
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+                val isTextStory =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+                val dateCreated =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+                val userID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+
+                stories.add(
+                    Story(
+                        id,
+                        title,
+                        author,
+                        description,
+                        imgURL,
+                        bgImgURL,
+                        isTextStory,
+                        dateCreated,
+                        score,
+                        userID
+                    )
+                )
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return stories
+    }
     //////////////////////////
     ///----  CHAPTER -----////
     //////////////////////////
@@ -1032,7 +1082,37 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return users
     }
+    fun getUsersByRole(roleId:Int): List<User> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
+            WHERE ${Contract.UserEntry.COLUMN_ROLE_ID_FK} = ?
+        """.trimIndent(), arrayOf(roleId.toString()))
+        val users = mutableListOf<User>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+                val hashedPw =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val email =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
+                val nickName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+                val imgAvatar =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+                val roleID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+                val createdDate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+                users.add(User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return users
+    }
     fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(

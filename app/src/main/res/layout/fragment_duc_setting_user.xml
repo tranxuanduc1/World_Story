@@ -55,6 +55,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_toChaptermarked_settingUserFragment"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:background="@drawable/image_button_search_slector"

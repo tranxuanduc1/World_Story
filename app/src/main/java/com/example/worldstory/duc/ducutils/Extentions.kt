@@ -138,7 +138,11 @@ fun Context.toActivity(activityClass: Class<out Activity>){
     var intent= Intent(this, activityClass)
     this.startActivity(intent)
 }
-
+fun Context.toActivity(activityClass: Class<out Activity>,key: String,bool: Boolean){
+    var intent= Intent(this, activityClass)
+    intent.putExtra(key,bool)
+    this.startActivity(intent)
+}
 fun Context.toActivity(activityClass: Class<out Activity>, key: Int, value: Parcelable?){
     var intent= Intent(this, activityClass)
     intent.putExtra(this.resources.getString(key),value)
@@ -195,12 +199,15 @@ fun createGridCardViewStory(
     context: Context,
     inflater:LayoutInflater,
     viewGroup: ViewGroup, genre: Genre,
-    dataList: List<Story> ){
+    dataList: List<Story> ,
+    isText: Boolean
+    ){
 
     var blistCardStoriesLayout= ListCardStoriesLayoutBinding.inflate(inflater)
     val listCardStoriesLayout = blistCardStoriesLayout.root
     var gridLayout=blistCardStoriesLayout.gridLayoutListCardStory
     var txtGenre=blistCardStoriesLayout.genreListCardStory
+    var btnSeeMore=blistCardStoriesLayout.txtSeeMoreListCardStory
     for(i in dataList){
         var bCardView= CardStoryItemLayoutBinding.inflate(inflater)
         var cardView =bCardView.root
@@ -214,7 +221,7 @@ fun createGridCardViewStory(
         author.text=i.author
         imgURL.loadImgURL(context,i.imgUrl)
 
-        score.text= String.format("%.1f",i.score)
+        score.text= formatFloat(i.score)
         idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({
@@ -238,6 +245,10 @@ fun createGridCardViewStory(
     }
 
     txtGenre.text=genre.genreName
+    //chuyen den  Storise by Genre
+    btnSeeMore.setOnClickListener{
+        context.toActivityStoriesByGenre(isText,genre)
+    }
     viewGroup.addView(listCardStoriesLayout)
     //return listCardStoriesLayout
 }
@@ -334,4 +345,10 @@ fun hashPassword(password: String): String {
 }
 fun checkHashPassword(rawPassword: String, hashedPassword: String): Boolean {
     return BCrypt.checkpw(rawPassword, hashedPassword)
+}
+fun formatFloat(num: Float): String{
+    return String.format("%.1f",num)
+}
+fun DateFromDateTime(dateTime: String): String {
+    return dateTime.split(" ")[0]
 }

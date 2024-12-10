@@ -5,6 +5,7 @@ import android.provider.CallLog
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducutils.AUTHOR
 import com.example.worldstory.duc.ducutils.GUEST
 import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
@@ -14,6 +15,7 @@ import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.hashPassword
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -48,7 +50,18 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return listOfStories
 
     }
+    fun getStoriesByStoryId(storyId: Int): Story? {
+        var story = dbHelper.getStoryByStoryId(storyId)
 
+        return story
+
+    }
+    fun getStoriesByIsText(isText: Boolean): List<Story> {
+        var listOfStories = dbHelper.getStoriesByIsText(isText.toInt())
+
+        return listOfStories
+
+    }
     //genre
     fun getAllGenres(): List<Genre> {
         var list = dbHelper.getAllGenres()
@@ -131,7 +144,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         dbHelper.insertComment(comment)
     }
     //user
-
+    fun getUsersByRole(roleId: Int): List<User>{
+        return dbHelper.getUsersByRole(roleId)
+    }
     fun addNewUserMember(
         username: String,
         password: String,

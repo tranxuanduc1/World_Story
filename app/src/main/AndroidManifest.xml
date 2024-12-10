@@ -18,6 +18,15 @@
         android:theme="@style/Theme.WorldStory"
         tools:targetApi="31">
         <activity
+            android:name="com.example.worldstory.duc.ducactivity.DucChapterMarkedActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.worldstory.duc.ducactivity.DucInfoUserActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.worldstory.duc.ducactivity.DucAllStoriesActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddTextChapterActivity"
             android:exported="false" />
         <activity
@@ -72,8 +81,7 @@
             android:name="com.example.worldstory.AdminMainActivity"
 
             android:exported="true"
-            android:launchMode="singleTask"
-            >
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
