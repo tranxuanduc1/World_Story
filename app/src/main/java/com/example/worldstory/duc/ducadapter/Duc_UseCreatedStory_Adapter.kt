@@ -8,13 +8,11 @@ import com.example.myapplication.databinding.ItemUserCreatedStoryLayoutBinding
 import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
-import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
 class Duc_UseCreatedStory_Adapter(
     var context: Context,
-    var userslist: List<User>,
-    var storiesList: List<Story>,
+    var usersAndNumlist: List<Pair< User, Int>>,
     var isText: Boolean
 ): RecyclerView.Adapter<Duc_UseCreatedStory_Adapter.Viewhoder>() {
     override fun onCreateViewHolder(
@@ -30,17 +28,13 @@ class Duc_UseCreatedStory_Adapter(
         holder: Viewhoder,
         position: Int
     ) {
-        var user=userslist[position]
+        var user=usersAndNumlist[position].first
+        var numCreated=usersAndNumlist[position].second
         var binding=holder.binding
-        var numStoriesAreCreatedByUser=0
-        storiesList.forEach { story->
-            if(story.userID==user.userID){
-                numStoriesAreCreatedByUser++
-            }
-        }
+
         binding.txtNicknameItemUserCreatedStory.text=user.userName
         // so luong truyen ma user da dang tai
-        binding.txtNumStoriesItemUserCreatedStory.text=numStoriesAreCreatedByUser.toString()
+        binding.txtNumStoriesItemUserCreatedStory.text=numCreated.toString()
         binding.imgAvatarItemUserCreatedStory.loadImgURL(context,user.imgAvatar)
         binding.btnToInfoUserItemUserCreatedStory.setOnClickListener{
             context.toActivity(DucInfoUserActivity::class.java)
@@ -48,7 +42,7 @@ class Duc_UseCreatedStory_Adapter(
     }
 
     override fun getItemCount(): Int {
-        return userslist.size
+        return usersAndNumlist.size
     }
 
     inner class Viewhoder(var binding: ItemUserCreatedStoryLayoutBinding) :

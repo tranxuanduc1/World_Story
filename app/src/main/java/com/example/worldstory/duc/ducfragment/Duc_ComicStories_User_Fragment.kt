@@ -2,7 +2,6 @@ package com.example.worldstory.duc.ducfragment
 
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,17 +25,16 @@ import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_UseCreatedStory_Adapter
 import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
-import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodel.DucUserViewModel
-import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucUserViewModelFactory
 import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -134,8 +132,9 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer{
                     users->
                 var numUsers=6
+                var topUser=getHotUsers(users,numUsers,stories)
                 var limitUser= if(users.size>=5)  users.take(numUsers) else users
-                var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),limitUser,stories,isText)
+                var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),topUser,isText)
                 var itemDeco= SetItemDecorationForRecyclerView(0,20,5,5)
                 binding.rvHotUsersComicStoriesUser.apply {
                     adapter=adapterAuthorUser
@@ -162,6 +161,53 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         // Inflate the layout for this fragment
         return view
     }
+
+
+    private fun setImageBanner() {
+        var imgURL: String =
+            "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
+        var imgURL2: String =
+            "https://drive.usercontent.google.com/download?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz&authuser=0"
+        val imageList = ArrayList<SlideModel>() // Create image list
+
+        imageList.add(SlideModel(imgURL))
+        imageList.add(SlideModel(imgURL2))
+        imageList.add(SlideModel(imgURL2))
+
+        val imageSlider = binding.imgBannerComicUserstory
+        imageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
+        imageSlider.startSliding(3000)
+    }
+
+
+
+
+
+    fun toSearchActivity() {
+        var intent = Intent(context, DucSearchActivity::class.java)
+        intent.putExtra(getKeyIsText(requireContext()), isText)
+        startActivity(intent)
+    }
+    private fun getHotUsers(
+        users: List<User>,
+        numUsers: Int,
+        stories: List<Story>
+    ): List<Pair< User, Int>> {
+        var newMap=mutableMapOf<Int,Int>()
+        stories.forEach{
+            //lay duoc so lan cac user tao truyen
+                newMap[it.userID]=newMap.getOrDefault(it.userID,0)+1
+            }
+        var newMapB=mutableMapOf<User, Int>()
+        users.forEach{
+            newMapB[it]=newMap.getOrDefault(it.userID,0)
+        }
+        var newPairList= newMapB.toList().sortedByDescending { it.second }
+        newPairList=if(newPairList.size>=numUsers) newPairList.take(numUsers) else newPairList
+        return newPairList
+        }
+
+
 
     private fun setHotStoies(stories: List<Story>) {
         var numberStoryShow=6
@@ -194,32 +240,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         }
 
     }
-    private fun setImageBanner() {
-        var imgURL: String =
-            "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
-        var imgURL2: String =
-            "https://drive.usercontent.google.com/download?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz&authuser=0"
-        val imageList = ArrayList<SlideModel>() // Create image list
-
-        imageList.add(SlideModel(imgURL))
-        imageList.add(SlideModel(imgURL2))
-        imageList.add(SlideModel(imgURL2))
-
-        val imageSlider = binding.imgBannerComicUserstory
-        imageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
-        imageSlider.startSliding(3000)
-    }
-
-
-
-
-
-    fun toSearchActivity() {
-        var intent = Intent(context, DucSearchActivity::class.java)
-        intent.putExtra(getKeyIsText(requireContext()), isText)
-        startActivity(intent)
-    }
-
     fun setConfigButton() {
         var searchImgBtn = binding.searchButtonComicStoriesUser
         searchImgBtn.setOnClickListener {
