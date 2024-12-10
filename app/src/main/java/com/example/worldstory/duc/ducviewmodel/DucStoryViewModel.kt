@@ -16,7 +16,6 @@ import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -43,11 +42,13 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
 
 
 
-    private fun fetchStories() {
+     fun fetchStories() {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 repository.getAllStories()
             }
+            //lay rating cua tung story
+            setRatingByStory(result)
             _stories.value = result
 
         }
@@ -60,6 +61,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             val result = withContext(Dispatchers.IO) {
                 repository.getStoriesHistoryByUser(userId)
             }
+
+            //lay rating cua tung story
+            setRatingByStory(result)
             _storiesHistory.value = result
 
         }
@@ -70,6 +74,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             val result = withContext(Dispatchers.IO) {
                 repository.getLoveStoriesByUser(userId)
             }
+
+            //lay rating cua tung story
+            setRatingByStory(result)
             _storiesUserSessionLoved.value = result
 
         }
@@ -79,20 +86,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             val resultStoriesByGenre=withContext(Dispatchers.IO){
                 repository.getStoriesByGenre(genre.genreID?: numDef,isText)
             }
+
             //lay rating cua tung story
-            for(story in resultStoriesByGenre){
-                var ratings=repository.getRatingsByStory(story.storyID?:numDef)
-
-                if(ratings.isNullOrEmpty()){
-                    story.score=5f
-                }else{
-                    var averageScore= String.format("%.1f", ratings.map { it.score }.average()).toFloat()
-
-                    story.score=averageScore
-
-                }
-
-            }
+            setRatingByStory(resultStoriesByGenre)
 
             _genreAndStoriesByGenre.value= Pair(genre, resultStoriesByGenre)
         }
@@ -159,5 +155,21 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             1
         )
 
+    }
+    private fun setRatingByStory(result: List<Story>){
+        //lay rating cua tung story
+        for(story in result){
+            var ratings=repository.getRatingsByStory(story.storyID?:numDef)
+
+            if(ratings.isNullOrEmpty()){
+                story.score=5f
+            }else{
+                var averageScore= String.format("%.1f", ratings.map { it.score }.average()).toFloat()
+
+                story.score=averageScore
+
+            }
+
+        }
     }
 }

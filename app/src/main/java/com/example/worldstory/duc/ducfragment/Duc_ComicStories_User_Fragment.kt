@@ -2,8 +2,8 @@ package com.example.worldstory.duc.ducfragment
 
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,34 +12,25 @@ import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
-import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
-import com.example.worldstory.duc.ducutils.callLog
+import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
+import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
+import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
-import com.example.worldstory.duc.ducutils.dateTimeNow
+import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyIsText
-import com.example.worldstory.duc.ducutils.getLoremIpsumLong
-import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
-import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Image
-import com.example.worldstory.model.Paragraph
-import com.example.worldstory.model.Role
 import com.example.worldstory.model.Story
-import com.example.worldstory.model.User
-import com.squareup.picasso.Picasso
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,13 +83,13 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
         var listBindingGrid: List<ListCardStoriesLayoutBinding>
         ducStoryViewModel.genreAndStoriesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
-
+            var numStories=6
             createGridCardViewStory(
                 requireContext(),
                 inflater,
                 linearContainerGridCardStory,
                 storiesByGenre.first,
-                storiesByGenre.second
+                storiesByGenre.second.take(numStories)
             )
 
         })
@@ -123,7 +114,12 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             }
 
         })
-
+        //tao truyen hot
+        ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer{
+            stories->
+           setHotStoies(stories)
+            setHighScoreStoies(stories)
+        })
         //set image banner
         setImageBanner()
         //button search
@@ -139,6 +135,35 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         return view
     }
 
+    private fun setHotStoies(stories: List<Story>) {
+        var numberStoryShow=6
+        var limitStories=stories.take(numberStoryShow)
+        var adapterHotStories= Duc_CardStoryItem_Adapter(requireContext(), ArrayList( limitStories))
+        binding.rvHotStoriesComicStoriesUser.apply {
+            adapter=adapterHotStories
+            layoutManager =
+                GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
+            setHasFixedSize(true)
+        }
+    }
+    private fun setHighScoreStoies(stories: List<Story>) {
+        var numberStoryShow=5
+        var numCol=1
+        var numSpace=20
+        val itemDeco= SetItemDecorationForRecyclerView(10,numSpace,10,10)
+        var limitStories=stories.take(numberStoryShow)
+        var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
+
+        binding.rvHighScoreStoriesComicStoriesUser.apply {
+            adapter=adapterHighScoreStories
+            layoutManager =
+                GridLayoutManager(context, numCol,LinearLayoutManager.VERTICAL,false)
+            addItemDecoration(itemDeco)
+            setHasFixedSize(true)
+
+        }
+
+    }
     private fun setImageBanner() {
         var imgURL: String =
             "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
@@ -172,6 +197,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         }
         binding.swipeRefreshComicStoriesUser.setOnRefreshListener{
             ducGenreViewModel.fetchGenres()
+            ducStoryViewModel.fetchStories()
         }
     }
 

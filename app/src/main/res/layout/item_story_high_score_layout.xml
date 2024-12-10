@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="10dp"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="20dp"
+    android:clickable="true"
+    android:background="@drawable/image_button_search_slector"
+    >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <ImageView
+            android:id="@+id/img_story_itemStoryHighScoreLayout"
+
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:src="@drawable/a5"
+            android:scaleType="centerCrop"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+
+                android:id="@+id/txt_titleStory_itemStoryHighScoreLayout"
+
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:text="helo"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txt_authorStory_itemStoryHighScoreLayout"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:text="tac gia"
+                android:textSize="15sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            >
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="end"
+                >
+                <TextView
+                    android:id="@+id/txt_numCommentStory_itemStoryHighScoreLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bình luận 20"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+                <TextView
+                    android:id="@+id/txt_numRatingStory_itemStoryHighScoreLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đánh giá 10"
+                    android:textSize="15sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+            <FrameLayout
+                android:layout_gravity="end|center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:background="@color/green2"
+                >
+                <TextView
+                    android:id="@+id/txt_scoreStory_itemStoryHighScoreLayout"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.0"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    />
+            </FrameLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

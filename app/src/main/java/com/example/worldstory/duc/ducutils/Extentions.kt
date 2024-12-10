@@ -214,7 +214,7 @@ fun createGridCardViewStory(
         author.text=i.author
         imgURL.loadImgURL(context,i.imgUrl)
 
-        score.text= String.format("%.1f",i.score)
+        score.text= formatFloat(i.score)
         idStory.text=i.storyID.toString()
         constraintLayout.changeShapeBackgroundColorByScore(i.score)
         cardView.setOnClickListener({
@@ -334,4 +334,7 @@ fun hashPassword(password: String): String {
 }
 fun checkHashPassword(rawPassword: String, hashedPassword: String): Boolean {
     return BCrypt.checkpw(rawPassword, hashedPassword)
+}
+fun formatFloat(num: Float): String{
+    return String.format("%.1f",num)
 }
