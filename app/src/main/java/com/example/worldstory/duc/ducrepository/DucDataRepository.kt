@@ -50,6 +50,12 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return listOfStories
 
     }
+    fun getStoriesByStoryId(storyId: Int): Story? {
+        var story = dbHelper.getStoryByStoryId(storyId)
+
+        return story
+
+    }
     fun getStoriesByIsText(isText: Boolean): List<Story> {
         var listOfStories = dbHelper.getStoriesByIsText(isText.toInt())
 

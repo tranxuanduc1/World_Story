@@ -3,7 +3,7 @@ package com.example.worldstory.duc
 import android.content.Context
 import com.example.myapplication.R
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducdataclass.DucChapterDataClass
+import com.example.worldstory.duc.ducdataclass.DucComboChapterDataClass
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
 import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
 import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter
 object SampleDataStory {
     private val dataList= mutableListOf<DucStoryDataClass>()
     private val listOfGenre = mutableListOf<DucGenreDataClass>()
-    private val listOfChapter = mutableListOf<DucChapterDataClass>()
+    private val listOfChapter = mutableListOf<DucComboChapterDataClass>()
     private val listOfParagraph = mutableListOf<DucParagraphDataClass>()
     private val listOfComment = mutableListOf<DucCommentDataClass>()
     private var sumIdComment:Int=0
@@ -33,7 +33,7 @@ object SampleDataStory {
         generateListOfGenre()
 //        generateListOfComment()
         generateListOfParagraph()
-        generateListOfChapter()
+        //generateListOfChapter()
     }
     fun getExampleImgURL():String{
         return             "https://drive.google.com/uc?id=1OZ0NxlZEq3x2OTgno6DJ8rH6lr1JXv8P"
@@ -188,61 +188,49 @@ object SampleDataStory {
 
     }
     //------------------------------
-    fun getOneChapterByID(context: Context,idChapter:Int): DucChapterDataClass{
-        return getListOfChapter(context).filter { it.idChapter==idChapter }.first()
-
-    }
-    fun getOneChapter(): DucChapterDataClass{
-        return DucChapterDataClass(1,1,"Chuong 1: khong gia tri","01/02/2024")
-    }
-    fun addChapter(item : DucChapterDataClass){
-        listOfChapter.add(item)
-    }
-    fun getListOfChapter(context: Context): List<DucChapterDataClass>{
-//        listOfChapter.clear()
-//        generateListOfChapter()
-        return  listOfChapter
-    }
-    private fun generateListOfChapter(){
-
-        var titleList = arrayOf(
-            "Chuong 1: hoho",
-            "Chuong 2: hoho",
-            "Chuong 3: hohoa",
-            "Chuong 4: hoho e ew werwer",
-            "Chuong 5: hoho sfge",
-            "Chuong 6: hohodas",
-
-            )
-        var dateCraetedList = arrayOf(
-            "01/02/2024",
-            "01/03/2024",
-            "01/04/2024",
-            "01/05/2024",
-            "01/06/2024",
-            "01/07/2024",
-
-            )
-        var idList = arrayOf(
-            1,2,3,4,5,6
-
-        )
-        var idChapter:Int=1
-        for(story in dataList)
-        {
-            for(i in idList.indices){
-                var item = DucChapterDataClass(
-                    idChapter,story.idStory,titleList[i]+" ${story.idStory}",dateCraetedList[i]
-                )
-                idChapter++
-                addChapter(item)
-            }
-        }
 
 
 
-
-    }
+//    private fun generateListOfChapter(){
+//
+//        var titleList = arrayOf(
+//            "Chuong 1: hoho",
+//            "Chuong 2: hoho",
+//            "Chuong 3: hohoa",
+//            "Chuong 4: hoho e ew werwer",
+//            "Chuong 5: hoho sfge",
+//            "Chuong 6: hohodas",
+//
+//            )
+//        var dateCraetedList = arrayOf(
+//            "01/02/2024",
+//            "01/03/2024",
+//            "01/04/2024",
+//            "01/05/2024",
+//            "01/06/2024",
+//            "01/07/2024",
+//
+//            )
+//        var idList = arrayOf(
+//            1,2,3,4,5,6
+//
+//        )
+//        var idChapter:Int=1
+//        for(story in dataList)
+//        {
+//            for(i in idList.indices){
+//                var item = DucChapterDataClass(
+//                    idChapter,story.idStory,titleList[i]+" ${story.idStory}",dateCraetedList[i]
+//                )
+//                idChapter++
+//                addChapter(item)
+//            }
+//        }
+//
+//
+//
+//
+//    }
     //------------------------------
     fun getOneParagraphByID(context: Context,idParagraph:Int): DucParagraphDataClass{
         return getListOfParagraph(context).filter { it.idParagraph==idParagraph }.first()
