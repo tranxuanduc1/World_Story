@@ -13,6 +13,7 @@ import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
     private val _storiesUserSessionLoved= MutableLiveData<List<Story>>()
     val storiesUserSessionLoved: LiveData<List<Story>> get() = _storiesUserSessionLoved
 
+    private val _storiesIsText = MutableLiveData<List<Story>>()
+    val storiesIsText: LiveData<List<Story>> get() = _storiesIsText
+
     init {
         fetchStories()
         fetchStoriesHistory()
@@ -50,6 +54,18 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             //lay rating cua tung story
             setRatingByStory(result)
             _stories.value = result
+
+        }
+
+    }
+    fun fetchStoriesIsText(isText: Boolean) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                repository.getStoriesByIsText(isText =isText )
+            }
+            //lay rating cua tung story
+            setRatingByStory(result)
+            _storiesIsText.value = result
 
         }
 

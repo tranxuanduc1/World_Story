@@ -77,7 +77,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
 
                 createGridCardViewStory(
                     requireContext(), inflater, linearContainerGridCardStory, storiesByGenre.first,
-                    storiesByGenre.second
+                    storiesByGenre.second,
+                    isText
                 )
 
         })

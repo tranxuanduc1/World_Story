@@ -14,6 +14,7 @@ import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.hashPassword
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toBoolean
+import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -48,7 +49,12 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return listOfStories
 
     }
+    fun getStoriesByIsText(isText: Boolean): List<Story> {
+        var listOfStories = dbHelper.getStoriesByIsText(isText.toInt())
 
+        return listOfStories
+
+    }
     //genre
     fun getAllGenres(): List<Genre> {
         var list = dbHelper.getAllGenres()

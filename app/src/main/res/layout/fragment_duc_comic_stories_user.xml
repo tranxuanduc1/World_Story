@@ -93,6 +93,8 @@
                 android:textStyle="normal"
                 android:padding="15dp"
                 android:textColor="@color/green2"
+                android:clickable="true"
+                android:background="@drawable/image_button_search_slector"
                 />
         </FrameLayout>
 

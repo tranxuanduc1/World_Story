@@ -6,8 +6,6 @@
     app:cardElevation="10dp"
     android:layout_margin="20dp"
     app:cardCornerRadius="20dp"
-    android:clickable="true"
-    android:background="@drawable/image_button_search_slector"
     >
     <FrameLayout
         android:layout_width="match_parent"
@@ -98,5 +96,12 @@
         </LinearLayout>
 
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/btn_toStoryOverview_itemStoryHighScoreLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/image_button_search_slector"
+        android:clickable="true"
 
+        />
 </androidx.cardview.widget.CardView>

@@ -21,7 +21,7 @@
 
           />
       <TextView
-          android:id="@+id/txt_titleHotStories_ComicStoriesUser"
+          android:id="@+id/txt_seeMore_listCardStory"
           android:layout_gravity="end"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -30,6 +30,8 @@
           android:textStyle="normal"
           android:padding="15dp"
           android:textColor="@color/green2"
+          android:clickable="true"
+          android:background="@drawable/image_button_search_slector"
           />
    </FrameLayout>
    <GridLayout

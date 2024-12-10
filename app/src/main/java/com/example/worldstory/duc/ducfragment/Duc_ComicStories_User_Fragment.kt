@@ -18,6 +18,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
+import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
@@ -26,6 +27,7 @@ import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyIsText
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
@@ -89,7 +91,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 inflater,
                 linearContainerGridCardStory,
                 storiesByGenre.first,
-                storiesByGenre.second.take(numStories)
+                storiesByGenre.second.take(numStories),
+                isText
             )
 
         })
@@ -137,6 +140,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
     private fun setHotStoies(stories: List<Story>) {
         var numberStoryShow=6
+        // lay 6 phan tu
         var limitStories=stories.take(numberStoryShow)
         var adapterHotStories= Duc_CardStoryItem_Adapter(requireContext(), ArrayList( limitStories))
         binding.rvHotStoriesComicStoriesUser.apply {
@@ -151,7 +155,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         var numCol=1
         var numSpace=20
         val itemDeco= SetItemDecorationForRecyclerView(10,numSpace,10,10)
-        var limitStories=stories.take(numberStoryShow)
+        //lay 5 phan tu co diem cao nhat
+        var limitStories=stories.sortedByDescending { it.score }.take(numberStoryShow)
         var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
 
         binding.rvHighScoreStoriesComicStoriesUser.apply {
@@ -195,9 +200,14 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         searchImgBtn.setOnClickListener {
             toSearchActivity()
         }
+        // tai lai data
         binding.swipeRefreshComicStoriesUser.setOnRefreshListener{
             ducGenreViewModel.fetchGenres()
             ducStoryViewModel.fetchStories()
+        }
+        // xem toan bo story
+        binding.txtSeeMoreHotStoriesComicStoriesUser.setOnClickListener{
+            requireContext().toActivity(DucAllStoriesActivity::class.java,getKeyIsText(requireContext()),isText)
         }
     }
 

@@ -594,6 +594,56 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return story
     }
+    fun getStoriesByIsText(isText: Int): List<Story> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${Contract.StoryEntry.TABLE_NAME}
+            WHERE ${Contract.StoryEntry.COLUMN_IS_TEXT_STORY} = ?
+        """.trimIndent(), arrayOf(isText.toString())
+        )
+        val stories = mutableListOf<Story>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID))
+                val title =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_TITLE))
+                val author =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_AUTHOR))
+                val description =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_DESCRIPTION))
+                val imgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IMAGE_URL))
+                val bgImgURL =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_BACKGROUND_IMAGE_URL))
+                val score =
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_SCORE))
+                val isTextStory =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_IS_TEXT_STORY))
+                val dateCreated =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_CREATED_DATE))
+                val userID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.StoryEntry.COLUMN_USER_CREATED_ID_FK))
+
+                stories.add(
+                    Story(
+                        id,
+                        title,
+                        author,
+                        description,
+                        imgURL,
+                        bgImgURL,
+                        isTextStory,
+                        dateCreated,
+                        score,
+                        userID
+                    )
+                )
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return stories
+    }
     //////////////////////////
     ///----  CHAPTER -----////
     //////////////////////////
