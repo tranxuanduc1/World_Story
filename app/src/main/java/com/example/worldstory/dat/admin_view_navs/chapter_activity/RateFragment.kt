@@ -72,7 +72,7 @@ class RateFragment : Fragment() {
         ).create(RateViewModel::class.java)
 
         binding.rateViewModel = rateViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         Log.w("id", idStory.toString())
         val pieChart = binding.pieChart

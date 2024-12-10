@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
@@ -44,16 +45,15 @@ class UserFragment : Fragment() {
     private var searchQuery: String? = null
     private var isSearchViewOpen = false
     private lateinit var items: List<String>
+
     private lateinit var binding: FragmentUserBinding
-    private val currentUserID = arguments?.getInt("currentID")
-    private val currentRole = arguments?.getString("currentRole")
     private val roleViewModel: RoleViewModel by activityViewModels {
         RoleViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private val userViewModel: UserViewModel by activityViewModels {
         UserViewModelFactory(DatabaseHelper(requireActivity()))
     }
-
+    var itemPosition = -1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,21 +66,52 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.userViewModel = userViewModel
+
+        //khôi phục
+        savedInstanceState?.let {
+            searchQuery = it.getString("search_query")
+            isSearchViewOpen = it.getBoolean("is_search_view_open", false)
+            itemPosition = it.getInt("item_position", 1)
+            // Gán lại giá trị tìm kiếm
+//            if (searchQuery!=null && searchQuery!="")
+//                binding.searchViewUser.setQuery(searchQuery, false)
+
+            userAdapter.update(userViewModel.userList.value?.toList() ?: emptyList())
+        }
+
+
+//        binding.userViewModel = userViewModel
 
         //spinner
         items = roleViewModel.roles.map { it.roleName }
-        val adapter = ArrayAdapter(requireContext(), R.layout.user_spinner_item, items)
-        binding.autoCompleteTextF.setText(
-            savedInstanceState?.getString("selected") ?: items[0],
-            true
-        )
-        binding.autoCompleteTextF.setAdapter(adapter)
-
-        //thiết lập onselected spinner
-        binding.autoCompleteTextF.setOnItemClickListener { _, _, position, _ ->
-            userAdapter.filterByRole(position)
+        ArrayAdapter(requireContext(), R.layout.user_spinner_item, items).also { adapter ->
+            adapter.setDropDownViewResource(R.layout.user_spinner_item)
+            binding.menu.adapter = adapter
         }
+
+
+        binding.menu.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (itemPosition != position + 1) {
+                        userViewModel.setUsersByRoleId(position + 1)
+                        Log.w("sizeu", userViewModel.userList.value.toString())
+                        itemPosition = position + 1
+                        userViewModel.roleSeclected=itemPosition
+                    }
+
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
+            }
+
         //thiết lập quan sát sự kiện nút add
         sharedViewModel._add.observe(viewLifecycleOwner) { isAddButtonClicked ->
             if (isAddButtonClicked == true) {
@@ -89,19 +120,14 @@ class UserFragment : Fragment() {
             }
         }
 
-        //searchview
-        //khôi phục
-        savedInstanceState?.let {
-            searchQuery = it.getString("search_query")
-            isSearchViewOpen = it.getBoolean("is_search_view_open", false)
 
-            // Gán lại giá trị tìm kiếm
-            binding.searchViewUser.setQuery(searchQuery, false)
 
-        }
+
         if (isSearchViewOpen) {
             binding.searchViewUser.visibility = View.VISIBLE
         }
+
+
         binding.searchViewUser.setOnQueryTextListener(object :
             SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
@@ -114,27 +140,44 @@ class UserFragment : Fragment() {
                 return false
             }
         })
+
+
         sharedViewModel._search.observe(viewLifecycleOwner) { isSearchClicked ->
             if (isSearchClicked == true) {
                 showSearchView()
                 sharedViewModel.searchHandle()
             }
         }
+
+
         binding.searchViewUser.findViewById<View>(androidx.appcompat.R.id.search_close_btn)
             ?.setOnClickListener() {
                 hideSearchView()
             }
-        userViewModel.__users.observe(viewLifecycleOwner) { new ->
-            userAdapter.update(new ?: emptyList())
 
-        }
         //recycleview
         binding.userList.layoutManager = LinearLayoutManager(requireContext())
+
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        userAdapter = UserAdapter(userViewModel.__users.value ?: emptyList(), color1,parentFragmentManager)
-        userAdapter.filterByRole(0)
+
+        userAdapter =
+            UserAdapter(
+                userViewModel.userList.value?.toMutableList() ?: mutableListOf(),
+                color1,
+                parentFragmentManager
+            )
+
         binding.userList.adapter = userAdapter
 
+
+//        userAdapter.filterByRole(itekmPosition)
+
+
+        userViewModel.userList.observe(viewLifecycleOwner) {
+            Log.w("sizeup", userViewModel.userList.value.toString())
+            userAdapter.update(userViewModel.userList.value?.toList() ?: emptyList())
+//            userAdapter.filterByRole(itemPosition)
+        }
         //swipe
         val simpleItemTouchCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -177,6 +220,7 @@ class UserFragment : Fragment() {
                 val itemView = viewHolder.itemView
                 val context = recyclerView.context
 
+
                 // Lấy icon và kích thước
                 val icon = ContextCompat.getDrawable(context, R.drawable.white_outline_delete_24)!!
                 val iconIntrinsicHeight = icon.intrinsicHeight
@@ -200,12 +244,11 @@ class UserFragment : Fragment() {
                     val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
                     val iconRight = itemView.right - iconMargin
                     val iconBottom = iconTop + icon.intrinsicHeight
-
+                    
                     // Vẽ icon lên Canvas
                     icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                     icon.draw(canvas)
-                }
-                else{
+                } else {
                     paint.color = Color.RED
                     canvas.drawRect(
                         itemView.left.toFloat(),
@@ -266,15 +309,24 @@ class UserFragment : Fragment() {
         // Cập nhật ViewModel với trạng thái cuộn
         sharedViewModel.recycleViewStateUser.value =
             RecyclerViewState(firstVisibleItemPosition, offset)
+
+//        userAdapter.update(userViewModel.userList.value?.toList()?: emptyList())
     }
+
 
     override fun onResume() {
         super.onResume()
+
+        sharedViewModel.recycleViewStateUser.value?.let {
+            val layoutManager = binding.userList.layoutManager as LinearLayoutManager
+            layoutManager.scrollToPositionWithOffset(it.firstVisibleItemPosition, it.offset)
+        }
+
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, items)
-        binding.autoCompleteTextF.setAdapter(adapter)
-        userAdapter.filterByRole(0)
-
+//        binding.autoCompleteTextF.setAdapter(adapter)k
+//        userAdapter.filterByRole(userViewModel.itemPosition)
+//        userAdapter.update(userViewModel.userList.value?.toList()?: emptyList())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -289,8 +341,9 @@ class UserFragment : Fragment() {
                 isSearchViewOpen
             )
             outState.putString("default", items[0])
-            outState.putString("selected", binding.autoCompleteTextF.text.toString())
+//            outState.putString("selected", binding.autoCompleteTextF.text.toString())
             outState.putStringArrayList("items", ArrayList(items))
+            outState.putInt("item_position", itemPosition)
         }
     }
 

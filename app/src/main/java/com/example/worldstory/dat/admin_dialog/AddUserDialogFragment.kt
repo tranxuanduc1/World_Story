@@ -1,15 +1,18 @@
 package com.example.worldstory.dat.admin_dialog
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AlertDialog.*
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
@@ -134,6 +137,10 @@ class AddUserDialogFragment : DialogFragment() {
                     }
                     if (isValid) {
                         lifecycleScope.launch {
+                            withContext(Dispatchers.Main) {
+                                binding.progressBar.visibility = View.VISIBLE
+                                disableMainScreenInteraction()
+                            }
                             try {
                                 val isUploadAvt = uploadImageAsynce(uriAvt, userViewModel.avtId)
                                 if (isUploadAvt) {
@@ -150,6 +157,12 @@ class AddUserDialogFragment : DialogFragment() {
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
+                            }
+                            finally {
+                                withContext(Dispatchers.Main) {
+                                    binding.progressBar.visibility = View.GONE
+                                    enableMainScreenInteraction()
+                                }
                             }
                         }
                     }
@@ -181,7 +194,7 @@ class AddUserDialogFragment : DialogFragment() {
         val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
 
         // Đọc tệp credentials (service account)
-        val serviceAccountStream: InputStream = resources.openRawResource(R.gitraw.cred)
+        val serviceAccountStream: InputStream = resources.openRawResource(R.raw.cred)
 
         // Tạo xác thực với tệp credentials JSON
         val credentials = GoogleCredential.fromStream(serviceAccountStream)
@@ -233,5 +246,33 @@ class AddUserDialogFragment : DialogFragment() {
         }
 
 
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun disableMainScreenInteraction() {
+        val overlay = View(requireContext())
+        overlay.setBackgroundColor(Color.parseColor("#80000000")) // Màu đen trong suốt
+        overlay.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+
+        // Thêm lớp phủ vào root view
+        val rootLayout = view?.findViewById<FrameLayout>(android.R.id.content)
+        rootLayout?.addView(overlay)
+
+        overlay.setOnTouchListener { v, event ->
+            true
+        }
+    }
+
+    fun enableMainScreenInteraction() {
+        // Loại bỏ overlay khi tải lên hoàn tất
+        val rootLayout = view?.findViewById<FrameLayout>(android.R.id.content)
+        val overlay = rootLayout?.getChildAt(rootLayout?.childCount?.minus(1) ?: 0)
+        if (overlay != null) {
+            rootLayout.removeView(overlay)
+        }
     }
 }

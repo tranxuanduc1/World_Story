@@ -2,10 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="1dp"
     android:layout_marginHorizontal="10dp"
-    android:orientation="vertical"
-    android:elevation="10dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,6 +11,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:background="@color/lgt_white"
             android:id="@+id/ca_column1"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
@@ -20,7 +19,7 @@
             android:text="Cột 1"
             android:textAlignment="center"
             android:maxLines="1"
-            android:textSize="16sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/ca_column2"
@@ -30,17 +29,41 @@
             android:text="Cột 2"
             android:textAlignment="center"
             android:maxLines="1"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/ca_column3"
-            android:layout_width="80dp"
+            android:textSize="13sp" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/ca_column2_edit"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:text="Cột 2"
+            android:textAlignment="center"
+            android:maxLines="1"
+            android:visibility="gone"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/ca_column3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="1"
             android:text="Cột 3"
             android:textAlignment="center"
             android:maxLines="1"
-            android:textSize="16sp" />
+            android:textSize="13sp" />
+        <ImageButton
+            android:id="@+id/accept_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:src="@drawable/baseline_check_24"/>
+        <ImageButton
+            android:id="@+id/cancel_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:src="@drawable/outline_cancel_24"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -13,136 +13,152 @@
             type="com.example.worldstory.model.User" />
     </data>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbarAlwaysDrawVerticalTrack="false">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:orientation="vertical"
-            android:scrollbarAlwaysDrawVerticalTrack="false"
-            android:scrollbars="vertical">
-
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/new_user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:hint="Tên user"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@={userViewModel.userName}" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/new_nickname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:hint="Nickname"
-                android:maxLines="1"
-
-                android:singleLine="true"
-                android:text="@={userViewModel.nickName}" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:hint="abc123@gmail.com"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@={userViewModel.email}" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/new_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:hint="Mật khẩu"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@={userViewModel.passWord}" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/cf_new_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:hint="Xác nhận mật khẩu"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true" />
+            android:layout_height="wrap_content"
+            android:scrollbarAlwaysDrawVerticalTrack="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="false"
+                android:scrollbars="vertical">
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/new_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:hint="Tên user"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@={userViewModel.userName}" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/new_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:hint="Nickname"
+                    android:maxLines="1"
+
+                    android:singleLine="true"
+                    android:text="@={userViewModel.nickName}" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:hint="abc123@gmail.com"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@={userViewModel.email}" />
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/new_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:hint="Mật khẩu"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@={userViewModel.passWord}" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/cf_new_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:hint="Xác nhận mật khẩu"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/pick_img_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/baseline_upload_24" />
-
-                    <ImageButton
-                        android:id="@+id/remove_avt_btn"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/outline_delete_24" />
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/pick_img_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/baseline_upload_24" />
+
+                        <ImageButton
+                            android:id="@+id/remove_avt_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:src="@drawable/outline_delete_24" />
+                    </LinearLayout>
+
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/avt_user_by_admin"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginHorizontal="30dp"
+                        android:scaleType="centerCrop"
+
+                        android:src="@drawable/cat"
+                        app:shapeAppearanceOverlay="@style/CircularImageViewStyle" />
+
                 </LinearLayout>
 
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/avt_user_by_admin"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    app:shapeAppearanceOverlay="@style/CircularImageViewStyle"
-
-                    android:src="@drawable/cat"
-                    android:layout_marginHorizontal="30dp" />
-
             </LinearLayout>
-
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </FrameLayout>
 </layout>

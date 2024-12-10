@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -22,7 +23,7 @@ interface OnItemClickListener {
 }
 
 class StoryAdapter(
-    private var storyList: List<Story>,
+    private var storyList: MutableList<Story>,
     private var color: Int,
     private val listener: OnItemClickListener
 
@@ -47,6 +48,7 @@ class StoryAdapter(
         holder.column4.text = highlightQuery(text = story.createdDate, query = searchQuery)
         holder.itemView.setOnClickListener {
             listener.onItemClick(story)
+
         }
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(color)
@@ -137,7 +139,9 @@ class StoryAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(stories: List<Story>) {
-        storyList = stories
+        Log.w("update",stories.size.toString())
+        storyList.clear()
+        storyList.addAll(stories)
         notifyDataSetChanged()
     }
 
@@ -153,4 +157,8 @@ class StoryAdapter(
             notifyItemRangeChanged(p,storyList.size)
         }
     }
+
+
+
+
 }

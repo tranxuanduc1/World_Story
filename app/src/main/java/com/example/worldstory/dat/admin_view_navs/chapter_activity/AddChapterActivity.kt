@@ -1,10 +1,15 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +30,7 @@ import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.media.MediaHttpUploader
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.InputStreamContent
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -106,25 +112,42 @@ class AddChapterActivity : AppCompatActivity() {
             if (binding.tenChap.text.isNullOrEmpty()) {
                 binding.tenChap.error = "Không được bỏ trống"
             } else {
+
                 CoroutineScope(Dispatchers.IO).launch {
-
-                    val deferredTasks =
-                        tempImgs.map { (k, v) ->
-                            async {
-                                uploadImageToDrive(k, v, chapterViewModel.arrID)
-                            }
-                        }
-                    val rs = deferredTasks.awaitAll()
-
                     withContext(Dispatchers.Main) {
-                        if (rs.all { it }) {
-                            chapterViewModel.setImgs()
-                            chapterViewModel.onAddChapter(storyID = storyID)
-                        } else {
-                            Log.w("khoong thanh cong", "that bai")
+                        binding.progressBar.visibility = View.VISIBLE
+                        disableMainScreenInteraction()
+                    }
+                    try {
+                        val deferredTasks =
+                            tempImgs.map { (k, v) ->
+                                async {
+                                    uploadImageToDrive(k, v, chapterViewModel.arrID)
+                                }
+                            }
+                        val rs = deferredTasks.awaitAll()
+
+                        withContext(Dispatchers.Main) {
+                            if (rs.all { it }) {
+                                chapterViewModel.setImgs()
+                                chapterViewModel.onAddChapter(storyID = storyID)
+                            } else {
+                                Log.w("khoong thanh cong", "that bai")
+                            }
+                            tempImgs.clear()
+                            index = 0
                         }
-                        tempImgs.clear()
-                        index=0
+                    } catch (e: Exception) {
+                        Log.w("Loi", e.message.toString())
+                    } finally{
+
+                        withContext(Dispatchers.Main) {
+//                            val intent = Intent(this@AddChapterActivity, AddChapterActivity::class.java) // Chỉ định lại Activity cần reload
+//                            finish() // Đóng Activity hiện tại
+//                            startActivity(intent) // Mở lại Activity
+                            binding.progressBar.visibility = View.GONE
+                            enableMainScreenInteraction()
+                        }
                     }
 
                 }
@@ -136,7 +159,7 @@ class AddChapterActivity : AppCompatActivity() {
         //lấy drive
         driveService = getDriveService(this)
 
-        binding.topAppBar.setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
+        binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
     }
 
@@ -165,6 +188,7 @@ class AddChapterActivity : AppCompatActivity() {
 
     fun uploadImageToDrive(order: Int, uri: Uri, arrID: MutableMap<Int, String>): Boolean {
 
+
         val mediaContent =
             InputStreamContent("image/jpeg", contentResolver.openInputStream(uri))
 
@@ -176,19 +200,53 @@ class AddChapterActivity : AppCompatActivity() {
 
 
         try {
-            val file = driveService.files().create(fileMetadata, mediaContent)
-                .setFields("id, webViewLink")
-                .execute()
-            arrID[order] = file.id
+            val file = driveService.files().create(fileMetadata, mediaContent).apply {
+                fields = "id, webViewLink"
+                mediaHttpUploader.apply {
+                    isDirectUploadEnabled = false // Tải lên theo từng phần
+                    chunkSize = MediaHttpUploader.MINIMUM_CHUNK_SIZE * 2 // Kích thước mỗi phần
+                }
+            }
+            val uploadedFile = file.execute()
+            arrID[order] = uploadedFile.id
+            mediaContent.closeInputStream
             return true
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("k up dc", "hythtyht")
+            mediaContent.closeInputStream
             return false
+        } finally {
+
         }
 
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    fun disableMainScreenInteraction() {
+        val overlay = View(this)
+        overlay.setBackgroundColor(Color.parseColor("#80000000")) // Màu đen trong suốt
+        overlay.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
 
+        // Thêm lớp phủ vào root view
+        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
+        rootLayout.addView(overlay)
+
+        overlay.setOnTouchListener { v, event ->
+            true
+        }
+    }
+
+    fun enableMainScreenInteraction() {
+        // Loại bỏ overlay khi tải lên hoàn tất
+        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
+        val overlay = rootLayout.getChildAt(rootLayout.childCount - 1)
+        if (overlay != null) {
+            rootLayout.removeView(overlay)
+        }
+    }
 }

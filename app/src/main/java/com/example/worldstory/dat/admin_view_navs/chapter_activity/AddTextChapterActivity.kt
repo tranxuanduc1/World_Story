@@ -136,6 +136,7 @@ class AddTextChapterActivity : AppCompatActivity() {
                 result = stringBuilder.toString()
                 bufferedReader.close()
             }
+            inputStream?.close()
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("ReadUri", "Error reading file", e)

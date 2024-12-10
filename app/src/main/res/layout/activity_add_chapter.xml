@@ -13,120 +13,173 @@
             type="com.example.worldstory.dat.admin_viewmodels.ImageViewModel" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/topAppBar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:background="@android:color/white">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Light_Beige"
-                android:minHeight="?attr/actionBarSize"
-                app:navigationIcon="@drawable/baseline_arrow_back_24" />
-        </com.google.android.material.appbar.AppBarLayout>
-        <TextView
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:text="Chapter mới"
-            android:textSize="34sp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:layout_marginVertical="10dp"
-            android:padding="15dp"
-            android:id="@+id/ten_chap"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tên truyện"
-            android:lines="1"
-            android:text="@={chapterViewModel.name}"
-            android:textSize="14sp" />
-
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingHorizontal="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thêm tranh/ảnh/hình" />
-
-            <ImageButton
-                android:id="@+id/upload_img_src"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:src="@drawable/baseline_upload_24" />
-        </LinearLayout>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:padding="10dp"
-                android:id="@+id/prev_uploaded"
-                android:layout_width="match_parent"
-
-                android:layout_height="200dp" />
-
-
-        <LinearLayout
-            android:paddingHorizontal="10dp"
-            android:layout_marginVertical="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Gỡ hết" />
-
-            <ImageButton
-                android:id="@+id/remove_uploaded"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:backgroundTint="@color/red"
-                android:src="@drawable/white_outline_delete_24" />
-        </LinearLayout>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:indeterminate="true"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/cancel_add_chapter"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/topAppBar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/Light_Beige"
+                    android:minHeight="?attr/actionBarSize"
+                    app:navigationIcon="@drawable/baseline_arrow_back_24" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:padding="10dp"
+                android:text="Chapter mới"
+                android:textSize="34sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/ten_chap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tên truyện"
+                    android:lines="1"
+                    android:padding="15dp"
+                    android:text="@={chapterViewModel.name}"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:backgroundTint="@color/Light_Beige">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Thêm tranh/ảnh/hình" />
+
+                    <ImageButton
+                        android:id="@+id/upload_img_src"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginHorizontal="20dp"
+                        android:src="@drawable/baseline_upload_24" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:background="@color/ltgray"
+                android:elevation="5dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/prev_uploaded"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+
+                    android:padding="10dp" />
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/Light_Beige">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Gỡ hết" />
+
+                    <ImageButton
+                        android:id="@+id/remove_uploaded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginHorizontal="20dp"
+                        android:backgroundTint="@color/red"
+                        android:src="@drawable/white_outline_delete_24" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/flame"
-                android:text="Cancel" />
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-            <Button
-                android:id="@+id/accept_add_chapter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:backgroundTint="@color/Teal"
-                android:text="Accept" />
+                <Button
+                    android:id="@+id/cancel_add_chapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/flame"
+                    android:text="Cancel" />
+
+                <Button
+                    android:id="@+id/accept_add_chapter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:backgroundTint="@color/Teal"
+                    android:text="Accept" />
+            </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
-
+    </FrameLayout>
 </layout>

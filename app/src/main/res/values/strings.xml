@@ -52,4 +52,10 @@
     <string name="add_button">add_button</string>
     <string name="search_hint">Nhập từ khóa cần tìm</string>
     <string name="new_story">New Story</string>
+
+
+    <string-array name="story_options">
+        <item>Truyện chữ</item>
+        <item>Truyện hình</item>
+    </string-array>
 </resources>

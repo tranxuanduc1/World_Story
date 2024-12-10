@@ -65,7 +65,7 @@ class CommentFragment : Fragment() {
             idStory
         ).create(CommentViewModel::class.java)
         binding.commentViewModel = commentViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         val barChart = binding.barChart
 

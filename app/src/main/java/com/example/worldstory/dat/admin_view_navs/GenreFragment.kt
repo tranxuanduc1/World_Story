@@ -103,7 +103,7 @@ class GenreFragment : Fragment() {
 
         binding.categoryList.layoutManager = LinearLayoutManager(requireContext())
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        genreAdapter = GenreAdapter(genreViewModel.genres.value ?: emptyList(), color1)
+        genreAdapter = GenreAdapter(genreViewModel,genreViewModel.genres.value ?: emptyList(), color1)
         binding.categoryList.adapter = genreAdapter
         genreViewModel.genres.observe(viewLifecycleOwner) {
             genreAdapter.updateList(genreViewModel.genres.value ?: emptyList())

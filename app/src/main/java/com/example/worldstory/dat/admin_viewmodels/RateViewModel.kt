@@ -48,7 +48,6 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
         try {
             if (id != null) {
                 tempRateList.addAll(db.getRatesByStory(id))
-
             }
             _rateList.value = tempRateList
             s.value = count.toString()
