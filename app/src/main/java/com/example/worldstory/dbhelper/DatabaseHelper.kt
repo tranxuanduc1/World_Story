@@ -977,7 +977,37 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return users
     }
+    fun getUsersByRole(roleId:Int): List<User> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
+            WHERE ${Contract.UserEntry.COLUMN_ROLE_ID_FK} = ?
+        """.trimIndent(), arrayOf(roleId.toString()))
+        val users = mutableListOf<User>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+                val userName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_USERNAME))
+                val hashedPw =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_PASSWORD))
+                val email =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_EMAIL))
+                val nickName =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_NICKNAME))
+                val imgAvatar =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_IMAGE_AVATAR))
+                val roleID =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
+                val createdDate =
+                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
+                users.add(User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return users
+    }
     fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(

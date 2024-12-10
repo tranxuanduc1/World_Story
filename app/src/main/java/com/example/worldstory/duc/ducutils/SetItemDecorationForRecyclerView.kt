@@ -14,7 +14,7 @@ class SetItemDecorationForRecyclerView (var spaceT: Int,var spaceB: Int,var spac
         outRect.left=spaceL.dpToPx()
         outRect.right=spaceR.dpToPx()
         outRect.bottom=spaceB.dpToPx()
-
+        outRect.top=spaceT.dpToPx()
 //        if(parent.getChildItemId(view)<1){
 //            outRect.top=spaceT.dpToPx()
 //

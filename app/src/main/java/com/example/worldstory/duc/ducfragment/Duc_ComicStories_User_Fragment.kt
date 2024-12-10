@@ -23,6 +23,7 @@ import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
+import com.example.worldstory.duc.ducadapter.Duc_UseCreatedStory_Adapter
 import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.dpToPx
@@ -30,8 +31,11 @@ import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
+import com.example.worldstory.duc.ducviewmodel.DucUserViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucUserViewModelFactory
 import com.example.worldstory.model.Story
 
 // TODO: Rename parameter arguments, choose names that match
@@ -61,7 +65,9 @@ class Duc_ComicStories_User_Fragment : Fragment() {
     val ducGenreViewModel: DucGenreViewModel by viewModels {
         DucGenreViewModelFactory(requireContext())
     }
-
+    private val ducUserViewModel: DucUserViewModel by viewModels {
+        DucUserViewModelFactory(requireContext())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -118,11 +124,30 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
         })
         //tao truyen hot
-        ducStoryViewModel.stories.observe(viewLifecycleOwner, Observer{
+        ducStoryViewModel.fetchStoriesIsText(isText)
+        ducStoryViewModel.storiesIsText.observe(viewLifecycleOwner, Observer{
             stories->
-           setHotStoies(stories)
+            setHotStoies(stories)
             setHighScoreStoies(stories)
+            ducUserViewModel.fetchAuthorUser()
+            //tao user hot
+            ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer{
+                    users->
+                var numUsers=6
+                var limitUser= if(users.size>=5)  users.take(numUsers) else users
+                var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),limitUser,stories,isText)
+                var itemDeco= SetItemDecorationForRecyclerView(0,20,5,5)
+                binding.rvHotUsersComicStoriesUser.apply {
+                    adapter=adapterAuthorUser
+                    layoutManager= GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
+                    addItemDecoration(itemDeco)
+                }
+            })
         })
+
+
+
+
         //set image banner
         setImageBanner()
         //button search

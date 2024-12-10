@@ -41,8 +41,10 @@
     <string name="comfirmPasswordDoesNotMatchPassword">Mật khẩu xác nhận không trùng với mật khẩu</string>
     <string name="usernameAlreadyExists">Tên đăng nhập đã tồn tại</string>
     <string name="hotStories">Truyện nổi bật</string>
+    <string name="hotUsers">Thành viên nổi bật</string>
     <string name="highScoreStories">Truyện đánh giá cao</string>
     <string name="seeMore">Xem thêm</string>
+    <string name="story">Truyện</string>
     //----------------KEY----------------
     <string name="key_storyInfo">STORY_INFO</string>
     <string name="key_storiesByGenre">STORIES_BY_GENRE</string>

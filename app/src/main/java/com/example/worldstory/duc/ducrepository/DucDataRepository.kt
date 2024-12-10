@@ -5,6 +5,7 @@ import android.provider.CallLog
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducutils.AUTHOR
 import com.example.worldstory.duc.ducutils.GUEST
 import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
@@ -137,7 +138,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         dbHelper.insertComment(comment)
     }
     //user
-
+    fun getUsersByRole(roleId: Int): List<User>{
+        return dbHelper.getUsersByRole(roleId)
+    }
     fun addNewUserMember(
         username: String,
         password: String,
