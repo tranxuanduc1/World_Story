@@ -349,3 +349,6 @@ fun checkHashPassword(rawPassword: String, hashedPassword: String): Boolean {
 fun formatFloat(num: Float): String{
     return String.format("%.1f",num)
 }
+fun DateFromDateTime(dateTime: String): String {
+    return dateTime.split(" ")[0]
+}

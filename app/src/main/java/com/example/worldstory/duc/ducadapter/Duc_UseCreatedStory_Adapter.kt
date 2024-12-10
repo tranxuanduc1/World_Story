@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemUserCreatedStoryLayoutBinding
+import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
 import com.example.worldstory.duc.ducutils.loadImgURL
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 
@@ -40,7 +42,9 @@ class Duc_UseCreatedStory_Adapter(
         // so luong truyen ma user da dang tai
         binding.txtNumStoriesItemUserCreatedStory.text=numStoriesAreCreatedByUser.toString()
         binding.imgAvatarItemUserCreatedStory.loadImgURL(context,user.imgAvatar)
-
+        binding.btnToInfoUserItemUserCreatedStory.setOnClickListener{
+            context.toActivity(DucInfoUserActivity::class.java)
+        }
     }
 
     override fun getItemCount(): Int {
