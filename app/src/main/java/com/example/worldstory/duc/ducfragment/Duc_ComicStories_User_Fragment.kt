@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
 import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
+import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
@@ -26,6 +28,7 @@ import com.example.worldstory.duc.ducadapter.Duc_UseCreatedStory_Adapter
 import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.getKeyIsText
+import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
@@ -66,6 +69,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
     private val ducUserViewModel: DucUserViewModel by viewModels {
         DucUserViewModelFactory(requireContext())
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -87,23 +91,29 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             binding.linearContainerGridCardStoryFragmentComicStoriesUser
         ///////////////////////
 
-        var listBindingGrid: List<ListCardStoriesLayoutBinding>
-        ducStoryViewModel.genreAndStoriesByGenre.observe(viewLifecycleOwner, Observer { storiesByGenre ->
-            var numStories=6
-            createGridCardViewStory(
-                requireContext(),
-                inflater,
-                linearContainerGridCardStory,
-                storiesByGenre.first,
-                storiesByGenre.second.take(numStories),
-                isText
-            )
+        ducStoryViewModel.genreAndStoriesByGenre.observe(
+            viewLifecycleOwner,
+            Observer { storiesByGenre ->
+                var numStories = 6
+                numStories =
+                    if (storiesByGenre.second.size >= 6)
+                        numStories
+                    else
+                        storiesByGenre.second.size
+                createGridCardViewStory(
+                    requireContext(),
+                    inflater,
+                    linearContainerGridCardStory,
+                    storiesByGenre.first,
+                    storiesByGenre.second.take(numStories),
+                    isText
+                )
 
-        })
+            })
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
             // tat hieu ung load
-            binding.swipeRefreshComicStoriesUser.isRefreshing=false
+            binding.swipeRefreshComicStoriesUser.isRefreshing = false
 
             recyclerViewGenreButton.apply {
                 layoutManager = GridLayoutManager(
@@ -121,20 +131,17 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             }
 
         })
-        //tao truyen hot
+        //tao truyen hot,user hot, high score stories
         ducStoryViewModel.fetchStoriesIsText(isText)
-        ducStoryViewModel.storiesIsText.observe(viewLifecycleOwner, Observer{
-            stories->
+        ducStoryViewModel.storiesIsText.observe(viewLifecycleOwner, Observer { stories ->
             setHotStoies(stories)
             setHighScoreStoies(stories)
             setHotUser(stories)
+            //set image banner
+            setImageBanner(stories)
         })
 
 
-
-
-        //set image banner
-        setImageBanner()
         //button search
         setConfigButton()
 
@@ -149,26 +156,38 @@ class Duc_ComicStories_User_Fragment : Fragment() {
     }
 
 
+    private fun setImageBanner(stories: List<Story>) {
+        var random = java.util.Random()
+        var numImage = 3
+        val imageListBanner = ArrayList<SlideModel>() // Create image list
+        val storyListBanner = ArrayList<Story>()
+        //lay 3 truyen ngau nhien
+        for (i in 1..numImage) {
+            var ran = random.nextInt(stories.size)
+            var story = stories[ran]
+            imageListBanner.add(SlideModel(story.bgImgUrl))
+            storyListBanner.add(story)
+        }
 
-
-    private fun setImageBanner() {
-        var imgURL: String =
-            "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV"
-        var imgURL2: String =
-            "https://drive.usercontent.google.com/download?id=11lEXSgF8HsX8BOyZ_Tek5Q_TI1FzWaBz&authuser=0"
-        val imageList = ArrayList<SlideModel>() // Create image list
-
-        imageList.add(SlideModel(imgURL))
-        imageList.add(SlideModel(imgURL2))
-        imageList.add(SlideModel(imgURL2))
-
+            //gan 3 truyen ngau nhien vao imageslider
         val imageSlider = binding.imgBannerComicUserstory
-        imageSlider.setImageList(imageList, ScaleTypes.CENTER_CROP)
+        imageSlider.setImageList(imageListBanner, ScaleTypes.CENTER_CROP)
         imageSlider.startSliding(3000)
+        imageSlider.setItemClickListener(object : ItemClickListener {
+            override fun doubleClick(position: Int) {
+
+            }
+
+            override fun onItemSelected(position: Int) {
+                requireContext().toActivity(
+                    DucStoryOverviewActivity::class.java,
+                    getKeyStoryInfo(requireContext()),
+                    storyListBanner[position]
+                )
+            }
+
+        })
     }
-
-
-
 
 
     fun toSearchActivity() {
@@ -176,58 +195,59 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         intent.putExtra(getKeyIsText(requireContext()), isText)
         startActivity(intent)
     }
+
     private fun getHotUsers(
         users: List<User>,
         numUsers: Int,
         stories: List<Story>
-    ): List<Pair< User, Int>> {
-        var newMap=mutableMapOf<Int,Int>()
-        stories.forEach{
+    ): List<Pair<User, Int>> {
+        var newMap = mutableMapOf<Int, Int>()
+        stories.forEach {
             //lay duoc so lan cac user tao truyen
-                newMap[it.userID]=newMap.getOrDefault(it.userID,0)+1
-            }
-        var newMapB=mutableMapOf<User, Int>()
-        users.forEach{
-            newMapB[it]=newMap.getOrDefault(it.userID,0)
+            newMap[it.userID] = newMap.getOrDefault(it.userID, 0) + 1
         }
-        var newPairList= newMapB.toList().sortedByDescending { it.second }
-        newPairList=if(newPairList.size>=numUsers) newPairList.take(numUsers) else newPairList
+        var newMapB = mutableMapOf<User, Int>()
+        users.forEach {
+            newMapB[it] = newMap.getOrDefault(it.userID, 0)
+        }
+        var newPairList = newMapB.toList().sortedByDescending { it.second }
+        newPairList = if (newPairList.size >= numUsers) newPairList.take(numUsers) else newPairList
         return newPairList
-        }
-
+    }
 
 
     private fun setHotStoies(stories: List<Story>) {
-        var numberStoryShow=6
+        var numberStoryShow = 6
         // lay 6 phan tu
-        var limitStories=stories.take(numberStoryShow)
-        var adapterHotStories= Duc_CardStoryItem_Adapter(requireContext(), ArrayList( limitStories))
+        var limitStories = stories.take(numberStoryShow)
+        var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
         binding.rvHotStoriesComicStoriesUser.apply {
-            adapter=adapterHotStories
+            adapter = adapterHotStories
             layoutManager =
                 GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
         }
     }
+
     private fun setHighScoreStoies(stories: List<Story>) {
-        var numberStoryShow=5
-        var numCol=1
-        var numSpace=20
-        val itemDeco= SetItemDecorationForRecyclerView(0,10,5,5)
+        var numberStoryShow = 5
+        var numCol = 1
+        var numSpace = 20
+        val itemDeco = SetItemDecorationForRecyclerView(0, 10, 5, 5)
 
         //lay danh sach story tuong tac nhieu nhat
         ducStoryViewModel.fetchComboHighScoreStories(stories)
-        ducStoryViewModel.comboHighScoreStories.observe(viewLifecycleOwner, Observer{
-            combo->
+        ducStoryViewModel.comboHighScoreStories.observe(viewLifecycleOwner, Observer { combo ->
             //lay 5 phan tu co diem cao nhat
 
-            var limitStories=combo.sortedByDescending { it.numRating }.take(numberStoryShow)
-            var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
+            var limitStories = combo.sortedByDescending { it.numRating }.take(numberStoryShow)
+            var adapterHighScoreStories =
+                Duc_HighScoreStory_Adapter(requireContext(), ArrayList(limitStories))
 
             binding.rvHighScoreStoriesComicStoriesUser.apply {
-                adapter=adapterHighScoreStories
+                adapter = adapterHighScoreStories
                 layoutManager =
-                    GridLayoutManager(context, numCol,LinearLayoutManager.VERTICAL,false)
+                    GridLayoutManager(context, numCol, LinearLayoutManager.VERTICAL, false)
                 addItemDecoration(itemDeco)
                 setHasFixedSize(true)
 
@@ -236,36 +256,43 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
 
     }
+
     private fun setHotUser(stories: List<Story>) {
         ducUserViewModel.fetchAuthorUser()
         //tao user hot
-        ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer{
-                users->
-            var numUsers=6
-            var topUser=getHotUsers(users,numUsers,stories)
-            var limitUser= if(users.size>=5)  users.take(numUsers) else users
-            var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),topUser,isText)
-            var itemDeco= SetItemDecorationForRecyclerView(0,5,1,1)
+        ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer { users ->
+            var numUsers = 6
+            var topUser = getHotUsers(users, numUsers, stories)
+            var limitUser = if (users.size >= 5) users.take(numUsers) else users
+            var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
+            var itemDeco = SetItemDecorationForRecyclerView(0, 5, 1, 1)
             binding.rvHotUsersComicStoriesUser.apply {
-                adapter=adapterAuthorUser
-                layoutManager= GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
+                adapter = adapterAuthorUser
+                layoutManager =
+                    GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
                 addItemDecoration(itemDeco)
             }
         })
     }
+
     fun setConfigButton() {
         var searchImgBtn = binding.searchButtonComicStoriesUser
         searchImgBtn.setOnClickListener {
             toSearchActivity()
         }
         // tai lai data
-        binding.swipeRefreshComicStoriesUser.setOnRefreshListener{
+        binding.swipeRefreshComicStoriesUser.setOnRefreshListener {
             ducGenreViewModel.fetchGenres()
             ducStoryViewModel.fetchStories()
+            ducStoryViewModel.fetchStoriesIsText(isText)
         }
         // xem toan bo story
-        binding.txtSeeMoreHotStoriesComicStoriesUser.setOnClickListener{
-            requireContext().toActivity(DucAllStoriesActivity::class.java,getKeyIsText(requireContext()),isText)
+        binding.txtSeeMoreHotStoriesComicStoriesUser.setOnClickListener {
+            requireContext().toActivity(
+                DucAllStoriesActivity::class.java,
+                getKeyIsText(requireContext()),
+                isText
+            )
         }
     }
 
