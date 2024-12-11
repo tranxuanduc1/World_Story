@@ -135,7 +135,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 var topUser=getHotUsers(users,numUsers,stories)
                 var limitUser= if(users.size>=5)  users.take(numUsers) else users
                 var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),topUser,isText)
-                var itemDeco= SetItemDecorationForRecyclerView(0,20,5,5)
+                var itemDeco= SetItemDecorationForRecyclerView(0,5,1,1)
                 binding.rvHotUsersComicStoriesUser.apply {
                     adapter=adapterAuthorUser
                     layoutManager= GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
@@ -225,7 +225,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         var numberStoryShow=5
         var numCol=1
         var numSpace=20
-        val itemDeco= SetItemDecorationForRecyclerView(10,numSpace,10,10)
+        val itemDeco= SetItemDecorationForRecyclerView(0,10,5,5)
         //lay 5 phan tu co diem cao nhat
         var limitStories=stories.sortedByDescending { it.score }.take(numberStoryShow)
         var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
