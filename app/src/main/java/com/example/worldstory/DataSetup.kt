@@ -262,21 +262,21 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
                     '${bgImgUrls[index]}', '${dateTimeNow()}', 5, 1, $randomUserId)
         """)
     }
-    // Giả sử bạn đã có một biến db để truy cập cơ sở dữ liệu
+
     val random = java.util.Random()
 
     for (storyId in 1..40) {
-        // Chọn ngẫu nhiên từ 1 đến 4 thể loại cho mỗi câu chuyện
-        val genreCount = random.nextInt(4) + 1 // Số lượng thể loại từ 1 đến 4
+        // chon 1->4 the loai cho moi story
+        val genreCount = random.nextInt(4) + 1
         val selectedGenres = mutableSetOf<Int>()
 
-        // Chọn ngẫu nhiên các thể loại mà không bị trùng lặp
+        // chon ngau nhien the loai cho story ma khong trung
         while (selectedGenres.size < genreCount) {
-            val genreId = random.nextInt(7) + 1 // Thể loại từ 1 đến 7
+            val genreId = random.nextInt(7) + 1
             selectedGenres.add(genreId)
         }
 
-        // Thêm dữ liệu vào bảng
+        // them vao db
         selectedGenres.forEach { genreId ->
             db?.execSQL("""
             INSERT INTO ${Contract.StoryGenreEntry.TABLE_NAME} 
