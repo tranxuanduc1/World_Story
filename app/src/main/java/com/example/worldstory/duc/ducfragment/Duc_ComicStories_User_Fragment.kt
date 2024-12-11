@@ -17,7 +17,6 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.myapplication.databinding.FragmentDucComicStoriesUserBinding
-import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
 import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
@@ -142,13 +141,10 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         })
 
 
+        setConfigView()
         //button search
         setConfigButton()
 
-
-        //testDatabase()
-//
-        //Picasso.get().load(url2).fit().into(binding.imgTestComicUserFragment)
 
 //       ---------------------------------------------------------------------------------
         // Inflate the layout for this fragment
@@ -169,7 +165,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             storyListBanner.add(story)
         }
 
-            //gan 3 truyen ngau nhien vao imageslider
+        //gan 3 truyen ngau nhien vao imageslider
         val imageSlider = binding.imgBannerComicUserstory
         imageSlider.setImageList(imageListBanner, ScaleTypes.CENTER_CROP)
         imageSlider.startSliding(3000)
@@ -223,34 +219,24 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
         binding.rvHotStoriesComicStoriesUser.apply {
             adapter = adapterHotStories
-            layoutManager =
-                GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
-            setHasFixedSize(true)
         }
     }
 
     private fun setHighScoreStoies(stories: List<Story>) {
         var numberStoryShow = 5
-        var numCol = 1
-        var numSpace = 20
-        val itemDeco = SetItemDecorationForRecyclerView(0, 10, 5, 5)
 
         //lay danh sach story tuong tac nhieu nhat
         ducStoryViewModel.fetchComboHighScoreStories(stories)
         ducStoryViewModel.comboHighScoreStories.observe(viewLifecycleOwner, Observer { combo ->
-            //lay 5 phan tu co diem cao nhat
 
+
+            //lay 5 phan tu co diem cao nhat
             var limitStories = combo.sortedByDescending { it.numRating }.take(numberStoryShow)
             var adapterHighScoreStories =
                 Duc_HighScoreStory_Adapter(requireContext(), ArrayList(limitStories))
 
             binding.rvHighScoreStoriesComicStoriesUser.apply {
                 adapter = adapterHighScoreStories
-                layoutManager =
-                    GridLayoutManager(context, numCol, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(itemDeco)
-                setHasFixedSize(true)
-
             }
         })
 
@@ -263,16 +249,44 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer { users ->
             var numUsers = 6
             var topUser = getHotUsers(users, numUsers, stories)
-            var limitUser = if (users.size >= 5) users.take(numUsers) else users
             var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
-            var itemDeco = SetItemDecorationForRecyclerView(0, 5, 1, 1)
             binding.rvHotUsersComicStoriesUser.apply {
                 adapter = adapterAuthorUser
-                layoutManager =
-                    GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(itemDeco)
+
             }
         })
+    }
+
+    private fun setConfigView() {
+
+        // hot stories
+        var numColHotStories = 3
+        binding.rvHotStoriesComicStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(context, numColHotStories, LinearLayoutManager.VERTICAL, false)
+            setHasFixedSize(true)
+        }
+
+        //high story
+        var numColHighStories = 1
+        val itemDecoHighStories = SetItemDecorationForRecyclerView(0, 20, 10, 10)
+        binding.rvHighScoreStoriesComicStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(context, numColHighStories, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(itemDecoHighStories)
+            setHasFixedSize(true)
+
+        }
+
+        //hot user
+        var itemDecoHotUser = SetItemDecorationForRecyclerView(0, 20, 10, 10)
+        binding.rvHotUsersComicStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(itemDecoHotUser)
+        }
+
+
     }
 
     fun setConfigButton() {

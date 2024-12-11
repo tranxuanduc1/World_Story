@@ -14,9 +14,11 @@ import com.example.myapplication.databinding.FragmentDucSettingUserBinding
 import com.example.worldstory.AdminMainActivity
 import com.example.worldstory.StartActivity
 import com.example.worldstory.duc.ducactivity.DucChapterMarkedActivity
+import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
 import com.example.worldstory.duc.ducactivity.DucLoginActivity
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.clearUserSession
+import com.example.worldstory.duc.ducutils.getKeyUserInfo
 import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
 import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
 import com.example.worldstory.duc.ducutils.isUserCurrentMember
@@ -24,6 +26,8 @@ import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
+import com.example.worldstory.model.Role
+import com.example.worldstory.model.User
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,8 +70,9 @@ class Duc_Setting_User_Fragment : Fragment() {
         ducAccountManagerViewModel.userSessionAndRole.observe(viewLifecycleOwner, Observer{
             userAndRole->
 
-            binding.imgAvatarSettingUserFragment.loadImgURL(requireContext(),userAndRole.first.imgAvatar)
-            binding.txtNickanmeSettingUserFragment.text=userAndRole.first.nickName
+
+            setInfoUser(userAndRole)
+
         })
         setViewButton()
         setConfigButton()
@@ -76,6 +81,8 @@ class Duc_Setting_User_Fragment : Fragment() {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_setting_user, container, false)
     }
+
+
 
     private fun setViewButton() {
         if(requireContext().isUserCurrentAdmin() || requireContext().isUserCurrentAuthor()){
@@ -130,7 +137,15 @@ class Duc_Setting_User_Fragment : Fragment() {
            handleLogout()
         }
     }
+    private fun setInfoUser(userAndRole: Pair<User, Role>) {
 
+        binding.imgAvatarSettingUserFragment.loadImgURL(requireContext(),userAndRole.first.imgAvatar)
+        binding.txtNickanmeSettingUserFragment.text=userAndRole.first.nickName
+        // chuyen den tran user khi nhan anh
+        binding.imgAvatarSettingUserFragment.setOnClickListener{
+            requireContext().toActivity(DucInfoUserActivity::class.java, getKeyUserInfo(requireContext()),userAndRole.first)
+        }
+    }
     private fun handleLogout() {
         requireContext().clearUserSession()
         //quay cho ve man hinh chinh

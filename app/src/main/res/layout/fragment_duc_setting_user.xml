@@ -28,7 +28,9 @@
             android:layout_height="100dp"
             android:src="@drawable/cat"
             android:scaleType="centerCrop"
-            android:background="@android:color/transparent"
+            android:background="@drawable/image_button_search_slector"
+            android:clickable="true"
+
             />
     </androidx.cardview.widget.CardView>
 
@@ -65,16 +67,17 @@
                     android:drawablePadding="20dp"
                     android:gravity="start|center_vertical"
                     />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:background="@drawable/image_button_search_slector"
-                    android:text="@string/titleCommentHistorySetting"
-                    android:drawableLeft="@drawable/icon_comment_history"
-                    android:paddingStart="20dp"
-                    android:drawablePadding="20dp"
-                    android:gravity="start|center_vertical"
-                    />
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    -->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="70dp"-->
+<!--                    android:background="@drawable/image_button_search_slector"-->
+<!--                    android:text="@string/titleCommentHistorySetting"-->
+<!--                    android:drawableLeft="@drawable/icon_comment_history"-->
+<!--                    android:paddingStart="20dp"-->
+<!--                    android:drawablePadding="20dp"-->
+<!--                    android:gravity="start|center_vertical"-->
+<!--                    />-->
 
         <View
             android:layout_width="match_parent"

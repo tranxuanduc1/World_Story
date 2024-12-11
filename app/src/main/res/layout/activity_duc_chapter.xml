@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeRefresh_chapter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.worldstory.duc.ducactivity.DucChapterActivity"
@@ -14,7 +13,20 @@
     android:layout_height="match_parent"
     >
 
+<!--<androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:id="@+id/swipeRefresh_chapter"-->
 
+<!--    >-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        >-->
+<!--       -->
+<!--    </LinearLayout>-->
+<!--</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollParagraph_chapter"
         android:layout_width="match_parent"
@@ -30,7 +42,7 @@
             >
 
 
-                        <TextView
+            <TextView
                 android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,6 +100,8 @@
             />
     </LinearLayout>
 
+
+
     <FrameLayout
 
         android:id="@+id/frameTop_chapter"
@@ -105,13 +119,27 @@
             android:layout_gravity="center_vertical"
             />
         <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
             android:id="@+id/txt_titleChapter_chapter"
-            android:layout_width="wrap_content"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:text="@string/buttonReadFromChapter1StoryOverview"
             android:layout_gravity="center"
             android:textSize="18sp"
             />
+        <ImageButton
+            android:id="@+id/btn_refresh_chapter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_refesh"
+            android:background="@drawable/image_button_search_slector"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginEnd="50dp"
+            android:scaleType="centerCrop"
+            />
+
         <ImageButton
             android:id="@+id/btnOpenCommentDialog_chapter"
             android:layout_width="wrap_content"
@@ -259,7 +287,7 @@
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:text="@string/comment"
                     android:textColor="@color/duc_skin"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/frame_containerCommentReplyInInputKeyboard_chapter"
@@ -335,4 +363,4 @@
 
     </FrameLayout>
 </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</FrameLayout>

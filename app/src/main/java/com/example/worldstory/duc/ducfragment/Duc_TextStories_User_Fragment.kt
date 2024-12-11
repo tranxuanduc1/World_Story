@@ -17,6 +17,7 @@ import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.myapplication.databinding.FragmentDucTextStoriesBinding
+import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
@@ -142,6 +143,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
             setImageBanner(stories)
         })
 
+
+        setConfigView()
         //button search
         setConfigButton()
 
@@ -150,21 +153,13 @@ class Duc_TextStories_User_Fragment : Fragment() {
         return view
     }
 
-    private fun setConfigButton() {
-        var searchImgBtn = binding.searchButtonTextStoriesUser
-        searchImgBtn.setOnClickListener {
-            toSearchActivity()
-        }
-        binding.swipeRefreshTextStoriesUser.setOnRefreshListener {
-            ducGenreViewModel.fetchGenres()
-        }
-    }
 
     fun toSearchActivity() {
         var intent = Intent(context, DucSearchActivity::class.java)
         intent.putExtra(getKeyIsText(requireContext()), isText)
         startActivity(intent)
     }
+
     private fun getHotUsers(
         users: List<User>,
         numUsers: Int,
@@ -192,17 +187,12 @@ class Duc_TextStories_User_Fragment : Fragment() {
         var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
         binding.rvHotStoriesTextStoriesUser.apply {
             adapter = adapterHotStories
-            layoutManager =
-                GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
-            setHasFixedSize(true)
+
         }
     }
 
     private fun setHighScoreStoies(stories: List<Story>) {
         var numberStoryShow = 5
-        var numCol = 1
-        var numSpace = 20
-        val itemDeco = SetItemDecorationForRecyclerView(0, 10, 5, 5)
 
         //lay danh sach story tuong tac nhieu nhat
         ducStoryViewModel.fetchComboHighScoreStories(stories)
@@ -215,10 +205,7 @@ class Duc_TextStories_User_Fragment : Fragment() {
 
             binding.rvHighScoreStoriesTextStoriesUser.apply {
                 adapter = adapterHighScoreStories
-                layoutManager =
-                    GridLayoutManager(context, numCol, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(itemDeco)
-                setHasFixedSize(true)
+
 
             }
         })
@@ -232,17 +219,45 @@ class Duc_TextStories_User_Fragment : Fragment() {
         ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer { users ->
             var numUsers = 6
             var topUser = getHotUsers(users, numUsers, stories)
-            var limitUser = if (users.size >= 5) users.take(numUsers) else users
             var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
-            var itemDeco = SetItemDecorationForRecyclerView(0, 5, 1, 1)
             binding.rvHotUsersTextStoriesUser.apply {
                 adapter = adapterAuthorUser
-                layoutManager =
-                    GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
-                addItemDecoration(itemDeco)
             }
         })
     }
+
+    private fun setConfigView() {
+
+        // hot stories
+        var numColHotStories = 3
+        binding.rvHotStoriesTextStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(context, numColHotStories, LinearLayoutManager.VERTICAL, false)
+            setHasFixedSize(true)
+        }
+
+        //high story
+        var numColHighStories = 1
+        val itemDecoHighStories = SetItemDecorationForRecyclerView(0, 20, 10, 10)
+        binding.rvHighScoreStoriesTextStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(context, numColHighStories, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(itemDecoHighStories)
+            setHasFixedSize(true)
+
+        }
+
+        //hot user
+        var itemDecoHotUser = SetItemDecorationForRecyclerView(0, 20, 10, 10)
+        binding.rvHotUsersTextStoriesUser.apply {
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(itemDecoHotUser)
+        }
+
+
+    }
+
     private fun setImageBanner(stories: List<Story>) {
         var random = java.util.Random()
         var numImage = 3
@@ -274,6 +289,27 @@ class Duc_TextStories_User_Fragment : Fragment() {
             }
 
         })
+    }
+
+    private fun setConfigButton() {
+        var searchImgBtn = binding.searchButtonTextStoriesUser
+        searchImgBtn.setOnClickListener {
+            toSearchActivity()
+        }
+        // tai lai data
+        binding.swipeRefreshTextStoriesUser.setOnRefreshListener {
+            ducGenreViewModel.fetchGenres()
+            ducStoryViewModel.fetchStories()
+            ducStoryViewModel.fetchStoriesIsText(isText)
+        }
+        // xem toan bo story
+        binding.txtSeeMoreHotStoriesTextStoriesUser.setOnClickListener {
+            requireContext().toActivity(
+                DucAllStoriesActivity::class.java,
+                getKeyIsText(requireContext()),
+                isText
+            )
+        }
     }
 
     companion object {

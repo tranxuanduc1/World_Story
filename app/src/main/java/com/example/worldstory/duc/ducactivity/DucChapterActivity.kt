@@ -1,10 +1,8 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -12,12 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityDucChapterBinding
-import com.example.myapplication.databinding.CommentOppositeLayoutBinding
-import com.example.myapplication.databinding.CommentSelfLayoutBinding
 import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
 import com.example.worldstory.duc.ducadapter.Duc_Comment_Adapter
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
@@ -25,18 +19,16 @@ import com.example.worldstory.duc.ducdialog.DucLoginDialogFragment
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
-import com.example.worldstory.duc.ducutils.getKey_chapterInfo
-import com.example.worldstory.duc.ducutils.getKey_mainChapter
-import com.example.worldstory.duc.ducutils.getKey_nextChapter
-import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.getKeyChapterInfo
+import com.example.worldstory.duc.ducutils.getKeyMainChapter
+import com.example.worldstory.duc.ducutils.getKeyNextChapter
+import com.example.worldstory.duc.ducutils.getKeyPreviousChapter
 import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.isUserCurrentGuest
-import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
-import com.example.worldstory.duc.ducutils.scrollToBottom
 import com.example.worldstory.duc.ducutils.toBoolean
 import com.example.worldstory.duc.ducviewmodel.DucChapterHistoryViewModel
 import com.example.worldstory.duc.ducviewmodel.DucChapterMarkViewModel
@@ -101,7 +93,7 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
         enableEdgeToEdge()
         setContentView(view)
 
-        var key: String = getKey_chapterInfo(this)
+        var key: String = getKeyChapterInfo(this)
 
 
 
@@ -141,8 +133,8 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
         })
         //lam moi
         ducSwipeRefreshViewModel.refreshView.observe(this, Observer { refresh ->
-            // xoa hieu ung load
-            binding.swipeRefreshChapter.isRefreshing = false
+//            // xoa hieu ung load
+//            binding.swipeRefreshChapter.isRefreshing = false
             loadContent()
         })
 
@@ -164,10 +156,10 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
     private fun loadData(key: String) {
         var bundle = intent.getBundleExtra(key)
         if (bundle is Bundle) {
-            mainChapter = bundle.getParcelable(getKey_mainChapter(this))
-            nextChapter = bundle.getParcelable(getKey_nextChapter(this))
+            mainChapter = bundle.getParcelable(getKeyMainChapter(this))
+            nextChapter = bundle.getParcelable(getKeyNextChapter(this))
             previousChapter =
-                bundle.getParcelable(getKey_previousChapter(this))
+                bundle.getParcelable(getKeyPreviousChapter(this))
             storyInfo = bundle.getParcelable(getKeyStoryInfo(this))
             ducChapterViewModel.setPreMainNextChapter(mainChapter, previousChapter, nextChapter)
 
@@ -534,9 +526,13 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
             }
 //
         }
-        binding.swipeRefreshChapter.setOnRefreshListener {
+        // tai lai noi dung
+        binding.btnRefreshChapter.setOnClickListener{
             ducSwipeRefreshViewModel.fetchRefreshView()
         }
+//        binding.swipeRefreshChapter.setOnRefreshListener {
+//            ducSwipeRefreshViewModel.fetchRefreshView()
+//        }
     }
     private fun setDialogRequestLogin() {
         dialogRequestLogin= DucLoginDialogFragment()
