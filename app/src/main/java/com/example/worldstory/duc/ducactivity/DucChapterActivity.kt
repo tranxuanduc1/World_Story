@@ -281,6 +281,8 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
         }
         // set even mark chapter button
         binding.btnMarkChapterChapter.setOnClickListener {
+            //kiem tra co phai tai koan khach
+            if (checkThenHandleGuestUser())return@setOnClickListener
             mainChapter?.let { main ->
                 isMark = !isMark
                 if (isMark) {

@@ -37,6 +37,7 @@ class DucLoginDialogFragment: DialogFragment() {
         val binding= DialogRequestLoginBinding.inflate(layoutInflater)
         val view = binding.root
         binding.btnLoginDialogComfirmLogin.setOnClickListener{
+            dismiss()
             var context=when {
                 parentFragment is DialogListener -> requireContext()
                 context is DialogListener -> context
