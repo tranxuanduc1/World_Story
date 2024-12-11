@@ -2,37 +2,75 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="7dp">
+    android:paddingVertical="1dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/cl1_rate"
-            android:padding="2dp"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_vertical">
+
+            <TextView
+                android:id="@+id/cl1_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="2dp"
+                android:text="1000"
+                android:textColor="@color/blue"
+                android:textSize="5sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="nickname: "
+                android:textColor="@color/Teal"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/cl2_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Idontdie"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username: "
             android:textColor="@color/flame"
-            android:textSize="11sp" />
-    </com.google.android.material.card.MaterialCardView>
+            android:textSize="8sp" />
 
+        <TextView
+            android:id="@+id/cl3_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I dont wan die"
+            android:textSize="10sp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/cl2_rate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Idontdie"
-        android:textColor="@color/Teal"
-        android:textSize="17sp" />
-
-    <TextView
-        android:id="@+id/cl3_rate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username: I dont wan die"
-        android:textSize="12sp" />
 
 </LinearLayout>

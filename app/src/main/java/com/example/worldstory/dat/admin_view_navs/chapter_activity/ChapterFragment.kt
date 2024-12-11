@@ -3,6 +3,7 @@ package com.example.worldstory.dat.admin_view_navs.chapter_activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
@@ -111,15 +113,17 @@ class ChapterFragment() : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
         binding.storyViewModel = storyViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // gán thuộc tính truyện hiện tại
         idStory = arguments?.getInt("idStory")
+        Log.w("id", idStory.toString())
         storyViewModel.setStoryByID(idStory)
         storyViewModel.setIDStory(idStory)
 
@@ -142,16 +146,23 @@ class ChapterFragment() : Fragment() {
         storyViewModel.chapterListByStory.observe(viewLifecycleOwner) { newChapterList ->
             chapterAdapter.updateList(newChapterList)
         }
+// view detail
+        binding.viewDetails.setOnClickListener {
+            if (binding.tomTat.isSingleLine()) {
+                binding.tomTat.setSingleLine(false)
+            } else
+                binding.tomTat.setSingleLine(true)
+        }
 
 
         // edit description
-        binding.editDes.setOnClickListener {
+        binding.editDeBtn.setOnClickListener {
             if (binding.tomTat.visibility == View.VISIBLE) {
                 binding.tomTat.visibility = View.GONE
                 binding.editDes.visibility = View.VISIBLE
             } else {
-                binding.tomTat.visibility = View.GONE
-                binding.editDes.visibility = View.VISIBLE
+                binding.tomTat.visibility = View.VISIBLE
+                binding.editDes.visibility = View.GONE
             }
 
         }
@@ -183,10 +194,14 @@ class ChapterFragment() : Fragment() {
         binding.saveChanges.setOnClickListener {
             storyViewModel.storyBgImg.clear()
             storyViewModel.storyImg.clear()
+            var uploadAvt = false
+            var upload = false
             lifecycleScope.launch {
                 try {
-                    val upload = uploadImageAsynce(uribg, storyViewModel.storyBgImg)
-                    val uploadAvt = uploadImageAsynce(uriav, storyViewModel.storyImg)
+                    if (::uriav.isInitialized)
+                        uploadAvt = uploadImageAsynce(uriav, storyViewModel.storyImg)
+                    if (::uribg.isInitialized)
+                        upload = uploadImageAsynce(uribg, storyViewModel.storyBgImg)
 
 
                     if (upload && uploadAvt) {
@@ -194,12 +209,24 @@ class ChapterFragment() : Fragment() {
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
                         storyViewModel.setStoryByID(idStory)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Lưu không thành công",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    }
+                    else if(upload){
+                        storyViewModel.updateBackGroundStory(story)
+                        Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
+                            .show()
+                        storyViewModel.setStoryByID(idStory)
+                    }
+                    else if(uploadAvt){
+                        storyViewModel.updateFaceStory(story)
+                        Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
+                            .show()
+                        storyViewModel.setStoryByID(idStory)
+                    }
+                    else {
+                        storyViewModel.updateInforStory(story)
+                        Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
+                            .show()
+                        storyViewModel.setStoryByID(idStory)
                         storyViewModel.resetValue()
                         storyViewModel.setStoryByID(idStory)
                     }

@@ -8,8 +8,6 @@
             android:layout_height="wrap_content"
 android:paddingVertical="12dp"
             android:orientation="horizontal"
-            android:elevation="10dp"
-
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 

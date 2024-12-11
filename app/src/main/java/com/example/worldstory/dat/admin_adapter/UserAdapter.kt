@@ -22,7 +22,7 @@ import com.example.worldstory.dat.admin_viewholder.UserViewHolder
 import com.squareup.picasso.Picasso
 
 class UserAdapter(
-    private var userList: List<User>,
+    private val userList: MutableList<User>,
     private var color: Int,
     private val fragmentManager: FragmentManager
 ) :
@@ -40,6 +40,8 @@ class UserAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = filteredList[position]
+
+
         Picasso.get().load(user.imgAvatar).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
         holder.column1.text = "Nickname: ${user.nickName}"
@@ -91,7 +93,8 @@ class UserAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun update(users: List<User>) {
-        userList = users
+        userList.clear()
+        userList.addAll(users)
         notifyDataSetChanged()
         Log.i("Observe", "da update")
     }

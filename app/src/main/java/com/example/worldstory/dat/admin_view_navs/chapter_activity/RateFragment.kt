@@ -1,5 +1,6 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -71,7 +72,7 @@ class RateFragment : Fragment() {
         ).create(RateViewModel::class.java)
 
         binding.rateViewModel = rateViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         Log.w("id", idStory.toString())
         val pieChart = binding.pieChart
@@ -83,12 +84,15 @@ class RateFragment : Fragment() {
                 Toast.makeText(requireContext(), "No slice selected", Toast.LENGTH_SHORT).show()
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 if (e is PieEntry) {
                     val label = e.label
                     for (i in 1 until maxScore + 1) {
                         if (label.contains("$i")) {
                             rateViewModel.setRateListBtScore(i)
+                            binding.sao.text = "$i sao"
+                            binding.numberUserRate.text = "Số người đánh giá $i sao:"
                             break
                         }
                     }
@@ -96,26 +100,35 @@ class RateFragment : Fragment() {
             }
         })
 
-        rateViewModel.rateList.observe(viewLifecycleOwner) {
-            updatePieChart(pieChart)
-        }
 
         //nạp rates
         binding.rateList.layoutManager = LinearLayoutManager(requireContext())
 
         rateAdapter = RateAdapter(
-            rateViewModel.users.value ?: emptyList(), requireContext()
+            rateViewModel.users.value?.toMutableList() ?: mutableListOf(),
+            rateViewModel.rateListByScore.value?.toMutableList() ?: mutableListOf(),
+            rateViewModel,
+            requireContext()
         )
 
         binding.rateList.adapter = rateAdapter
 
-        rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
-            rateAdapter.update(rateViewModel.users.value ?: emptyList())
+        rateViewModel.rateList.observe(viewLifecycleOwner) {
+            Log.w("del1",rateViewModel.rateList.value?.size.toString())
+            updatePieChart(pieChart)
         }
+
+        rateViewModel.rateListByScore.observe(viewLifecycleOwner) {
+            rateAdapter.update(
+                rateViewModel.users.value?.toMutableList() ?: mutableListOf(),
+                rateViewModel.rateListByScore.value?.toMutableList() ?: mutableListOf()
+            )
+        }
+
     }
 
     fun updatePieChart(pieChart: PieChart) {
-
+rateRatioList.clear()
         // Dữ liệu cho biểu đồ
         val entries = ArrayList<PieEntry>()
 
@@ -139,7 +152,7 @@ class RateFragment : Fragment() {
         // Tạo PieData
         val pieData = PieData(dataSet)
         pieData.setValueTextSize(12f)
-        pieData.setValueTextColor(android.graphics.Color.WHITE)
+        pieData.setValueTextColor(Color.WHITE)
 
 
         // Gắn dữ liệu vào biểu đồ

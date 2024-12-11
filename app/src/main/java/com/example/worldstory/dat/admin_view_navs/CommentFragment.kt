@@ -1,19 +1,31 @@
 package com.example.worldstory.dat.admin_view_navs
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentCommentBinding
 import com.example.worldstory.dat.admin_adapter.CommentAdapter
-import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterFragment
-import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
-import com.example.worldstory.model_for_test.Comment
+import com.example.worldstory.dat.admin_viewmodels.CommentViewModel
+import com.example.worldstory.dat.admin_viewmodels.CommentViewModelFactory
+import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Comment
+import com.example.worldstory.model.User
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class CommentFragment : Fragment() {
@@ -28,52 +40,103 @@ class CommentFragment : Fragment() {
         }
     }
 
-
-    private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var recyclerView: RecyclerView
+    private var idStory: Int? = -1
+    private lateinit var binding: FragmentCommentBinding
+    private lateinit var commentViewModel: CommentViewModel
     private lateinit var commentAdapter: CommentAdapter
-    private val commentList = mutableListOf<Comment>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_comment, container, false)
+        binding = FragmentCommentBinding.inflate(layoutInflater)
+        return binding.root
     }
 
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
-        //thiết lập quan sát sự kiện nút add
-        sharedViewModel._add.observe(viewLifecycleOwner) {isAddEvent->
-            if(isAddEvent==true) {
-                onAddButtonClicked()  // Gọi hàm xử lý khi sự kiện xảy ra
-                sharedViewModel.addHandled()
-            }
+
+
+        idStory = arguments?.getInt("idStory")
+        commentViewModel = CommentViewModelFactory(
+            DatabaseHelper(requireContext()),
+            idStory
+        ).create(CommentViewModel::class.java)
+        binding.commentViewModel = commentViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        val barChart = binding.barChart
+
+        updateBarChart(barChart)
+
+        commentViewModel.comments.observe(viewLifecycleOwner) {
+            updateBarChart(barChart)
         }
+
+
         // Khởi tạo RecyclerView
-        recyclerView = view.findViewById(R.id.recycleView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recycleView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Khởi tạo dữ liệu mẫu
-        var i=1
-        while(i<25){
-            commentList.add(Comment("Bình luận 1", "Hứa Quang Đạt", "12/09/2024", R.drawable.baseline_search_24))
-            commentList.add(Comment("Bình luận 2", "Người dùng khác", "15/09/2024", R.drawable.outline_mode_comment_24))
-            i++
+        commentAdapter = CommentAdapter(
+            commentViewModel.commentUserMap.value?.toMutableMap()?: mutableMapOf(),
+            commentViewModel.comments.value?.toMutableList()?: mutableListOf(),
+            requireContext(),
+            commentViewModel
+        )
+        binding.recycleView.adapter = commentAdapter
+        // Gán adapter cho RecyclerView
+
+
+        commentViewModel.comments.observe(viewLifecycleOwner)
+        {
+
+            commentAdapter.updateList(
+                commentViewModel.commentUserMap.value?.toMutableMap()?: mutableMapOf(),
+                commentViewModel.comments.value?.toMutableList()?: mutableListOf()
+            )
+
+            updateBarChart(barChart)
         }
 
-        // Gán adapter cho RecyclerView
-        commentAdapter = CommentAdapter(commentList)
-        recyclerView.adapter = commentAdapter
+
     }
 
-    private fun onAddButtonClicked() {
-        Toast.makeText(requireContext(),"comment", Toast.LENGTH_LONG).show()    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateBarChart(barChart: BarChart) {
+
+
+        val barChart = binding.barChart
+
+        val quartComments =
+            commentViewModel.groupCommentsByQuarter(commentViewModel.comments.value ?: emptyList())
+
+
+        val barEntries = quartComments.entries.mapIndexed { index, entry ->
+            BarEntry(index.toFloat(), entry.value.toFloat())
+        }
+
+        // Tạo BarDataSet và cấu hình
+        val barDataSet = BarDataSet(barEntries, "Số lượng bình luận theo quý")
+        barDataSet.color = ContextCompat.getColor(requireContext(), R.color.blue)
+
+        // Tạo BarData và hiển thị lên BarChart
+        val barData = BarData(barDataSet)
+        barChart.data = barData
+
+        // Cấu hình biểu đồ
+        barChart.description.text = "Số lượng bình luận"
+        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(quartComments.keys.toList())
+        barChart.xAxis.granularity = 1f
+
+        barChart.setScaleEnabled(true)
+        barChart.setPinchZoom(true)
+        barChart.setScaleMinima(1f, 1f)
+
+        barChart.invalidate() // Làm mới biểu đồ
+    }
+
+
 }

@@ -4,16 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Genre
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     private val _genres = MutableLiveData<List<Genre>>()
     val genres: LiveData<List<Genre>> get() = _genres
     val genreName = MutableLiveData<String>()
 
+    private val tempGenres = mutableListOf<Genre>()
+
     init {
-        fetchAllGenre()
+        fetch()
     }
 
     fun onAddNewGern(): Long {
@@ -24,8 +31,23 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         return l
     }
 
+    fun fetch() {
+        tempGenres.addAll(db.getAllGenres())
+        _genres.value = tempGenres
+
+    }
+
     fun fetchAllGenre() {
-        _genres.value = db.getAllGenres()
+        tempGenres.clear()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                tempGenres.addAll(db.getAllGenres())
+            }
+
+            _genres.value = tempGenres
+        }
+
+
     }
 
     fun getIDbyName(name: String): Int {
@@ -55,9 +77,14 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     }
 
 
-    fun deleteGenre(id:Int){
-        db.deleteGenre(id   )
+    fun deleteGenre(id: Int) {
+        db.deleteGenre(id)
         fetchAllGenre()
+    }
+
+    fun sumStoryByGenre(id: Int): Int {
+        val set = db.getStoriesIdbyGenreId(id)
+        return set.size
     }
 }
 

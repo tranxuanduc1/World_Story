@@ -18,9 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
 
             <LinearLayout
@@ -52,9 +49,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="1dp"
                                 android:layout_weight="1"
+                                android:fontFamily="sans-serif-condensed-medium"
                                 android:padding="5dp"
                                 android:text="@={storyViewModel.title}"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/Teal"
                                 android:textSize="20sp" />
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -63,10 +61,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="1dp"
                                 android:layout_weight="1"
+                                android:fontFamily="sans-serif-condensed-medium"
                                 android:padding="5dp"
                                 android:singleLine="true"
                                 android:text="@={storyViewModel.title}"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/Teal"
                                 android:textSize="24sp"
                                 android:visibility="gone" />
 
@@ -75,7 +74,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:backgroundTint="@color/voncano"
+                                android:backgroundTint="@color/smog_blue"
+                                android:contentDescription="Chỉnh sửa tựa của truyện"
                                 android:foregroundGravity="right"
                                 android:src="@drawable/outline_edit_12" />
                         </LinearLayout>
@@ -90,17 +90,21 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:fontFamily="sans-serif-condensed"
                                 android:padding="10dp"
                                 android:singleLine="true"
-                                android:text="@={storyViewModel.author}" />
+                                android:text="@={storyViewModel.author}"
+                                android:textColor="@color/hard_black" />
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_author"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:fontFamily="sans-serif-condensed"
                                 android:singleLine="true"
                                 android:text="@={storyViewModel.author}"
+                                android:textColor="@color/hard_black"
                                 android:visibility="gone" />
 
                             <ImageButton
@@ -108,24 +112,25 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:backgroundTint="@color/voncano"
+                                android:backgroundTint="@color/smog_blue"
+                                android:contentDescription="Chỉnh sửa tên tác giả"
                                 android:foregroundGravity="right"
                                 android:src="@drawable/outline_edit_12" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                          >
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/tom_tat"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="8dp"
-                                android:padding="5dp"
-
                                 android:layout_weight="1"
+                                android:padding="5dp"
+                                android:singleLine="true"
                                 android:text="@={storyViewModel.decription}"
                                 android:textSize="11sp" />
 
@@ -133,17 +138,31 @@
                                 android:id="@+id/edit_des"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
                                 android:layout_weight="1"
+                                android:padding="5dp"
                                 android:singleLine="true"
                                 android:text="@={storyViewModel.decription}"
+                                android:textSize="11sp"
                                 android:visibility="gone" />
+
+                            <ImageButton
+                                android:id="@+id/view_details"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:backgroundTint="@color/lgt_white"
+                                android:contentDescription="Mở rộng tóm tắt"
+                                android:foregroundGravity="right"
+                                android:src="@drawable/outline_preview_12" />
 
                             <ImageButton
                                 android:id="@+id/edit_de_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:backgroundTint="@color/voncano"
+                                android:backgroundTint="@color/smog_blue"
+                                android:contentDescription="Chỉnh sửa tóm tắt"
                                 android:foregroundGravity="right"
                                 android:src="@drawable/outline_edit_12" />
                         </LinearLayout>
@@ -154,108 +173,189 @@
                 </com.google.android.material.card.MaterialCardView>
 
 
-
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="130dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:backgroundTint="@color/Light_Beige">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="40dp"
-                        android:fontFamily="sans-serif-condensed-medium"
+                        android:orientation="horizontal">
 
-                        android:padding="10dp"
-                        android:text="Background"
-                        tools:ignore="RtlHardcoded" />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="40dp"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:padding="10dp"
 
-                    <ImageView
-                        android:id="@+id/img_bground"
-                        android:layout_width="140dp"
-                        android:layout_height="100dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:scaleType="centerInside" />
+                            android:text="Background"
+                            android:textSize="10sp"
+                            tools:ignore="RtlHardcoded" />
 
-                    <ImageButton
-                        android:id="@+id/up_background_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/baseline_upload_24"
-                        android:tooltipText="Tải hình nền truyện" />
+                        <ImageView
+                            android:id="@+id/img_bground"
+                            android:layout_width="140dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center"
+                            android:layout_marginHorizontal="10dp"
+                            android:scaleType="centerInside" />
+
+                        <ImageButton
+                            android:id="@+id/up_background_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|end"
+                            android:contentDescription="Tải hình nền truyện lên"
+                            android:src="@drawable/baseline_upload_24"
+                            android:tooltipText="Tải hình nền truyện" />
 
 
-                </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="10dp"
 
-                    <TextView
-                        android:layout_width="130dp"
+                    android:backgroundTint="@color/Light_Beige">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="40dp"
-                        android:fontFamily="sans-serif-condensed-medium"
-                        android:padding="10dp"
-                        android:text="Bìa truyện"
-                        tools:ignore="RtlHardcoded" />
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/avt_story"
-                        android:layout_width="140dp"
-                        android:layout_height="100dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:scaleType="centerInside" />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="40dp"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:padding="10dp"
+                            android:text="Bìa truyện"
+                            android:textSize="10sp"
+                            tools:ignore="RtlHardcoded" />
 
-                    <ImageButton
-                        android:id="@+id/up_avt_story_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        <ImageView
+                            android:id="@+id/avt_story"
+                            android:layout_width="140dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center"
+                            android:layout_marginHorizontal="10dp"
+                            android:scaleType="centerInside" />
 
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/baseline_upload_24"
-                        android:tooltipText="Tải hình nền truyện" />
+                        <ImageButton
+                            android:id="@+id/up_avt_story_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|end"
+                            android:contentDescription="Tải hình bìa truyện"
+                            android:src="@drawable/baseline_upload_24"
+                            android:tooltipText="Tải hình nền truyện" />
 
-                </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
 
                     <Button
                         android:id="@+id/save_changes"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
                         android:backgroundTint="@color/black"
                         android:text="Lưu" />
                 </LinearLayout>
 
-                <com.google.android.material.divider.MaterialDivider
+                <com.google.android.material.card.MaterialCardView
+                    android:backgroundTint="@color/ltgray"
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:layout_margin="13dp" />
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+
+                                android:fontFamily="sans-serif-condensed-medium"
+                                android:paddingHorizontal="2dp"
+                                android:paddingVertical="4dp"
+                                android:textColor="@color/hard_black"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:fontFamily="sans-serif-condensed-medium"
+                                android:paddingHorizontal="2dp"
+                                android:paddingVertical="4dp"
+                                android:text="Tên chapter"
+                                android:textAlignment="center"
+                                android:textColor="@color/hard_black"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/created_date_chapter"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:fontFamily="sans-serif-condensed-medium"
+                                android:paddingHorizontal="2dp"
+                                android:paddingVertical="4dp"
+                                android:text="Ngày cập nhật"
+                                android:textAlignment="center"
+                                android:textColor="@color/hard_black"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="@color/sweetheart">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/chapter_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+
+                                android:padding="10dp" />
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chapter_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                </com.google.android.material.card.MaterialCardView>
 
-                    android:padding="10dp" />
 
             </LinearLayout>
 
 
-        </androidx.core.widget.NestedScrollView>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_chapter"

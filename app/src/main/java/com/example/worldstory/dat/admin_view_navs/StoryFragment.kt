@@ -9,10 +9,15 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -55,6 +60,8 @@ class StoryFragment : Fragment(), OnItemClickListener {
         StoryViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private lateinit var binding: FragmentStoryBinding
+
+    private var type=-1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +73,40 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //spinner
+        val spinner:Spinner=binding.menuStory
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.story_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            spinner.adapter = adapter
+        }
+
+
+        spinner.onItemSelectedListener=object:OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(type!=position){
+                    type=position
+                    storyViewModel.fetchAllStoriesByType(type)
+                }
+            }
+        }
+
 
         //thiết lập quan sát sự kiện nút add
         sharedViewModel._add.observe(viewLifecycleOwner) { isAddEvent ->
@@ -81,7 +122,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         //thêm item
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        storyAdapter = StoryAdapter(storyViewModel.stories.value ?: emptyList(), color1, this)
+        storyAdapter = StoryAdapter(storyViewModel.stories.value?.toMutableList() ?: mutableListOf(), color1, this)
         binding.storyList.adapter = storyAdapter
         storyViewModel.stories.observe(viewLifecycleOwner) {
             storyAdapter.updateList(storyViewModel.stories.value ?: emptyList())
