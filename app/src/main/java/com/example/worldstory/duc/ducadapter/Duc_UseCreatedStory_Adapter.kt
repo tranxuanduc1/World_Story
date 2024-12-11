@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemUserCreatedStoryLayoutBinding
 import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
+import com.example.worldstory.duc.ducutils.getKeyUserInfo
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.User
@@ -37,7 +38,7 @@ class Duc_UseCreatedStory_Adapter(
         binding.txtNumStoriesItemUserCreatedStory.text=numCreated.toString()
         binding.imgAvatarItemUserCreatedStory.loadImgURL(context,user.imgAvatar)
         binding.btnToInfoUserItemUserCreatedStory.setOnClickListener{
-            context.toActivity(DucInfoUserActivity::class.java)
+            context.toActivity(DucInfoUserActivity::class.java, getKeyUserInfo(context),user)
         }
     }
 

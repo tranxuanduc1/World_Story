@@ -10,9 +10,9 @@ import com.example.worldstory.duc.ducactivity.DucChapterActivity
 import com.example.worldstory.duc.ducdataclass.DucComboChapterDataClass
 import com.example.worldstory.duc.ducutils.getKeyChapterInfo
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
-import com.example.worldstory.duc.ducutils.getKey_mainChapter
-import com.example.worldstory.duc.ducutils.getKey_nextChapter
-import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.getKeyMainChapter
+import com.example.worldstory.duc.ducutils.getKeyNextChapter
+import com.example.worldstory.duc.ducutils.getKeyPreviousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.Chapter
@@ -58,9 +58,9 @@ class Duc_ChapterMarked_Adapter(
         story: Story
     ) : Bundle{
         var bundle = Bundle()
-        bundle.putParcelable(getKey_nextChapter(context), nextChapter)
-        bundle.putParcelable(getKey_mainChapter(context), mainChapter)
-        bundle.putParcelable(getKey_previousChapter(context), preChapter)
+        bundle.putParcelable(getKeyNextChapter(context), nextChapter)
+        bundle.putParcelable(getKeyMainChapter(context), mainChapter)
+        bundle.putParcelable(getKeyPreviousChapter(context), preChapter)
         bundle.putParcelable(getKeyStoryInfo(context), story)
         return bundle
     }

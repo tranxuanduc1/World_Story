@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.example.worldstory.createDataFirstTime
 import com.example.worldstory.dbhelper.Contract.CommentEntry
-import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.Genre
@@ -1644,7 +1643,25 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return rates
     }
+    fun getAllStoryIdsInRate(): List<Int> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT ${Contract.RateEntry.COLUMN_STORY_ID_FK} FROM ${Contract.RateEntry.TABLE_NAME} ORDER BY ${Contract.RateEntry.COLUMN_RATE}",
+            null
+        )
+        val storyIds = mutableListOf<Int>()
 
+        if (cursor.moveToFirst()) {
+            do {
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RateEntry.COLUMN_STORY_ID_FK))
+
+                storyIds.add(storyId)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return storyIds
+    }
     fun getRatesByStory(storyId: Int): List<Rate> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1782,7 +1799,26 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return comments
     }
-
+    fun getAllStoryIdsInComment(): List<Int> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            """
+            SELECT ${Contract.CommentEntry.COLUMN_STORY_ID_FK} FROM ${Contract.CommentEntry.TABLE_NAME}
+        """.trimIndent(), null
+        )
+        val storyIds = mutableListOf<Int>()
+        if (cursor.moveToFirst()) {
+            do {
+                val storyId =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.CommentEntry.COLUMN_STORY_ID_FK))
+                storyIds.add(
+                    storyId
+                )
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return storyIds
+    }
     //////////////////////////
     ///----ChapterMark-----////
     //////////////////////////

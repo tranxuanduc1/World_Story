@@ -143,6 +143,9 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
     fun createComment(comment: Comment) {
         dbHelper.insertComment(comment)
     }
+    fun getAllStoryIdsInComment(): List<Int>{
+        return dbHelper.getAllStoryIdsInComment()
+    }
     //user
     fun getUsersByRole(roleId: Int): List<User>{
         return dbHelper.getUsersByRole(roleId)
@@ -271,7 +274,10 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         dbHelper.insertRate(rate)
     }
 
-
+    fun getAllStoryIdsInRate(): List<Int>{
+        var list =dbHelper.getAllStoryIdsInRate()
+        return list
+    }
     //user love stories
     fun getLoveStoriesByUser(userId: Int): List<Story> {
         var storiesId = dbHelper.getLoveStoriesIdByUser(userId)

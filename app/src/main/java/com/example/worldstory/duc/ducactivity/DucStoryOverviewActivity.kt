@@ -16,14 +16,13 @@ import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
 import com.example.worldstory.duc.ducdialog.DucLoginDialogFragment
-import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
-import com.example.worldstory.duc.ducutils.getKey_chapterInfo
-import com.example.worldstory.duc.ducutils.getKey_mainChapter
-import com.example.worldstory.duc.ducutils.getKey_nextChapter
-import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.getKeyChapterInfo
+import com.example.worldstory.duc.ducutils.getKeyMainChapter
+import com.example.worldstory.duc.ducutils.getKeyNextChapter
+import com.example.worldstory.duc.ducutils.getKeyPreviousChapter
 import com.example.worldstory.duc.ducutils.isUserCurrentGuest
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
@@ -196,11 +195,11 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
     }
 
     private fun toChapterActivity(chapter: Chapter) {
-        var key = getKey_chapterInfo(this)
+        var key = getKeyChapterInfo(this)
 
-        var key_mainChapter = getKey_mainChapter(this)
-        var key_nextChapter = getKey_nextChapter(this)
-        var key_previousChapter = getKey_previousChapter(this)
+        var key_mainChapter = getKeyMainChapter(this)
+        var key_nextChapter = getKeyNextChapter(this)
+        var key_previousChapter = getKeyPreviousChapter(this)
         var key_storyInfo = getKeyStoryInfo(this)
 
         var bundle = Bundle()

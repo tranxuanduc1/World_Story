@@ -60,6 +60,7 @@
     <string name="key_mainChapterInfo">MAIN_CHAPTER_INFO</string>
     <string name="key_resultSearchInfo">RESULT_SEARCH_INFO</string>
     <string name="key_textQuery">TEXT_QUERY</string>
+    <string name="key_userInfo">USER_INFO</string>
 
     //----------------KEY SHARE PREFERENCE----------------
     <string name="key_user_session">KEY_USER_SESSION</string>
