@@ -10,6 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.myapplication.R
+import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.duc.ducutils.getKeyStoryInfo
+import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.Story
 
 class Duc_ListSearch_ArrayAdapter(
@@ -39,7 +42,7 @@ class Duc_ListSearch_ArrayAdapter(
         title.text=item.title
         idStory.text = item.storyID.toString()
         view.setOnClickListener{
-            Toast.makeText(context,"idstory: ${item.storyID.toString()} ,${item.title}  ", Toast.LENGTH_SHORT).show()
+            appContext.toActivity(DucStoryOverviewActivity::class.java, getKeyStoryInfo(appContext),item)
         }
 
         return view

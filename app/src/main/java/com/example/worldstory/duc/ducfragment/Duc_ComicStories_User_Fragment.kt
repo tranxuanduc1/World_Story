@@ -127,21 +127,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             stories->
             setHotStoies(stories)
             setHighScoreStoies(stories)
-            ducUserViewModel.fetchAuthorUser()
-            //tao user hot
-            ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer{
-                    users->
-                var numUsers=6
-                var topUser=getHotUsers(users,numUsers,stories)
-                var limitUser= if(users.size>=5)  users.take(numUsers) else users
-                var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),topUser,isText)
-                var itemDeco= SetItemDecorationForRecyclerView(0,5,1,1)
-                binding.rvHotUsersComicStoriesUser.apply {
-                    adapter=adapterAuthorUser
-                    layoutManager= GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
-                    addItemDecoration(itemDeco)
-                }
-            })
+            setHotUser(stories)
         })
 
 
@@ -161,6 +147,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         // Inflate the layout for this fragment
         return view
     }
+
+
 
 
     private fun setImageBanner() {
@@ -226,19 +214,44 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         var numCol=1
         var numSpace=20
         val itemDeco= SetItemDecorationForRecyclerView(0,10,5,5)
-        //lay 5 phan tu co diem cao nhat
-        var limitStories=stories.sortedByDescending { it.score }.take(numberStoryShow)
-        var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
 
-        binding.rvHighScoreStoriesComicStoriesUser.apply {
-            adapter=adapterHighScoreStories
-            layoutManager =
-                GridLayoutManager(context, numCol,LinearLayoutManager.VERTICAL,false)
-            addItemDecoration(itemDeco)
-            setHasFixedSize(true)
+        //lay danh sach story tuong tac nhieu nhat
+        ducStoryViewModel.fetchComboHighScoreStories(stories)
+        ducStoryViewModel.comboHighScoreStories.observe(viewLifecycleOwner, Observer{
+            combo->
+            //lay 5 phan tu co diem cao nhat
 
-        }
+            var limitStories=combo.sortedByDescending { it.numRating }.take(numberStoryShow)
+            var adapterHighScoreStories= Duc_HighScoreStory_Adapter(requireContext(), ArrayList( limitStories))
 
+            binding.rvHighScoreStoriesComicStoriesUser.apply {
+                adapter=adapterHighScoreStories
+                layoutManager =
+                    GridLayoutManager(context, numCol,LinearLayoutManager.VERTICAL,false)
+                addItemDecoration(itemDeco)
+                setHasFixedSize(true)
+
+            }
+        })
+
+
+    }
+    private fun setHotUser(stories: List<Story>) {
+        ducUserViewModel.fetchAuthorUser()
+        //tao user hot
+        ducUserViewModel.userAuthor.observe(viewLifecycleOwner, Observer{
+                users->
+            var numUsers=6
+            var topUser=getHotUsers(users,numUsers,stories)
+            var limitUser= if(users.size>=5)  users.take(numUsers) else users
+            var adapterAuthorUser= Duc_UseCreatedStory_Adapter(requireContext(),topUser,isText)
+            var itemDeco= SetItemDecorationForRecyclerView(0,5,1,1)
+            binding.rvHotUsersComicStoriesUser.apply {
+                adapter=adapterAuthorUser
+                layoutManager= GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
+                addItemDecoration(itemDeco)
+            }
+        })
     }
     fun setConfigButton() {
         var searchImgBtn = binding.searchButtonComicStoriesUser

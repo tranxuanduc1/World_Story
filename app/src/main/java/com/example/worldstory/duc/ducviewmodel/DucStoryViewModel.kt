@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.SampleDataStory
+import com.example.worldstory.duc.ducdataclass.DucComboHighScoreStoryDataClass
 import com.example.worldstory.duc.ducutils.getLoremIpsum
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducrepository.DucDataRepository
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.numDef
@@ -35,6 +37,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
 
     private val _storiesIsText = MutableLiveData<List<Story>>()
     val storiesIsText: LiveData<List<Story>> get() = _storiesIsText
+
+    private val _comboHighScoreStories = MutableLiveData<List<DucComboHighScoreStoryDataClass>>()
+    val comboHighScoreStories: LiveData<List<DucComboHighScoreStoryDataClass>> get() = _comboHighScoreStories
 
     init {
         fetchStories()
@@ -109,7 +114,41 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
             _genreAndStoriesByGenre.value= Pair(genre, resultStoriesByGenre)
         }
     }
+    fun fetchComboHighScoreStories(stories: List<Story>){
+        viewModelScope.launch{
+            var resultStoryIdComment=withContext(Dispatchers.IO){
+                repository.getAllStoryIdsInComment()
+            }
+            var resultStoryIdRate=withContext(Dispatchers.IO){
+                repository.getAllStoryIdsInRate()
+            }
 
+            //lay so commtn moi story
+            var mapOfStoryIdComment=mutableMapOf<Int, Int>()
+            resultStoryIdComment.forEach{
+                storyId->
+                mapOfStoryIdComment[storyId]=mapOfStoryIdComment.getOrDefault(storyId,0)+1
+            }
+
+            //lay so rate moi story
+            var mapOfStoryIdRate=mutableMapOf<Int, Int>()
+            resultStoryIdRate.forEach{
+                    storyId->
+                mapOfStoryIdRate[storyId]=mapOfStoryIdRate.getOrDefault(storyId,0)+1
+            }
+
+            //tong hop vao
+            var listOfComboHighScoreStories=mutableListOf<DucComboHighScoreStoryDataClass>()
+            stories.forEach{
+                story->
+                var numComment=mapOfStoryIdComment.getOrDefault(story.storyID,0)
+                var numRate=mapOfStoryIdRate.getOrDefault(story.storyID,0)
+                var combo= DucComboHighScoreStoryDataClass(story,numComment,numRate)
+                listOfComboHighScoreStories.add(combo)
+            }
+            _comboHighScoreStories.value=listOfComboHighScoreStories
+        }
+    }
     fun getStoriesByGenre(genreId: Int, isText: Boolean): List<Story> {
         return  repository.getStoriesByGenre(genreId,isText)
     }
