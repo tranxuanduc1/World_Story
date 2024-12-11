@@ -57,7 +57,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
         GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }
     private val storyViewModel: StoryViewModel by activityViewModels {
-        StoryViewModelFactory(DatabaseHelper(requireActivity()))
+        StoryViewModelFactory(DatabaseHelper(requireActivity()),0)
     }
     private lateinit var binding: FragmentStoryBinding
 
@@ -291,6 +291,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     }
 
     private fun onAddButtonClicked() {
+
         AddStoryDialog().show(parentFragmentManager, "AddStoryDialogFragment")
     }
 
@@ -310,7 +311,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     override fun onItemClick(item: Story) {
         val intent = Intent(requireContext(), ChapterActivity::class.java)
         intent.putExtra("ID",item.storyID)
-
+        intent.putExtra("type",storyViewModel.type)
         startActivity(intent)
     }
 

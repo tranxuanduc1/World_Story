@@ -1,6 +1,7 @@
 package com.example.worldstory.dat.admin_viewmodels
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,11 +14,13 @@ import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
+class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
+    ViewModel(db) {
     private val _stories = MutableLiveData<List<Story>>()
     val stories: LiveData<List<Story>> get() = _stories
     val title = MutableLiveData<String>()
@@ -32,7 +35,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     val currentStoryID = MutableLiveData(-1)
     val chapterListByStory = MutableLiveData<List<Chapter>>()
 
-    var type = 0
+    var type = _type
     private val tempList = mutableListOf<Story>()
     private val tempMap = mutableMapOf<Int, Set<Int>>()
 
@@ -41,10 +44,28 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         fetchAllStoriesByType(type)
     }
 
-
     fun fetchAllChapters() {
+        val tempChapterList = mutableListOf<Chapter>()
         if (currentStoryID.value!! >= 0)
-            chapterListByStory.value = db.getChaptersByStory(currentStoryID.value!!)
+            tempChapterList.addAll(db.getChaptersByStory(currentStoryID.value!!))
+
+        chapterListByStory.value = tempChapterList
+    }
+
+    fun fetchAllChaptersAsynce() {
+        val tempChapterList = mutableListOf<Chapter>()
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                currentStoryID.value?.let { storyId ->
+                    if (storyId >= 0) {
+                        tempChapterList.addAll(db.getChaptersByStory(storyId))
+                    }
+                }
+            }
+
+            chapterListByStory.value = tempChapterList
+        }
     }
 
     fun setIDStory(id: Int?) {
@@ -53,7 +74,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     }
 
     fun setStoryByID(id: Int?) {
-        try{
+        try {
             val story = stories.value?.filter { it.storyID == id }!!.first()
             author.value = story.author
             decription.value = story.description
@@ -62,7 +83,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             genreIDList.value = storyGenreMap[story.storyID]?.toList()
             storyBgImg.add(story.bgImgUrl)
             storyImg.add(story.imgUrl)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 
@@ -85,7 +106,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         val l: Long = insertStory(story)
         genreIDList.value?.forEach { gID -> insertStoryGenre(l.toInt(), gID) }
         resetValue()
-        fetchAllStoriesByTypeAsynce(type)
+        fetchAllStoriesByTypeAsynce(type ?: 0)
         return l
     }
 
@@ -100,39 +121,51 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     }
 
     fun fetchAllStoriesByTypeAsynce(id: Int) {
-        type = id
-        tempMap.clear()
-        tempList.clear()
-        viewModelScope.launch {
+        Log.w("asynce", "yes")
+        try {
+            type = id
+            tempMap.clear()
+            tempList.clear()
+            viewModelScope.launch {
 
-            withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
 
-                tempList.addAll(db.getStoriesByType(type))
-                tempList.forEach { s ->
-                    tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
+                    tempList.addAll(db.getStoriesByType(type ?: 0))
+                    tempList.forEach { s ->
+                        tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
+                    }
                 }
+
+                _stories.value = tempList
+                storyGenreMap.values.clear()
+                tempMap.forEach { k, v -> storyGenreMap[k] = v }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun fetchAllStoriesByType(id: Int ) {
+        try {
+            type = id
+            tempMap.clear()
+            tempList.clear()
+
+            tempList.addAll(db.getStoriesByType(type ?: 0))
+            tempList.forEach { s ->
+                tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
             }
 
+
             _stories.value = tempList
             storyGenreMap.values.clear()
             tempMap.forEach { k, v -> storyGenreMap[k] = v }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
     }
-    fun fetchAllStoriesByType(id: Int) {
-        type = id
-        tempMap.clear()
-        tempList.clear()
-
-                tempList.addAll(db.getStoriesByType(type))
-                tempList.forEach { s ->
-                    tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
-                }
-
-
-            _stories.value = tempList
-            storyGenreMap.values.clear()
-            tempMap.forEach { k, v -> storyGenreMap[k] = v }
-        }
 
     fun insertStory(story: Story): Long {
         val l = db.insertStory(story)
@@ -146,8 +179,13 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 
     fun deleteStory(story: Story): Int {
         val i: Int = db.deleteStory(story.storyID)
-        fetchAllStoriesByTypeAsynce(type)
-        return i
+        try {
+            fetchAllStoriesByTypeAsynce(type?: 0)
+            return i
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return -1
+        }
     }
 
     fun updateBackGroundStory(story: Story?): Int {
@@ -160,12 +198,12 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             description = decription.value.toString(),
             score = story?.score ?: 0f,
             author = author.value.toString(),
-            imgUrl = story?.imgUrl?:"",
+            imgUrl = story?.imgUrl ?: "",
             bgImgUrl = transform(storyBgImg.first())
         )
         try {
             val i: Int = db.updateBackgroundStory(s)
-            fetchAllStoriesByTypeAsynce(type)
+            fetchAllStoriesByTypeAsynce(type?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -175,6 +213,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         }
 
     }
+
     fun updateFaceStory(story: Story?): Int {
         val s = Story(
             storyID = story?.storyID,
@@ -186,11 +225,11 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             score = story?.score ?: 0f,
             author = author.value.toString(),
             imgUrl = transform(storyImg.first()),
-            bgImgUrl = story?.bgImgUrl?:""
+            bgImgUrl = story?.bgImgUrl ?: ""
         )
         try {
             val i: Int = db.updateFaceStory(s)
-            fetchAllStoriesByTypeAsynce(type)
+            fetchAllStoriesByTypeAsynce(type ?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -212,12 +251,12 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
             description = decription.value.toString(),
             score = story?.score ?: 0f,
             author = author.value.toString(),
-            imgUrl = story?.imgUrl?:"",
-            bgImgUrl = story?.bgImgUrl?:""
+            imgUrl = story?.imgUrl ?: "",
+            bgImgUrl = story?.bgImgUrl ?: ""
         )
         try {
             val i: Int = db.updateInforStory(s)
-            fetchAllStoriesByTypeAsynce(type)
+            fetchAllStoriesByTypeAsynce(type?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -243,7 +282,7 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         )
         try {
             val i: Int = db.updateStory(s)
-            fetchAllStoriesByTypeAsynce(type)
+            fetchAllStoriesByTypeAsynce(type?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -253,21 +292,32 @@ class StoryViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         }
 
     }
+
     fun getStoryById(id: Int): Story? {
-        return stories.value?.first { it.storyID == id }
+        try {
+            return stories.value?.first { it.storyID == id }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
     }
 
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
+
+    fun deleteChapter(id: Int) {
+        db.deleteChapter(id)
+        fetchAllChaptersAsynce()
+    }
 }
 
-class StoryViewModelFactory(private val databaseHelper: DatabaseHelper) :
+class StoryViewModelFactory(private val databaseHelper: DatabaseHelper, private val _type: Int=0) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
-            return StoryViewModel(databaseHelper) as T
+            return StoryViewModel(databaseHelper,_type) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

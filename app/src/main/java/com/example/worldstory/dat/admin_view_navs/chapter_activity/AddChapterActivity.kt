@@ -1,14 +1,19 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -20,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +34,8 @@ import com.example.myapplication.databinding.ActivityAddChapterBinding
 import com.example.worldstory.dat.admin_adapter.PreviewUploadedAdapter
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModelFactory
+import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
+import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.media.MediaHttpUploader
@@ -58,6 +66,9 @@ class AddChapterActivity : AppCompatActivity() {
     private val chapterViewModel: ChapterViewModel by viewModels {
         ChapterViewModelFactory(DatabaseHelper(this))
 //        ChapterViewModelFactory(DatabaseHelper.getInstance(this))
+    }
+    private val storyViewModel: StoryViewModel by viewModels {
+        StoryViewModelFactory(DatabaseHelper(this))
     }
 
     private lateinit var driveService: Drive
@@ -139,12 +150,9 @@ class AddChapterActivity : AppCompatActivity() {
                         }
                     } catch (e: Exception) {
                         Log.w("Loi", e.message.toString())
-                    } finally{
+                    } finally {
 
                         withContext(Dispatchers.Main) {
-//                            val intent = Intent(this@AddChapterActivity, AddChapterActivity::class.java) // Chỉ định lại Activity cần reload
-//                            finish() // Đóng Activity hiện tại
-//                            startActivity(intent) // Mở lại Activity
                             binding.progressBar.visibility = View.GONE
                             enableMainScreenInteraction()
                         }
@@ -162,7 +170,20 @@ class AddChapterActivity : AppCompatActivity() {
         binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
     }
-
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (view is EditText) {
+                val outRect = Rect()
+                view.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    view.clearFocus()
+                    hideKeyboard(this)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
     fun openImagePicker() {
         pickImageLauncher.launch(arrayOf("image/jpeg"))
     }
@@ -247,6 +268,16 @@ class AddChapterActivity : AppCompatActivity() {
         val overlay = rootLayout.getChildAt(rootLayout.childCount - 1)
         if (overlay != null) {
             rootLayout.removeView(overlay)
+        }
+    }
+
+
+    fun hideKeyboard(activity: Activity) {
+        val inputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocus = activity.currentFocus
+        if (currentFocus != null) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
         }
     }
 }

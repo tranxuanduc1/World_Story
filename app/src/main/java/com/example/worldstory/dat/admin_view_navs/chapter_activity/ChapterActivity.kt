@@ -19,10 +19,8 @@ import com.example.worldstory.dbhelper.DatabaseHelper
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class   ChapterActivity : AppCompatActivity() {
-    private val storyViewModel: StoryViewModel by viewModels {
-        StoryViewModelFactory(DatabaseHelper(this))
-    }
+class ChapterActivity : AppCompatActivity() {
+    private lateinit var storyViewModel: StoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +32,19 @@ class   ChapterActivity : AppCompatActivity() {
             insets
         }
 
+
         val intent: Intent = getIntent()
         val storyID: Int = intent.getIntExtra("ID", -1)
+        val type = intent.getIntExtra("type", 0)
+
+        storyViewModel =
+            StoryViewModelFactory(DatabaseHelper(this), type).create(StoryViewModel::class.java)
 
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         val viewpp = findViewById<ViewPager2>(R.id.vpp2)
         viewpp.invalidate()
         ///adapter
-        val adapter = ViewPagerAdapter(this, storyID)
+        val adapter = ViewPagerAdapter(this, storyID,type)
         viewpp.adapter = adapter
         TabLayoutMediator(tabLayout, viewpp) { tab, position ->
             when (position) {
@@ -52,13 +55,12 @@ class   ChapterActivity : AppCompatActivity() {
         }.attach()
 
         findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.topAppBar)
-            .setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
+            .setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         onBackPressedDispatcher.addCallback(this) {
-            if(supportFragmentManager.backStackEntryCount>1){
+            if (supportFragmentManager.backStackEntryCount > 1) {
                 supportFragmentManager.popBackStack()
-            }
-            else finish()
+            } else finish()
         }
 
     }

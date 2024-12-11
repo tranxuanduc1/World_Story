@@ -16,6 +16,8 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     val imgMap = mutableMapOf<Int, String>()
     val name = MutableLiveData<String>()
 
+
+
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
@@ -70,6 +72,8 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         }
         return false
     }
+
+
 
 }
 
