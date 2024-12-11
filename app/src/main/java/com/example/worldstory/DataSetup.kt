@@ -1,28 +1,11 @@
 package com.example.worldstory
 
-import android.content.Context
-import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.os.Handler
-import android.os.Looper
-import com.example.myapplication.R
 import com.example.worldstory.dbhelper.Contract
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducactivity.DucUserHomeActivity
 import com.example.worldstory.duc.ducutils.dateTimeNow
-import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.hashPassword
-import com.example.worldstory.duc.ducutils.numDef
-import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Image
-import com.example.worldstory.model.Paragraph
-import com.example.worldstory.model.Rate
-import com.example.worldstory.model.Role
-import com.example.worldstory.model.Story
-import com.example.worldstory.model.User
 
 fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
 
@@ -262,27 +245,73 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
                     '${bgImgUrls[index]}', '${dateTimeNow()}', 5, 1, $randomUserId)
         """)
     }
-    // Giả sử bạn đã có một biến db để truy cập cơ sở dữ liệu
+
     val random = java.util.Random()
 
     for (storyId in 1..40) {
-        // Chọn ngẫu nhiên từ 1 đến 4 thể loại cho mỗi câu chuyện
-        val genreCount = random.nextInt(4) + 1 // Số lượng thể loại từ 1 đến 4
+        // chon 1->4 the loai cho moi story
+        val genreCount = random.nextInt(4) + 1
         val selectedGenres = mutableSetOf<Int>()
 
-        // Chọn ngẫu nhiên các thể loại mà không bị trùng lặp
+        // chon ngau nhien the loai cho story ma khong trung
         while (selectedGenres.size < genreCount) {
-            val genreId = random.nextInt(7) + 1 // Thể loại từ 1 đến 7
+            val genreId = random.nextInt(7) + 1
             selectedGenres.add(genreId)
         }
 
-        // Thêm dữ liệu vào bảng
+        // them vao db
         selectedGenres.forEach { genreId ->
             db?.execSQL("""
             INSERT INTO ${Contract.StoryGenreEntry.TABLE_NAME} 
             (${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}, ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}) 
             VALUES ($storyId, $genreId)
         """.trimIndent())
+        }
+
+    }
+    for (storyId in 1..10) {
+
+        //them chapter
+
+        for (chapterId in 1..5) {
+            val chapterTitle = "Chương $chapterId truyen $storyId"
+            val dateCreated = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
+
+            // Chèn dữ liệu chapter vào bảng chapter_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ChapterEntry.TABLE_NAME} 
+                    (${Contract.ChapterEntry.COLUMN_TITLE}, ${Contract.ChapterEntry.COLUMN_DATE_CREATED}, 
+                     ${Contract.ChapterEntry.COLUMN_STORY_ID_FK})
+                    VALUES ('$chapterTitle', '$dateCreated', $storyId)
+                """)
+
+
+
+        }
+    }
+    var listOfImageChapterUrl=listOf<String>(
+        "https://drive.google.com/uc?id=1eFvesLiPiREI8q8B2EAufHPWYv5D_jul",
+        "https://drive.google.com/uc?id=1qcKZ_12g0qdq1wO9kSAzjf3vb4geWepj",
+        "https://drive.google.com/uc?id=1UZH_gJMCENWPALjWC7--ZFvFoSZUINWZ",
+        "https://drive.google.com/uc?id=1Tuc_sSJgZqdT2ip_54xISNXS2xu3nVxv",
+        "https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y",
+    )
+    for (chapterId in 1..50) {
+
+
+        // Tạo 5 hình ảnh cho mỗi chapter
+        for (image in 1..listOfImageChapterUrl.size) {
+
+
+            val order = image
+
+            // Chèn dữ liệu hình ảnh vào bảng img_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+                    VALUES ('${listOfImageChapterUrl[image-1]}', $order, $chapterId)
+                """)
         }
     }
 

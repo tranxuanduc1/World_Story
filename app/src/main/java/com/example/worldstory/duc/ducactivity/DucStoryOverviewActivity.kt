@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
+import com.example.worldstory.duc.ducdialog.DucLoginDialogFragment
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
@@ -23,6 +24,7 @@ import com.example.worldstory.duc.ducutils.getKey_chapterInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.isUserCurrentGuest
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.toActivity
@@ -44,9 +46,11 @@ import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 
-class DucStoryOverviewActivity : AppCompatActivity() {
+class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.DialogListener {
     private lateinit var binding: ActivityDucStoryOverviewBinding
     private lateinit var storyInfo: Story
+    private lateinit var dialogRequestLogin: DucLoginDialogFragment
+
     private val ducChapterViewModel: DucChapterViewModel by viewModels {
         DucChapterViewModelFactory(this)
     }
@@ -91,6 +95,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
                 )
                     .show()
             }
+        setDialogRequestLogin()
         setSwipeRefresh(key)
     }
 
@@ -241,7 +246,9 @@ class DucStoryOverviewActivity : AppCompatActivity() {
         })
 
         binding.rateBarStoryOverview.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            if (fromUser) {
+
+            //kiem tra co phai gest user
+            if (fromUser && !checkGuestUser()) {
                 ducRateViewModel.ratingStoryByCurrentUser(
                     storyInfo.storyID ?: numDef,
                     rating.toInt()
@@ -268,6 +275,7 @@ class DucStoryOverviewActivity : AppCompatActivity() {
                 }
                 //  neu user bam nut lan nua
                 binding.btnLoveStoryStoryOverview.setOnClickListener {
+                    if (checkThenHandleGuestUser())return@setOnClickListener
                     isLike = !isLike
                     setStyleButtonLoveStory(isLike)
                     updateDataUserSessionLoveStory(isLike)
@@ -371,7 +379,30 @@ class DucStoryOverviewActivity : AppCompatActivity() {
             setRatingBar()
         })
     }
+    private fun setDialogRequestLogin() {
+        dialogRequestLogin= DucLoginDialogFragment()
 
+    }
+    private fun checkThenHandleGuestUser(): Boolean {
+        if(isUserCurrentGuest()){
+            dialogRequestLogin.show(supportFragmentManager,"login")
+
+            return true
+        }else{
+            return false
+        }
+    }
+    private fun checkGuestUser(): Boolean {
+        if(isUserCurrentGuest()){
+
+            return true
+        }else{
+            return false
+        }
+    }
+    override fun onDialogSubmit(input: String) {
+        TODO("Not yet implemented")
+    }
 }
 
 

@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.app.Dialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.myapplication.databinding.DialogComfirmLogoutBinding
 import com.example.myapplication.databinding.FragmentDucSettingUserBinding
 import com.example.worldstory.AdminMainActivity
 import com.example.worldstory.StartActivity
@@ -38,6 +40,8 @@ class Duc_Setting_User_Fragment : Fragment() {
         DucAccountManagerViewModelFactory(requireContext())
     }
     private lateinit var binding: FragmentDucSettingUserBinding
+    private lateinit var dialogLogout: Dialog
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -67,6 +71,7 @@ class Duc_Setting_User_Fragment : Fragment() {
         })
         setViewButton()
         setConfigButton()
+        setDialogLogOut()
         return view
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_setting_user, container, false)
@@ -102,13 +107,36 @@ class Duc_Setting_User_Fragment : Fragment() {
             requireContext().toActivity(DucChapterMarkedActivity::class.java)
         }
         binding.btnLogoutSettingUserFragment.setOnClickListener{
-            requireContext().clearUserSession()
-            //quay cho ve man hinh chinh
-            callLog("========","da clear")
-            StartActivity.isActivityRunning=false
-            requireContext().toActivity(StartActivity::class.java)
+            //hien thi dialog
+            dialogLogout.show()
+
+
 
         }
+    }
+
+    private fun setDialogLogOut() {
+         dialogLogout= Dialog(requireContext())
+        var dialogBinding=DialogComfirmLogoutBinding.inflate(layoutInflater)
+        dialogLogout.apply {
+            setContentView(dialogBinding.root)
+            setCancelable(false)
+        }
+        dialogBinding.btnBackDialogComfirmLogout.setOnClickListener{
+            dialogLogout.dismiss()
+        }
+        //xu ly dang xuat
+        dialogBinding.btnLogoutDialogComfirmLogout.setOnClickListener{
+           handleLogout()
+        }
+    }
+
+    private fun handleLogout() {
+        requireContext().clearUserSession()
+        //quay cho ve man hinh chinh
+        callLog("========","da clear")
+        StartActivity.isActivityRunning=false
+        requireContext().toActivity(StartActivity::class.java)
     }
 
     companion object {

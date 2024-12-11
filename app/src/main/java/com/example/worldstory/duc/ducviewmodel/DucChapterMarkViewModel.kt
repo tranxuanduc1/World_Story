@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.ducdataclass.DucComboChapterDataClass
 import com.example.worldstory.duc.ducrepository.DucDataRepository
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Story
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,11 +41,13 @@ class DucChapterMarkViewModel(var repository: DucDataRepository, var context: Co
         viewModelScope.launch{
             var userId=context.getUserIdSession()
             var listOfChapterMarkAndStory=mutableListOf<DucComboChapterDataClass>()
-            val resultChapters= withContext(Dispatchers.IO){
+            val resultChapterMarks= withContext(Dispatchers.IO){
                 repository.getChaptersMarkedByUser(userId)
             }
+            callLog("chaptermarkViewModel", resultChapterMarks.toString())
+
             // lay story cua tung chapter
-            resultChapters.forEach{
+            resultChapterMarks.forEach{
                     chapter->
                 var resultStory=withContext(Dispatchers.IO){
                     repository.getStoriesByStoryId(chapter.storyID)
@@ -58,8 +60,8 @@ class DucChapterMarkViewModel(var repository: DucDataRepository, var context: Co
                         repository.getChaptersByStory(story.storyID?: numDef)
 
                     }
-                    var nextChapter=getNextChapterByCurrentChapter(chapter,resultChapters)
-                    var preChapter=getPreviousChapterByCurrentChapter(chapter,resultChapters)
+                    var nextChapter=getNextChapterByCurrentChapter(chapter,resultListChapter)
+                    var preChapter=getPreviousChapterByCurrentChapter(chapter,resultListChapter)
 
                     listOfChapterMarkAndStory.add(DucComboChapterDataClass(preChapter,chapter,nextChapter,story))
 

@@ -75,10 +75,10 @@
 <!--            </intent-filter>-->
 <!--        </activity>-->
         <activity
-            android:name="com.example.worldstory.StartActivity"
+            android:name="com.example.worldstory.AdminMainActivity"
             android:exported="false" /> <!-- user gui -->
         <activity
-            android:name="com.example.worldstory.AdminMainActivity"
+            android:name="com.example.worldstory.StartActivity"
 
             android:exported="true"
             android:launchMode="singleTask">

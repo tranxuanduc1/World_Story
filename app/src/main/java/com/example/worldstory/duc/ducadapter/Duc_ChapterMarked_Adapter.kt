@@ -13,6 +13,7 @@ import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKey_mainChapter
 import com.example.worldstory.duc.ducutils.getKey_nextChapter
 import com.example.worldstory.duc.ducutils.getKey_previousChapter
+import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
@@ -42,6 +43,7 @@ class Duc_ChapterMarked_Adapter(
         var binding = holder.binding
         binding.txtTitleChapterItemChapterMarked.text =mainChapter.title
         binding.txtTitleStoryItemChapterMarked.text = story.title
+        binding.imgStoryItemChapterMarked.loadImgURL(context,story.imgUrl)
         binding.btnToChapterChapterMark.setOnClickListener {
             var bundle = makeBundleToChapterActivity(preChapter,mainChapter,nextChapter,story)
             context.toActivity(DucChapterActivity::class.java, getKeyChapterInfo(context),bundle)

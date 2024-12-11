@@ -21,6 +21,7 @@ import com.example.myapplication.databinding.CommentSelfLayoutBinding
 import com.example.worldstory.duc.ducadapter.DucViewPaperPhotoViewAdapter
 import com.example.worldstory.duc.ducadapter.Duc_Comment_Adapter
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
+import com.example.worldstory.duc.ducdialog.DucLoginDialogFragment
 import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -32,6 +33,7 @@ import com.example.worldstory.duc.ducutils.hideKeyboard
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
 import com.example.worldstory.duc.ducutils.getTextDataNotFound
 import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.duc.ducutils.isUserCurrentGuest
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducutils.scrollToBottom
@@ -54,7 +56,7 @@ import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Story
 
 
-class DucChapterActivity : AppCompatActivity() {
+class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogListener {
     private lateinit var binding: ActivityDucChapterBinding
 
 
@@ -90,6 +92,7 @@ class DucChapterActivity : AppCompatActivity() {
     private var storyInfo: Story? = null
     private var listOfChapterMarks = mutableListOf<Chapter>()
     private var oldItemTouchHelper:ItemTouchHelper?=null
+    private lateinit var dialogRequestLogin: DucLoginDialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +128,6 @@ class DucChapterActivity : AppCompatActivity() {
             setupViewImageOrParagraph()
             prepareDataContenForChapter()
             loadContent()
-
         }
         // da lay duoc comment tu database
         ducCommentViewModel.commentsByStory.observe(this, Observer { comments ->
@@ -148,7 +150,10 @@ class DucChapterActivity : AppCompatActivity() {
         setConfigCommentDialog()
         setConfigButton()
         setConfigView()
+        setDialogRequestLogin()
+
     }
+
 
 
 
@@ -276,6 +281,8 @@ class DucChapterActivity : AppCompatActivity() {
         }
         // set even mark chapter button
         binding.btnMarkChapterChapter.setOnClickListener {
+            //kiem tra co phai tai koan khach
+            if (checkThenHandleGuestUser())return@setOnClickListener
             mainChapter?.let { main ->
                 isMark = !isMark
                 if (isMark) {
@@ -439,6 +446,7 @@ class DucChapterActivity : AppCompatActivity() {
             if (content.isEmpty()) {
                 return@setOnClickListener
             }
+            if(checkThenHandleGuestUser()) return@setOnClickListener
             // co noi dung
             mainChapter?.let {
                 //neu co reply
@@ -475,6 +483,15 @@ class DucChapterActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkThenHandleGuestUser(): Boolean {
+        if(isUserCurrentGuest()){
+            dialogRequestLogin.show(supportFragmentManager,"login")
+
+            return true
+        }else{
+            return false
+        }
+    }
 
 
     private fun setConfigCommentDialog() {
@@ -520,6 +537,13 @@ class DucChapterActivity : AppCompatActivity() {
         binding.swipeRefreshChapter.setOnRefreshListener {
             ducSwipeRefreshViewModel.fetchRefreshView()
         }
+    }
+    private fun setDialogRequestLogin() {
+        dialogRequestLogin= DucLoginDialogFragment()
+
+    }
+    override fun onDialogSubmit(input: String) {
+
     }
 }
 //    private fun setCommentSelf(

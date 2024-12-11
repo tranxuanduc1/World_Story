@@ -18,6 +18,10 @@
     <string name="nextChapter">Chương sau</string>
     <string name="comment">Bình luận</string>
     <string name="logout">Đăng xuất</string>
+    <string name="comfirmLogout">Xác nhận đăng xuất</string>
+    <string name="requestLogin">Yêu cầu đăng nhập</string>
+    <string name="back">Trở về</string>
+    <string name="YouNeedToLoginToUseThisFeature">Bạn cần phải đăng nhập để sử dụng tính năng này</string>
     <string name="switchToAdmin">Chuyển sang Quản trị viên</string>
     <string name="login">Đăng nhập</string>
     <string name="signUp">Đăng ký</string>
