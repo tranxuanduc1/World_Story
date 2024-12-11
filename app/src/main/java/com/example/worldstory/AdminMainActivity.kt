@@ -14,7 +14,6 @@ import androidx.activity.viewModels
 
 import androidx.fragment.app.Fragment
 import com.example.worldstory.dat.admin_view_navs.GenreFragment
-import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.StoryFragment
 import com.example.worldstory.dat.admin_view_navs.UserFragment
 import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
@@ -24,9 +23,8 @@ import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.duc.ducutils.getUserIdSession
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.Role
+import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
+import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -44,6 +42,7 @@ class AdminMainActivity : AppCompatActivity() {
     private val genreViewModel: GenreViewModel by viewModels {
         GenreViewModelFactory(DatabaseHelper(this))
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,12 +53,6 @@ class AdminMainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
-
-//        roleViewModel.deleteAllRole()
-//        roleViewModel.insertRole(Role(null,"ADMIN"))
-//        roleViewModel.insertRole(Role(null,"AUTHOR"))
-//        roleViewModel.insertRole(Role(null,"MEMBER"))
-//        roleViewModel.insertRole(Role(null,"GUEST"))
 
         //Thiết lập sự kiện thông báo nhấn nút add
         val topAppBar: MaterialToolbar = findViewById(R.id.topAppBar)
@@ -75,51 +68,53 @@ class AdminMainActivity : AppCompatActivity() {
                     sharedViewModel.onSearch()
                     true
                 }
-
                 else -> false
             }
         }
-        //đồng bộ navigationBottom với navgraph
-        if (savedInstanceState == null) {
-            loadFragment(UserFragment(), "user")
-        }
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        val bundle =Bundle()
-//        val userID=this.getUserIdSession()
-//        val roleCurrentUser=userViewModel.getUser(userID).roleID
-//        val user=userViewModel.getUser(userID)
-        val currentRole="ADMIN"
-//        bundle.putInt("currentID",userID)
-        bundle.putString("currentRole",currentRole)
+        if (savedInstanceState == null) {
+            if (this.isUserCurrentAdmin())
+                loadFragment(UserFragment(), "user")
+            else if (this.isUserCurrentAuthor()) {
+                bottomNavigationView.menu.findItem(R.id.userFragment).setVisible(false)
+                loadFragment(GenreFragment(), "category")
+            }
+        }
+
+
+        val bundle = Bundle()
+        val currentRole = "ADMIN"
+        bundle.putString("currentRole", currentRole)
         bottomNavigationView.setOnItemSelectedListener { item ->
 
             when (item.itemId) {
                 R.id.userFragment -> {
-                    val userFragment=UserFragment()
-                    userFragment.arguments=bundle
-                    loadFragment(userFragment, "user")
-                    true
+                    if (this.isUserCurrentAdmin()) {
+                        val userFragment = UserFragment()
+                        userFragment.arguments = bundle
+                        loadFragment(userFragment, "user")
+                        true
+                    } else {
+                        Toast.makeText(this, "Bạn không có quyền truy cập", Toast.LENGTH_SHORT)
+                            .show()
+                        false
+                    }
+
                 }
 
                 R.id.categoryFragment -> {
-                    val genreFragment=GenreFragment()
-                    genreFragment.arguments=bundle
+                    val genreFragment = GenreFragment()
+                    genreFragment.arguments = bundle
                     loadFragment(genreFragment, "category")
                     true
                 }
 
                 R.id.storyFragment -> {
-                    val storyFragment=StoryFragment()
-                    storyFragment.arguments=bundle
+                    val storyFragment = StoryFragment()
+                    storyFragment.arguments = bundle
                     loadFragment(storyFragment, "story")
-                    true
-                }
-
-                R.id.commentFragment -> {
-                    val commentFragment=CommentFragment()
-                    commentFragment.arguments=bundle
-                    loadFragment(commentFragment, "comment")
                     true
                 }
 
@@ -127,12 +122,19 @@ class AdminMainActivity : AppCompatActivity() {
             }
         }
         supportFragmentManager.addOnBackStackChangedListener {
-            when (supportFragmentManager.findFragmentById(R.id.host_fragment)?.tag) {
-                "user" -> bottomNavigationView.selectedItemId = R.id.userFragment
-                "category" -> bottomNavigationView.selectedItemId = R.id.categoryFragment
-                "story" -> bottomNavigationView.selectedItemId = R.id.storyFragment
-                "comment" -> bottomNavigationView.selectedItemId = R.id.commentFragment
+            if (this.isUserCurrentAdmin()) {
+                when (supportFragmentManager.findFragmentById(R.id.host_fragment)?.tag) {
+                    "user" -> bottomNavigationView.selectedItemId = R.id.userFragment
+                    "category" -> bottomNavigationView.selectedItemId = R.id.categoryFragment
+                    "story" -> bottomNavigationView.selectedItemId = R.id.storyFragment
+                }
+            } else if (this.isUserCurrentAuthor()) {
+                when (supportFragmentManager.findFragmentById(R.id.host_fragment)?.tag) {
+                    "category" -> bottomNavigationView.selectedItemId = R.id.categoryFragment
+                    "story" -> bottomNavigationView.selectedItemId = R.id.storyFragment
+                }
             }
+
         }
         onBackPressedDispatcher.addCallback(this) {
             val currentTime = System.currentTimeMillis()
@@ -163,7 +165,7 @@ class AdminMainActivity : AppCompatActivity() {
             // Chỉ thêm nếu chưa tồn tại
             fragmentManager.beginTransaction().apply {
                 replace(R.id.host_fragment, fragment, tag)
-                addToBackStack(tag) // Sử dụng tag để quản lý BackStack
+                addToBackStack(tag)
                 commit()
             }
         } else {

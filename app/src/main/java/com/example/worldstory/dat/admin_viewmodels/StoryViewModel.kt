@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
+class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
     ViewModel(db) {
     private val _stories = MutableLiveData<List<Story>>()
     val stories: LiveData<List<Story>> get() = _stories
@@ -89,7 +89,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
 
     }
 
-    fun onAddNewStory(): Long {
+    fun onAddNewStory(userId: Int): Long {
         val story = Story(
             null,
             title.value.toString(),
@@ -99,8 +99,8 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
             SampleDataStory.getExampleImgURLParagraph(),
             isTextStory = isText.value?.toInt() ?: 1,
             dateTimeNow(),
-            Float.MAX_VALUE / Float.MAX_VALUE,
-            1
+            5f,
+            userId
         )
 
         val l: Long = insertStory(story)
@@ -146,7 +146,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
 
     }
 
-    fun fetchAllStoriesByType(id: Int ) {
+    fun fetchAllStoriesByType(id: Int) {
         try {
             type = id
             tempMap.clear()
@@ -180,7 +180,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
     fun deleteStory(story: Story): Int {
         val i: Int = db.deleteStory(story.storyID)
         try {
-            fetchAllStoriesByTypeAsynce(type?: 0)
+            fetchAllStoriesByTypeAsynce(type ?: 0)
             return i
         } catch (e: Exception) {
             e.printStackTrace()
@@ -203,7 +203,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
         )
         try {
             val i: Int = db.updateBackgroundStory(s)
-            fetchAllStoriesByTypeAsynce(type?: 0)
+            fetchAllStoriesByTypeAsynce(type ?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -256,7 +256,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
         )
         try {
             val i: Int = db.updateInforStory(s)
-            fetchAllStoriesByTypeAsynce(type?: 0)
+            fetchAllStoriesByTypeAsynce(type ?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -282,7 +282,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
         )
         try {
             val i: Int = db.updateStory(s)
-            fetchAllStoriesByTypeAsynce(type?: 0)
+            fetchAllStoriesByTypeAsynce(type ?: 0)
             resetValue()
             return i
         } catch (e: Exception) {
@@ -312,12 +312,15 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type:Int) :
     }
 }
 
-class StoryViewModelFactory(private val databaseHelper: DatabaseHelper, private val _type: Int=0) :
+class StoryViewModelFactory(
+    private val databaseHelper: DatabaseHelper,
+    private val _type: Int = 0
+) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
-            return StoryViewModel(databaseHelper,_type) as T
+            return StoryViewModel(databaseHelper, _type) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

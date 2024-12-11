@@ -60,34 +60,34 @@
         <activity
             android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name="com.example.worldstory.AdminMainActivity"-->
-<!--            android:exported="false" /> &lt;!&ndash; user gui &ndash;&gt;-->
-<!--        <activity-->
-<!--            android:name="com.example.worldstory.StartActivity"-->
-<!--            android:exported="true"-->
-<!--            android:launchMode="singleTask"-->
-<!--            >-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
         <activity
             android:name="com.example.worldstory.AdminMainActivity"
             android:exported="false" /> <!-- user gui -->
         <activity
             android:name="com.example.worldstory.StartActivity"
-
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--            android:name="com.example.worldstory.AdminMainActivity"-->
+<!--            android:exported="false" /> &lt;!&ndash; user gui &ndash;&gt;-->
+<!--        <activity-->
+<!--            android:name="com.example.worldstory.StartActivity"-->
+
+<!--            android:exported="true"-->
+<!--            android:launchMode="singleTask">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
     </application>
 
 </manifest>

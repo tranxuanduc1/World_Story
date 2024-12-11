@@ -15,7 +15,6 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -26,6 +25,8 @@
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
+                app:cardElevation="10dp"
+                style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -109,6 +110,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:padding="10dp"
                             android:fontFamily="sans-serif-condensed"
                             android:singleLine="true"
                             android:text="@={storyViewModel.author}"
@@ -135,6 +137,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
+                            android:padding="5dp"
                             android:text="Tóm tắt nội dung: "
                             android:textSize="11sp" />
 
@@ -188,7 +191,7 @@
 
 
             <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewFilledStyle"
+                style="?attr/materialCardViewOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
@@ -235,7 +238,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewFilledStyle"
+                style="?attr/materialCardViewOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"

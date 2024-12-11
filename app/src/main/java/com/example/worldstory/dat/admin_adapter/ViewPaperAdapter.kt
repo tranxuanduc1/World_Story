@@ -3,7 +3,7 @@ package com.example.worldstory.dat.admin_adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.worldstory.dat.admin_view_navs.CommentFragment
+import com.example.worldstory.dat.admin_view_navs.chapter_activity.CommentFragment
 import com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterFragment
 import com.example.worldstory.dat.admin_view_navs.chapter_activity.RateFragment
 

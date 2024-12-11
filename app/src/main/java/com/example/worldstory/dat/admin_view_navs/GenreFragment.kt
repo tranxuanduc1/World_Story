@@ -27,6 +27,8 @@ import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
 import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.User
 import com.example.worldstory.model_for_test.Category
@@ -103,12 +105,17 @@ class GenreFragment : Fragment() {
 
         binding.categoryList.layoutManager = LinearLayoutManager(requireContext())
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        genreAdapter = GenreAdapter(genreViewModel,genreViewModel.genres.value ?: emptyList(), color1)
+        genreAdapter = GenreAdapter(
+            genreViewModel,
+            genreViewModel.genres.value ?: emptyList(),
+            color1,
+            requireContext()
+        )
         binding.categoryList.adapter = genreAdapter
         genreViewModel.genres.observe(viewLifecycleOwner) {
             genreAdapter.updateList(genreViewModel.genres.value ?: emptyList())
         }
-        Log.i("size","${genreViewModel.genres.value?.size}")
+        Log.i("size", "${genreViewModel.genres.value?.size}")
 
 
         //swipe
@@ -127,12 +134,30 @@ class GenreFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val genre = genreAdapter.getGenre(position)
                 if (direction == ItemTouchHelper.LEFT) {
+                    if (requireContext().isUserCurrentAdmin())
+                        showConfirmationDialog(genre, position)
+                    else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Bạn không có quyền xóa đối tượng này",
+                            Toast.LENGTH_SHORT
 
-                    showConfirmationDialog(genre, position)
-
+                        ).show()
+                        genreAdapter.notifyItemChanged(position)
+                    }
                 } else if (direction == ItemTouchHelper.RIGHT) {
 
-                    showConfirmationDialog(genre, position)
+                    if (requireContext().isUserCurrentAdmin())
+                        showConfirmationDialog(genre, position)
+                    else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Bạn không có quyền xóa đối tượng này",
+                            Toast.LENGTH_SHORT
+
+                        ).show()
+                        genreAdapter.notifyItemChanged(position)
+                    }
 
                 }
             }
@@ -180,8 +205,7 @@ class GenreFragment : Fragment() {
                     // Vẽ icon lên Canvas
                     icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                     icon.draw(canvas)
-                }
-                else{
+                } else {
                     paint.color = Color.RED
                     canvas.drawRect(
                         itemView.left.toFloat(),
@@ -245,7 +269,7 @@ class GenreFragment : Fragment() {
     }
 
 
-    private fun showConfirmationDialog(genre: Genre, p:Int) {
+    private fun showConfirmationDialog(genre: Genre, p: Int) {
         // Tạo AlertDialog.Builder
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage("Có chắc muốn xóa không?")

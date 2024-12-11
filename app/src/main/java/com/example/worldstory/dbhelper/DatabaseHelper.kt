@@ -549,6 +549,7 @@ class DatabaseHelper(context: Context) :
             arrayOf(story.storyID.toString())
         )
     }
+
     fun updateFaceStory(story: Story): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -561,6 +562,7 @@ class DatabaseHelper(context: Context) :
             arrayOf(story.storyID.toString())
         )
     }
+
     fun updateInforStory(story: Story): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -575,6 +577,7 @@ class DatabaseHelper(context: Context) :
             arrayOf(story.storyID.toString())
         )
     }
+
     fun deleteStory(storyId: Int?): Int {
         val db = writableDatabase
         return db.delete(
@@ -685,6 +688,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return story
     }
+
     fun getStoriesByIsText(isText: Int): List<Story> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1082,12 +1086,15 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return users
     }
-    fun getUsersByRole(roleId:Int): List<User> {
+
+    fun getUsersByRole(roleId: Int): List<User> {
         val db = readableDatabase
-        val cursor = db.rawQuery("""
+        val cursor = db.rawQuery(
+            """
             SELECT * FROM ${Contract.UserEntry.TABLE_NAME}
             WHERE ${Contract.UserEntry.COLUMN_ROLE_ID_FK} = ?
-        """.trimIndent(), arrayOf(roleId.toString()))
+        """.trimIndent(), arrayOf(roleId.toString())
+        )
         val users = mutableListOf<User>()
 
         if (cursor.moveToFirst()) {
@@ -1107,12 +1114,24 @@ class DatabaseHelper(context: Context) :
                     cursor.getInt(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_ROLE_ID_FK))
                 val createdDate =
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.UserEntry.COLUMN_CREATED_DATE))
-                users.add(User(id, userName, hashedPw,email, imgAvatar, nickName, roleID, createdDate))
+                users.add(
+                    User(
+                        id,
+                        userName,
+                        hashedPw,
+                        email,
+                        imgAvatar,
+                        nickName,
+                        roleID,
+                        createdDate
+                    )
+                )
             } while (cursor.moveToNext())
         }
         cursor.close()
         return users
     }
+
     fun getUserByUsersId(userId: Int): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1368,7 +1387,7 @@ class DatabaseHelper(context: Context) :
         val db = this.readableDatabase
         val cursor = db.rawQuery(
             "SELECT CASE WHEN EXISTS (SELECT 1 FROM ${Contract.GenreEntry.TABLE_NAME}" +
-                    " WHERE ${Contract.GenreEntry.COLUMN_NAME} = ?)" +
+                    " WHERE LOWER(${Contract.GenreEntry.COLUMN_NAME}) = LOWER(?))" +
                     " THEN 1 ELSE 0 END AS user_exists", arrayOf(name)
         )
         var exists = 0
@@ -1933,6 +1952,11 @@ class DatabaseHelper(context: Context) :
             "${BaseColumns._ID} = ?",
             arrayOf(ImageID.toString())
         )
+    }
+
+    fun deleteImageByChapterId(id: Int) {
+        val db = writableDatabase
+        db.execSQL("DELETE FROM ${Contract.ImageEntry.TABLE_NAME} WHERE ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK}=${id}")
     }
 
     fun updateImage(img: Image): Int {

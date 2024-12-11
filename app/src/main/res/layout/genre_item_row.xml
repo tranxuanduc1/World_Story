@@ -25,7 +25,6 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Cột 2"
             android:textAlignment="center"
             android:maxLines="1"
             android:textSize="13sp" />
@@ -62,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:src="@drawable/outline_cancel_24"/>
+            android:src="@drawable/outline_cancel_12"/>
     </LinearLayout>
 
 </LinearLayout>

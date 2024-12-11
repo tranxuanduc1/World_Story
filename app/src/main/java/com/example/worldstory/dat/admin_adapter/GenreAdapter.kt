@@ -2,6 +2,7 @@ package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +12,21 @@ import android.widget.Filterable
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.GenreViewHolder
 import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
+import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Rate
 
 class GenreAdapter(
     private val genreViewModel: GenreViewModel,
     private var genreList: List<Genre>,
-    private var color: Int
+    private var color: Int,
+    private val context: Context
 ) :
     RecyclerView.Adapter<GenreViewHolder>(), Filterable {
     private var filteredList: List<Genre> = genreList
@@ -40,8 +45,10 @@ class GenreAdapter(
         holder.column2.text = genre.genreName
         holder.column3.text = sum.toString()
         holder.itemView.setOnLongClickListener {
-            showPopupMewnu(holder.itemView, genre)
-            true
+            if (context.isUserCurrentAdmin()) {
+                showPopupMewnu(holder.itemView, genre)
+                true
+            } else false
         }
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(color)
@@ -109,7 +116,7 @@ class GenreAdapter(
                     val acceptBtn = view.findViewById<ImageButton>(R.id.accept_change)
                     val cancelBtn = view.findViewById<ImageButton>(R.id.cancel_change)
 
-                    val open = fun(): Boolean{
+                    val open = fun(): Boolean {
                         editText.visibility = View.VISIBLE
                         acceptBtn.visibility = View.VISIBLE
                         cancelBtn.visibility = View.VISIBLE
@@ -117,7 +124,7 @@ class GenreAdapter(
                         textView3.visibility = View.GONE
                         return true
                     }
-                    val close=fun():Boolean{
+                    val close = fun(): Boolean {
                         editText.visibility = View.GONE
                         acceptBtn.visibility = View.GONE
                         cancelBtn.visibility = View.GONE
@@ -126,7 +133,6 @@ class GenreAdapter(
                         return true
                     }
                     open()
-
 
 
                     val dialog = AlertDialog.Builder(view.context)
