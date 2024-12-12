@@ -33,7 +33,7 @@ class Duc_UseCreatedStory_Adapter(
         var numCreated=usersAndNumlist[position].second
         var binding=holder.binding
 
-        binding.txtNicknameItemUserCreatedStory.text=user.userName
+        binding.txtNicknameItemUserCreatedStory.text=user.nickName
         // so luong truyen ma user da dang tai
         binding.txtNumStoriesItemUserCreatedStory.text=numCreated.toString()
         binding.imgAvatarItemUserCreatedStory.loadImgURL(context,user.imgAvatar)

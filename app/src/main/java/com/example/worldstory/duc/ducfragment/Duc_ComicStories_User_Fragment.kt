@@ -111,20 +111,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 )
 
             })
-//        var numStories=6
-//        ducStoryViewModel.listOfStoriesAndGenre.observe(viewLifecycleOwner, Observer{
-//            listOfStoriesAndGenre->
-//            listOfStoriesAndGenre.forEach {
-//                callLog("storyViewmodel",it.listOfStories.toString())
-//            }
-//
-//            var adapterGird= Duc_CardStoryAndGenre_Adapter(requireContext(),listOfStoriesAndGenre,isText,numStories)
-//            binding.rvCardStoriesAndGenreComicStoriesUser.adapter=null
-//            binding.rvCardStoriesAndGenreComicStoriesUser.apply {
-//                adapter=adapterGird
-//
-//            }
-//        })
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
             // tat hieu ung load
@@ -144,7 +130,6 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
                 ducStoryViewModel.fetchGenreAndStoriesByGenre(genre, isText)
             }
-            //ducStoryViewModel.fetchListOfStoriesAndGenre(genres,isText)
 
         })
         //tao truyen hot,user hot, high score stories
