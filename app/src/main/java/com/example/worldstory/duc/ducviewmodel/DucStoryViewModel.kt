@@ -41,6 +41,9 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
     private val _comboHighScoreStories = MutableLiveData<List<DucComboHighScoreStoryDataClass>>()
     val comboHighScoreStories: LiveData<List<DucComboHighScoreStoryDataClass>> get() = _comboHighScoreStories
 
+    private val _storiesByUser = MutableLiveData<List<Story>>()
+    val storiesByUser: LiveData<List<Story>> get() = _storiesByUser
+
     init {
         fetchStories()
         fetchStoriesHistory()
@@ -147,6 +150,15 @@ class DucStoryViewModel(var repository: DucDataRepository, var context: Context)
                 listOfComboHighScoreStories.add(combo)
             }
             _comboHighScoreStories.value=listOfComboHighScoreStories
+        }
+    }
+
+    fun fetchStoriesByUser(userId: Int){
+        viewModelScope.launch{
+            var resultStoriesByUser=withContext(Dispatchers.IO){
+                repository.getStoriesByUser(userId)
+            }
+            _storiesByUser.value=resultStoriesByUser
         }
     }
     fun getStoriesByGenre(genreId: Int, isText: Boolean): List<Story> {

@@ -405,6 +405,6 @@ fun formatFloat(num: Float): String {
     return String.format("%.1f", num)
 }
 
-fun DateFromDateTime(dateTime: String): String {
-    return dateTime.split(" ")[0]
+fun String.dateFromDateTime(): String {
+    return split(" ")[0]
 }

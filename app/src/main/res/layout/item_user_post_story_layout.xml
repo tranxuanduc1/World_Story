@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp">
+            <ImageView
+                android:id="@+id/img_avatarUser_UserPostStory"
+                android:layout_margin="15dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/cat"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="15dp"
+                >
+                <TextView
+                    android:id="@+id/txt_nickNameUser_UserPostStory"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="Ten cua use nguoi "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/txt_datePost_UserPostStory"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="2024-11-10 "
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/img_imgStory_UserPostStory"
+                android:layout_marginVertical="80dp"
+                android:layout_width="300dp"
+                android:layout_height="400dp"
+                android:src="@drawable/a5"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:background="@drawable/image_button_search_slector"
+                />
+
+        </FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green1"/>
+    </LinearLayout>
+
+</LinearLayout>

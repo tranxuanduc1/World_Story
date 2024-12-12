@@ -217,6 +217,9 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         // lay 6 phan tu
         var limitStories = stories.take(numberStoryShow)
         var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
+
+        //xoa adapter cu
+        binding.rvHotStoriesComicStoriesUser.adapter=null
         binding.rvHotStoriesComicStoriesUser.apply {
             adapter = adapterHotStories
         }
@@ -235,6 +238,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             var adapterHighScoreStories =
                 Duc_HighScoreStory_Adapter(requireContext(), ArrayList(limitStories))
 
+            //xoa adapter cu
+            binding.rvHighScoreStoriesComicStoriesUser.adapter=null
             binding.rvHighScoreStoriesComicStoriesUser.apply {
                 adapter = adapterHighScoreStories
             }
@@ -250,6 +255,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             var numUsers = 6
             var topUser = getHotUsers(users, numUsers, stories)
             var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
+            //xoa adapter cu
+            binding.rvHotUsersComicStoriesUser.adapter=null
             binding.rvHotUsersComicStoriesUser.apply {
                 adapter = adapterAuthorUser
 
