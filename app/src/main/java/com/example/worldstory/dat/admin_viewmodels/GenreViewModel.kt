@@ -21,14 +21,13 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     private val tempGenres = mutableListOf<Genre>()
 
     init {
-        fetchAllGenre()
+        fetch()
     }
 
-    fun onAddNewGern(userId:Int): Long {
+    fun onAddNewGern(userId: Int): Long {
         val genre = Genre(null, genreName = genreName.value.toString(), userId)
         val l = insertGenre(genre)
         genreName.value = ""
-        fetchAllGenre()
         return l
     }
 
@@ -36,18 +35,17 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         tempGenres.clear()
         tempGenres.addAll(db.getAllGenres())
         _genres.value = tempGenres
-
     }
 
     fun fetchAllGenre() {
         tempGenres.clear()
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+
                 tempGenres.addAll(db.getAllGenres())
-            }
+
 
             _genres.value = tempGenres
-        }
+            tempGenres.clear()
+
 
 
     }
@@ -62,26 +60,26 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
 
     fun deleteGenre(genre: Genre): Int {
         val i: Int = db.deleteGenre(genre.genreID)
-        fetchAllGenre()
+        fetch()
         return i
     }
 
     fun insertGenre(genre: Genre): Long {
         val l: Long = db.insertGenre(genre)
-        fetchAllGenre()
+        fetch()
         return l
     }
 
     fun updateGenre(genre: Genre): Int {
         val i: Int = db.updateGenre(genre)
-        fetchAllGenre()
+        fetch()
         return i
     }
 
 
     fun deleteGenre(id: Int) {
         db.deleteGenre(id)
-        fetchAllGenre()
+        fetch()
     }
 
     fun sumStoryByGenre(id: Int): Int {
