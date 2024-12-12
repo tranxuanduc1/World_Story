@@ -33,11 +33,10 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Cột 2"
             android:textAlignment="center"
             android:maxLines="1"
             android:visibility="gone"
-            android:textSize="16sp" />
+            android:textSize="13sp" />
         <TextView
             android:id="@+id/ca_column3"
             android:layout_width="0dp"

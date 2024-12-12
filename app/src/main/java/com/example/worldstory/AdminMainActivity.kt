@@ -1,6 +1,10 @@
 package com.example.worldstory
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +15,7 @@ import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.Constraints
 
 import androidx.fragment.app.Fragment
 import com.example.worldstory.dat.admin_view_navs.GenreFragment
@@ -54,6 +59,8 @@ class AdminMainActivity : AppCompatActivity() {
             insets
         }
 
+
+
         //Thiết lập sự kiện thông báo nhấn nút add
         val topAppBar: MaterialToolbar = findViewById(R.id.topAppBar)
         topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
@@ -68,6 +75,7 @@ class AdminMainActivity : AppCompatActivity() {
                     sharedViewModel.onSearch()
                     true
                 }
+
                 else -> false
             }
         }
@@ -177,5 +185,10 @@ class AdminMainActivity : AppCompatActivity() {
     override fun onDestroy() {
         DatabaseHelper(this).close()
         super.onDestroy()
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

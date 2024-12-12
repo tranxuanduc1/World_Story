@@ -50,7 +50,6 @@ class StartActivity : AppCompatActivity() {
             finish()
             return
         }
-
         isActivityRunning = true
         enableEdgeToEdge()
         binding = ActivityStartBinding.inflate(layoutInflater)
@@ -60,7 +59,6 @@ class StartActivity : AppCompatActivity() {
         setContentView(view)
         var dataHelper: DatabaseHelper = DatabaseHelper.getInstance(this)
 
-        //testDatabase()
 
         callLog("=========", "bat dau chay start activity")
 

@@ -3,9 +3,12 @@ package com.example.worldstory.dat.admin_adapter
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -19,11 +22,13 @@ import com.example.worldstory.model.User
 
 class RateAdapter(
     private val userList: MutableList<User>,
-    private val rateList:MutableList<Rate>,
+    private val rateList: MutableList<Rate>,
     private val rateViewModel: RateViewModel,
     private val context: Context
 ) :
-    RecyclerView.Adapter<RateViewHolder>() {
+    RecyclerView.Adapter<RateViewHolder>(), Filterable {
+
+    private var filterList: List<User> = userList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RateViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,13 +37,18 @@ class RateAdapter(
     }
 
     override fun onBindViewHolder(holder: RateViewHolder, position: Int) {
-        val user = userList[position]
-        val rate=rateList[position]
+
+        val user = filterList[position]
+        val rate = rateList.find { it.userID == user.userID }
         holder.c2.text = user.userName
         holder.c3.text = user.nickName
         holder.c1.text = user.userID.toString()
         holder.itemView.setOnLongClickListener {
-            showPopupMewnu(holder.itemView, rate =rate )
+            if (rate != null) {
+                showPopupMewnu(holder.itemView, rate = rate)
+            } else {
+                Log.w("RateAdapter", "Không tìm thấy rate cho userID: ${user.userID}")
+            }
             true
         }
         if (position % 2 == 0) {
@@ -48,10 +58,10 @@ class RateAdapter(
     }
 
 
-    override fun getItemCount(): Int = userList.size
+    override fun getItemCount(): Int = filterList.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun update(newUserList: List<User>,newRateList: List<Rate>) {
+    fun update(newUserList: List<User>, newRateList: List<Rate>) {
         userList.clear()
         rateList.clear()
         userList.addAll(newUserList)
@@ -60,8 +70,9 @@ class RateAdapter(
     }
 
 
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun showPopupMewnu(view: View, rate: Rate) {
+    private fun showPopupMewnu(view: View, rate: Rate?) {
         val popupMenu = PopupMenu(view.context, view)
 
         popupMenu.menuInflater.inflate(R.menu.stats_options_menu, popupMenu.menu)
@@ -86,5 +97,37 @@ class RateAdapter(
         popupMenu.show()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun resetList() {
+        filterList = userList.toList()
+        notifyDataSetChanged()
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                var query: String = constraint.toString()
+                filterList = if (query.isEmpty()) {
+                    userList
+                } else {
+                    userList.filter {
+                        it.nickName.contains(
+                            query,
+                            ignoreCase = true
+                        ) || it.userName.contains(query, ignoreCase = true)
+                    }
+                }
+                val result = FilterResults()
+                result.values = filterList
+                return result
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun publishResults(p0: CharSequence, p1: FilterResults) {
+                filterList = p1.values as List<User>
+                notifyDataSetChanged()
+            }
+        }
+    }
 
 }

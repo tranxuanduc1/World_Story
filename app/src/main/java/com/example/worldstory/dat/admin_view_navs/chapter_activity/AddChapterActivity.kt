@@ -88,6 +88,8 @@ class AddChapterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAddChapterBinding.inflate(layoutInflater)
+        binding.headerAdd.visibility = View.VISIBLE
+        binding.headerChange.visibility = View.GONE
         binding.chapterViewModel = chapterViewModel
         binding.lifecycleOwner = this
         setContentView(binding.root)
@@ -127,7 +129,6 @@ class AddChapterActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main) {
                         binding.progressBar.visibility = View.VISIBLE
-                        disableMainScreenInteraction()
                     }
                     try {
                         val deferredTasks =
@@ -154,7 +155,7 @@ class AddChapterActivity : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
-                            enableMainScreenInteraction()
+                            this@AddChapterActivity.finish()
                         }
                     }
 
@@ -170,20 +171,7 @@ class AddChapterActivity : AppCompatActivity() {
         binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
     }
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val view = currentFocus
-            if (view is EditText) {
-                val outRect = Rect()
-                view.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    view.clearFocus()
-                    hideKeyboard(this)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
+
     fun openImagePicker() {
         pickImageLauncher.launch(arrayOf("image/jpeg"))
     }
@@ -272,12 +260,5 @@ class AddChapterActivity : AppCompatActivity() {
     }
 
 
-    fun hideKeyboard(activity: Activity) {
-        val inputMethodManager =
-            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        val currentFocus = activity.currentFocus
-        if (currentFocus != null) {
-            inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-        }
-    }
+
 }

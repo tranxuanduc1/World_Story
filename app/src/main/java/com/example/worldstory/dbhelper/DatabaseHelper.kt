@@ -774,6 +774,7 @@ class DatabaseHelper(context: Context) :
         val db = writableDatabase
         val values = ContentValues().apply {
             put(Contract.ChapterEntry.COLUMN_TITLE, chapter.title)
+            put(Contract.ChapterEntry.COLUMN_DATE_CREATED, chapter.dateCreated)
         }
         return db.update(
             Contract.ChapterEntry.TABLE_NAME,
@@ -881,6 +882,11 @@ class DatabaseHelper(context: Context) :
             "${BaseColumns._ID} = ?",
             arrayOf(paragraphID.toString())
         )
+    }
+
+    fun deleteParagraphByChapterId(id: Int){
+        val db=writableDatabase
+        db.execSQL("DELETE FROM ${Contract.ParagraphEntry.TABLE_NAME} WHERE ${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK}= $id")
     }
 
     fun updateParagraph(paragraph: Paragraph): Int {
@@ -1598,12 +1604,12 @@ class DatabaseHelper(context: Context) :
         return db.insert(Contract.RateEntry.TABLE_NAME, null, values)
     }
 
-    fun deleteRate(rate: Rate): Int {
+    fun deleteRate(rate: Rate?): Int {
         val db = writableDatabase
         return db.delete(
             Contract.RateEntry.TABLE_NAME,
             "${Contract.RateEntry.COLUMN_USER_ID_FK} = ? AND ${Contract.RateEntry.COLUMN_STORY_ID_FK} = ?",
-            arrayOf(rate.userID.toString(), rate.storyID.toString())
+            arrayOf(rate?.userID.toString(), rate?.storyID.toString())
         )
     }
 

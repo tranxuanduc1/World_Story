@@ -1,13 +1,17 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +32,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.google.android.material.appbar.AppBarLayout
 
 
 class RateFragment : Fragment() {
@@ -61,9 +66,17 @@ class RateFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+
+        binding.root.setOnTouchListener { v, _ ->
+            hideKeyboard(v)
+            false
+        }
+
+
 
         idStory = arguments?.getInt("idStory1")
         rateViewModel = RateViewModelFactory(
@@ -81,7 +94,11 @@ class RateFragment : Fragment() {
 
         pieChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
-                Toast.makeText(requireContext(), "No slice selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Bấm vô màu khác để hiện danh sách theo loại đó",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             @SuppressLint("SetTextI18n")
@@ -96,6 +113,7 @@ class RateFragment : Fragment() {
                             break
                         }
                     }
+
                 }
             }
         })
@@ -114,7 +132,7 @@ class RateFragment : Fragment() {
         binding.rateList.adapter = rateAdapter
 
         rateViewModel.rateList.observe(viewLifecycleOwner) {
-            Log.w("del1",rateViewModel.rateList.value?.size.toString())
+            Log.w("del1", rateViewModel.rateList.value?.size.toString())
             updatePieChart(pieChart)
         }
 
@@ -123,12 +141,48 @@ class RateFragment : Fragment() {
                 rateViewModel.users.value?.toMutableList() ?: mutableListOf(),
                 rateViewModel.rateListByScore.value?.toMutableList() ?: mutableListOf()
             )
+            rateAdapter.resetList()
         }
+
+
+        binding.searchRate.setOnSearchClickListener {
+
+
+            if (binding.headerRates.visibility == View.VISIBLE) {
+                binding.headerRates.visibility = View.GONE
+            }
+        }
+        binding.searchRate.setOnCloseListener {
+            if (binding.headerRates.visibility == View.GONE) {
+                binding.headerRates.visibility = View.VISIBLE
+            }
+            rateAdapter.resetList()
+            false
+        }
+
+        binding.searchRate.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                rateAdapter.filter.filter(query)
+                hideKeyboard(binding.searchRate)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
 
     }
 
+    private fun hideKeyboard(view: View) {
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+
     fun updatePieChart(pieChart: PieChart) {
-rateRatioList.clear()
+        rateRatioList.clear()
         // Dữ liệu cho biểu đồ
         val entries = ArrayList<PieEntry>()
 
@@ -143,7 +197,7 @@ rateRatioList.clear()
         dataSet.colors = listOf(
             Color.RED,
             ContextCompat.getColor(requireContext(), R.color.flame),
-            Color.YELLOW,
+            ContextCompat.getColor(requireContext(), R.color.golden),
             Color.GREEN,
             Color.BLUE
         )
@@ -158,11 +212,11 @@ rateRatioList.clear()
         // Gắn dữ liệu vào biểu đồ
         pieChart.data = pieData
         pieChart.setUsePercentValues(true) // Hiển thị theo phần trăm
-        pieChart.description.isEnabled = false // Tắt phần mô tả
+        pieChart.description.isEnabled = false
         pieChart.setDrawEntryLabels(false)
         pieChart.isHighlightPerTapEnabled = true  // Cho phép chọn slice khi bấm
         pieChart.setTouchEnabled(true)           // Cho phép tương tác với PieChart
         pieChart.animateY(1000) // Hiệu ứng
-        pieChart.invalidate() // Cập nhật lại biểu đồ
+        pieChart.invalidate()
     }
 }

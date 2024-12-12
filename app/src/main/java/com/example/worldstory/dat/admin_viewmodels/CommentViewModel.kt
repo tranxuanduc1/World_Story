@@ -52,7 +52,7 @@ class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : V
                 getUsers(tempComments).forEach { (k, v) -> tempCommentUserMap[k] = v }
             }
 
-            tempCommentUserMap.forEach { (k, v) -> tempUserList.add(v) }
+            tempCommentUserMap.forEach { (_, v) -> tempUserList.add(v) }
 
             _userList.value = tempUserList
             _commentUserMap.value = tempCommentUserMap

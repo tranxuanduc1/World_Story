@@ -1,12 +1,15 @@
 package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
@@ -94,9 +97,39 @@ class CommentFragment : Fragment() {
             updateBarChart(barChart)
         }
 
+        binding.searchCmt.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
 
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                commentAdapter.filter.filter(query )
+                hideKeyboard(binding.searchCmt)
+                return true
+            }
+        })
+
+
+        binding.searchCmt.setOnSearchClickListener {
+
+
+            if (binding.headerTable.visibility == View.VISIBLE) {
+                binding.headerTable.visibility = View.GONE
+            }
+        }
+        binding.searchCmt.setOnCloseListener {
+            if (binding.headerTable.visibility == View.GONE) {
+                binding.headerTable.visibility = View.VISIBLE
+            }
+            commentAdapter.resetList()
+            false
+        }
     }
 
+    private fun hideKeyboard(view: View) {
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateBarChart(barChart: BarChart) {

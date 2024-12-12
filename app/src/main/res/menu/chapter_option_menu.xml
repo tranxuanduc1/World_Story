@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/del_chapter"
+        android:title="Xóa" />
+    <item
+        android:id="@+id/change_content_chapter"
+        android:title="Thay đổi nội dung" />
+</menu>

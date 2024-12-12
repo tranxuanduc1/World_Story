@@ -7,6 +7,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,6 +56,7 @@ class AddTextChapterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddTextChapterBinding.inflate(layoutInflater)
+        binding.headerAdd.visibility= View.VISIBLE
         binding.chapterViewModel = chapterViewModel
         binding.lifecycleOwner = this
 
@@ -87,18 +90,24 @@ class AddTextChapterActivity : AppCompatActivity() {
 
         //accept
         binding.acceptAddChapterTxt.setOnClickListener {
-            if (binding.tenChap.text.isNullOrEmpty()) {
-                binding.tenChap.error = "Không được bỏ trống"
-            } else {
-                val storyID = intent.getIntExtra("storyID", -1)
-                for (s in tempFile) {
-                    contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
-                    chapterViewModel.onAddTextChapter(storyID, contentMap)
+            try {
+                if (binding.tenChap.text.isNullOrEmpty()) {
+                    binding.tenChap.error = "Không được bỏ trống"
+                } else {
+                    val storyID = intent.getIntExtra("storyID", -1)
+                    for (s in tempFile) {
+                        contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
+                        chapterViewModel.onAddTextChapter(storyID, contentMap)
+                    }
+                    contentMap.clear()
+                    tempFile.clear()
+                    index = 0
+                    this.finish()
                 }
-                contentMap.clear()
-                tempFile.clear()
-                index = 0
+            }catch (e:Exception ){
+                Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
             }
+
         }
 
         //sk upload
@@ -145,14 +154,4 @@ class AddTextChapterActivity : AppCompatActivity() {
         return result
     }
 
-
-    // Khởi tạo Google Drive API client
-    fun initDriveService(credential: GoogleCredential): Drive {
-        val transport = NetHttpTransport()
-        val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
-
-        return Drive.Builder(transport, jsonFactory, credential)
-            .setApplicationName("YourApp")
-            .build()
-    }
 }

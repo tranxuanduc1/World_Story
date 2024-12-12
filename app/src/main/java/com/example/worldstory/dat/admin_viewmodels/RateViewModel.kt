@@ -102,7 +102,7 @@ class RateViewModel(private val db: DatabaseHelper, private val id: Int?) : View
     }
 
 
-    fun delete(rate: Rate): Int {
+    fun delete(rate: Rate?): Int {
         try {
 
             val i = db.deleteRate(rate)

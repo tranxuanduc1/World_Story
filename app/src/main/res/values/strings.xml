@@ -58,4 +58,12 @@
         <item>Truyện hình</item>
         <item>Truyện chữ</item>
     </string-array>
+
+
+    <string-array name="sort_story_options">
+        <item>Mới nhất</item>
+        <item>Cũ nhất</item>
+        <item>Id giảm</item>
+        <item>Id tăng </item>
+    </string-array>
 </resources>

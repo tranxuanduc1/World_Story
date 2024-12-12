@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Genre
+import com.example.worldstory.model.Role
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,18 +21,19 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     private val tempGenres = mutableListOf<Genre>()
 
     init {
-        fetch()
+        fetchAllGenre()
     }
 
     fun onAddNewGern(userId:Int): Long {
         val genre = Genre(null, genreName = genreName.value.toString(), userId)
-        fetchAllGenre()
         val l = insertGenre(genre)
         genreName.value = ""
+        fetchAllGenre()
         return l
     }
 
     fun fetch() {
+        tempGenres.clear()
         tempGenres.addAll(db.getAllGenres())
         _genres.value = tempGenres
 

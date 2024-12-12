@@ -2,6 +2,8 @@ package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,8 +12,11 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.worldstory.dat.admin_view_navs.chapter_activity.EditChapterActivity
+import com.example.worldstory.dat.admin_view_navs.chapter_activity.EditTextChapterActivity
 import com.example.worldstory.dat.admin_viewholder.ChapterViewHolder
 import com.example.worldstory.dat.admin_viewholder.CommentViewHolder
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
@@ -21,7 +26,13 @@ import com.example.worldstory.model.Rate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ChapterAdapter(private var chapterList: MutableList<Chapter>?, private val storyViewModel: StoryViewModel) :
+class ChapterAdapter(
+    private var chapterList: MutableList<Chapter>?,
+    private val storyViewModel: StoryViewModel,
+    private val context: Context,
+    private val storyId: Int,
+    private val type: Int,
+) :
     RecyclerView.Adapter<ChapterViewHolder>() {
     override fun getItemCount(): Int = chapterList?.size ?: 0
 
@@ -34,7 +45,7 @@ class ChapterAdapter(private var chapterList: MutableList<Chapter>?, private val
         holder.col2.text = chapter?.title
         holder.col3.text = getFormatedDate(chapter?.dateCreated)
         holder.itemView.setOnLongClickListener {
-            showPopupMewnu(holder.itemView,chapter)
+            showPopupMewnu(holder.itemView, chapter)
             true
         }
     }
@@ -68,11 +79,11 @@ class ChapterAdapter(private var chapterList: MutableList<Chapter>?, private val
     private fun showPopupMewnu(view: View, chapter: Chapter?) {
         val popupMenu = PopupMenu(view.context, view)
 
-        popupMenu.menuInflater.inflate(R.menu.stats_options_menu, popupMenu.menu)
+        popupMenu.menuInflater.inflate(R.menu.chapter_option_menu, popupMenu.menu)
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.del_item -> {
+                R.id.del_chapter -> {
                     val dialog = AlertDialog.Builder(view.context)
                     dialog.setMessage("Có chắc muốn xóa ?")
                         .setPositiveButton("Đồng ý") { dialog, _ ->
@@ -84,12 +95,27 @@ class ChapterAdapter(private var chapterList: MutableList<Chapter>?, private val
                         }
                     dialog.show()
                 }
+
+                R.id.change_content_chapter -> {
+
+                    if (type == 0) {
+                        val intent = Intent(context, EditChapterActivity::class.java)
+                        intent.putExtra("chapter", chapter)
+                        intent.putExtra("storyId", storyId)
+                        context.startActivity(intent)
+                    } else if (type == 1) {
+                        val intent = Intent(context, EditTextChapterActivity::class.java)
+                        intent.putExtra("chapter", chapter)
+                        intent.putExtra("storyId", storyId)
+                        context.startActivity(intent)
+                    }
+
+                }
             }
             true
         }
         popupMenu.show()
     }
-
 
 
 }

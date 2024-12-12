@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -13,9 +14,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,6 +31,7 @@ import com.example.worldstory.dat.admin_viewmodels.ChapterViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.model.Chapter
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.googleapis.media.MediaHttpUploader
 import com.google.api.client.http.HttpTransport
@@ -73,11 +77,22 @@ class EditChapterActivity : AppCompatActivity() {
             }
         }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val chapter = intent.getParcelableExtra("chapter", Chapter::class.java)
+
         binding = ActivityAddChapterBinding.inflate(layoutInflater)
+
+
+        binding.headerChange.visibility = View.VISIBLE
+
+
         binding.chapterViewModel = chapterViewModel
+        chapterViewModel.name.value = chapter?.title
+
         binding.lifecycleOwner = this
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -107,12 +122,12 @@ class EditChapterActivity : AppCompatActivity() {
 
         //accept
         binding.acceptAddChapter.setOnClickListener {
+
+
             val storyID = intent.getIntExtra("storyID", -1)
 
             if (binding.tenChap.text.isNullOrEmpty()) {
-                binding.tenChap.error = "Không được bỏ trống"
-            } else {
-
+                chapterViewModel.name.value = chapter?.title
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main) {
                         binding.progressBar.visibility = View.VISIBLE
@@ -130,15 +145,30 @@ class EditChapterActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             if (rs.all { it }) {
                                 chapterViewModel.setImgs()
-                                chapterViewModel.onAddChapter(storyID = storyID)
+                                chapterViewModel.arrID.clear()
+                                chapterViewModel.updateContent(
+                                    chapterID = chapter?.chapterID ?: -1,
+                                    storyID = storyID
+                                )
                             } else {
                                 Log.w("khoong thanh cong", "that bai")
+
                             }
+                            prvImgAdapter.updateMap(emptyMap())
                             tempImgs.clear()
                             index = 0
+                            Toast.makeText(
+                                this@EditChapterActivity,
+                                "Đã cập nhật",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (e: Exception) {
-                        Log.w("Loi", e.message.toString())
+                        Toast.makeText(
+                            this@EditChapterActivity,
+                            e.message.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } finally {
 
                         withContext(Dispatchers.Main) {
@@ -146,19 +176,66 @@ class EditChapterActivity : AppCompatActivity() {
                             enableMainScreenInteraction()
                         }
                     }
-
                 }
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main) {
+                        binding.progressBar.visibility = View.VISIBLE
+                        disableMainScreenInteraction()
+                    }
+                    try {
+                        val deferredTasks =
+                            tempImgs.map { (k, v) ->
+                                async {
+                                    uploadImageToDrive(k, v, chapterViewModel.arrID)
+                                }
+                            }
+                        val rs = deferredTasks.awaitAll()
 
+                        withContext(Dispatchers.Main) {
+                            if (rs.all { it }) {
+                                chapterViewModel.setImgs()
+                                chapterViewModel.arrID.clear()
+                                chapterViewModel.updateContent(
+                                    chapterID = chapter?.chapterID ?: -1,
+                                    storyID = storyID
+                                )
+                            } else {
+                                Log.w("khoong thanh cong", "that bai")
+
+                            }
+                            prvImgAdapter.updateMap(emptyMap())
+                            tempImgs.clear()
+                            index = 0
+                            Toast.makeText(
+                                this@EditChapterActivity,
+                                "Đã cập nhật",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this@EditChapterActivity,
+                            e.message.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } finally {
+
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                            enableMainScreenInteraction()
+                        }
+                    }
+                }
             }
-
         }
-
         //lấy drive
         driveService = getDriveService(this)
 
         binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
     }
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus
@@ -173,6 +250,14 @@ class EditChapterActivity : AppCompatActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        chapterViewModel.name.value = ""
+        chapterViewModel.arrID.clear()
+        chapterViewModel.imgMap.clear()
+    }
+
     fun openImagePicker() {
         pickImageLauncher.launch(arrayOf("image/jpeg"))
     }

@@ -17,7 +17,6 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     val name = MutableLiveData<String>()
 
 
-
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
@@ -27,6 +26,7 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         sortedMap.forEach { (k, v) ->
             imgMap[k] = transform(v)
         }
+        arrID.clear()
     }
 
     fun getAllImage(): List<Image> {
@@ -49,31 +49,55 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
 
                 }
             imgMap.clear()
-            name.value = ""
             return true
         }
         imgMap.clear()
-        name.value = ""
         return false
     }
 
-//    fun updateContent(chapterID: Int){
-//        db.deleteImageByChapterId(chapterID)
-//
-//        val chapter = Chapter(
-//            chapterID, name.value.toString(), dateTimeNow(), storyID
-//        )
-//        db.updateChapter()
-//    }
+    fun updateContent(chapterID: Int, storyID: Int) {
+
+
+        val chapter = Chapter(
+            chapterID, name.value.toString(), dateTimeNow(), storyID
+        )
+        db.updateChapter(chapter)
+        db.deleteImageByChapterId(chapterID)
+        for (i in imgMap) {
+            val img = Image(null, i.value, i.key, chapterID)
+            db.insertImage(img)
+        }
+
+        imgMap.clear()
+        name.value = ""
+    }
+
+    fun updateTextContent(chapterID: Int, storyID: Int, content: Map<Int, String>) {
+
+        val chapter = Chapter(
+            chapterID, name.value.toString(), dateTimeNow(), storyID
+        )
+        db.updateChapter(chapter)
+
+        if (content.isNotEmpty()) {
+            db.deleteParagraphByChapterId(chapterID)
+            for (c in content) {
+                val p = Paragraph(null, c.value, c.key, chapterID)
+                db.insertParagraph(p)
+            }
+        }
+        imgMap.clear()
+        name.value = ""
+    }
 
     fun onAddTextChapter(storyID: Int, content: Map<Int, String>): Boolean {
         if (storyID != -1) {
             val chapter = Chapter(null, name.value.toString(), dateTimeNow(), storyID)
             val l: Long = db.insertChapter(chapter)
 
-            if(content.isNotEmpty()){
-                for (c in content){
-                    val p= Paragraph(null,c.value,c.key,l.toInt())
+            if (content.isNotEmpty()) {
+                for (c in content) {
+                    val p = Paragraph(null, c.value, c.key, l.toInt())
                     db.insertParagraph(p)
                 }
             }
@@ -81,7 +105,6 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         }
         return false
     }
-
 
 
 }

@@ -145,7 +145,7 @@ class ChapterFragment() : Fragment() {
 
 
         chapterAdapter =
-            ChapterAdapter(storyViewModel.chapterListByStory.value?.toMutableList(), storyViewModel)
+            ChapterAdapter(storyViewModel.chapterListByStory.value?.toMutableList(), storyViewModel,requireContext(),idStory?:-1,type)
 
         binding.chapterList.layoutManager = LinearLayoutManager(requireContext())
         binding.chapterList.adapter = chapterAdapter

@@ -81,7 +81,7 @@ class AddUserDialogFragment : DialogFragment() {
 
             builder.setView(binding.root)
                 .setSingleChoiceItems(arr, -1) { dialog, which ->
-                    userViewModel.roleID = which+1
+                    userViewModel.roleID = which + 1
                 }
                 .setPositiveButton("Add") { dialog, _ ->
                 }
@@ -96,7 +96,7 @@ class AddUserDialogFragment : DialogFragment() {
                 addButton.setOnClickListener {
                     // Kiểm tra các trường khi nhấn nút Add
                     var isValid = true
-                    if (userViewModel.roleID<1 || userViewModel.roleID>4) {
+                    if (userViewModel.roleID < 1 || userViewModel.roleID > 4) {
                         Toast.makeText(
                             requireContext(),
                             "Chọn 1 vai trò cho user",
@@ -135,11 +135,19 @@ class AddUserDialogFragment : DialogFragment() {
                         binding.cfNewPassword.error = "Không khớp mật khẩu"
                         isValid = false
                     }
+                    if (::uriAvt.isInitialized == false) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Vui lòng thêm hình đại diện",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        isValid=false
+                    }
                     if (isValid) {
                         lifecycleScope.launch {
                             withContext(Dispatchers.Main) {
                                 binding.progressBar.visibility = View.VISIBLE
-                                disableMainScreenInteraction()
+                                addButton.isEnabled=false
                             }
                             try {
                                 val isUploadAvt = uploadImageAsynce(uriAvt, userViewModel.avtId)
@@ -157,11 +165,9 @@ class AddUserDialogFragment : DialogFragment() {
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                            }
-                            finally {
+                            } finally {
                                 withContext(Dispatchers.Main) {
                                     binding.progressBar.visibility = View.GONE
-                                    enableMainScreenInteraction()
                                 }
                             }
                         }
@@ -206,7 +212,7 @@ class AddUserDialogFragment : DialogFragment() {
             .build()
     }
 
-    fun uploadImageToDrive(uri: Uri, idAvt:MutableList<String>): Boolean {
+    fun uploadImageToDrive(uri: Uri, idAvt: MutableList<String>): Boolean {
 
         val mediaContent =
             InputStreamContent("image/jpeg", context?.contentResolver?.openInputStream(uri))
@@ -222,7 +228,7 @@ class AddUserDialogFragment : DialogFragment() {
             val file = driveService.files().create(fileMetadata, mediaContent)
                 .setFields("id, webViewLink")
                 .execute()
-            idAvt.add( file.id)
+            idAvt.add(file.id)
             return true
         } catch (e: Exception) {
             e.printStackTrace()

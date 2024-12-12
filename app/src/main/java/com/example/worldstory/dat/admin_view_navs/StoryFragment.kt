@@ -81,7 +81,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.story_options,
-            android.R.layout.simple_spinner_item
+            android.R.layout.simple_expandable_list_item_1
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
@@ -91,7 +91,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
             val selectedPosition = it.getInt("type")
             spinner.setSelection(selectedPosition)
         }
-//set để quay lại chọn đúng type trước
+        //set để quay lại chọn đúng type trước
         spinner.setSelection(storyViewModel.type)
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
