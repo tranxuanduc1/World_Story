@@ -17,6 +17,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucStoryOverviewBinding
 import com.example.worldstory.duc.ducdialog.DucLoginDialogFragment
 import com.example.worldstory.duc.ducutils.changeBackgroundTintColorByScore
+import com.example.worldstory.duc.ducutils.dateFromDateTime
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKeyChapterInfo
@@ -182,7 +183,7 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
         val btn = itemView.findViewById<LinearLayout>(R.id.btn_listItemStoryOverview_layout)
         titleTextView.text = chapter.title
         idChapterTextView.text = chapter.chapterID.toString()
-        dateCreatedTextView.text = chapter.dateCreated.toString()
+        dateCreatedTextView.text = chapter.dateCreated.dateFromDateTime()
         if (isRead) {
             itemView.setBackgroundResource(R.color.duc_skin)
         }
