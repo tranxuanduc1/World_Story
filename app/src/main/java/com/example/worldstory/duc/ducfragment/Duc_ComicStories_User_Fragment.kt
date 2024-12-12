@@ -21,10 +21,12 @@ import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
+import com.example.worldstory.duc.ducadapter.Duc_CardStoryAndGenre_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_UseCreatedStory_Adapter
 import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -109,6 +111,20 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 )
 
             })
+//        var numStories=6
+//        ducStoryViewModel.listOfStoriesAndGenre.observe(viewLifecycleOwner, Observer{
+//            listOfStoriesAndGenre->
+//            listOfStoriesAndGenre.forEach {
+//                callLog("storyViewmodel",it.listOfStories.toString())
+//            }
+//
+//            var adapterGird= Duc_CardStoryAndGenre_Adapter(requireContext(),listOfStoriesAndGenre,isText,numStories)
+//            binding.rvCardStoriesAndGenreComicStoriesUser.adapter=null
+//            binding.rvCardStoriesAndGenreComicStoriesUser.apply {
+//                adapter=adapterGird
+//
+//            }
+//        })
         //button genre
         ducGenreViewModel.genres.observe(viewLifecycleOwner, Observer { genres ->
             // tat hieu ung load
@@ -128,6 +144,7 @@ class Duc_ComicStories_User_Fragment : Fragment() {
 
                 ducStoryViewModel.fetchGenreAndStoriesByGenre(genre, isText)
             }
+            //ducStoryViewModel.fetchListOfStoriesAndGenre(genres,isText)
 
         })
         //tao truyen hot,user hot, high score stories
@@ -292,7 +309,13 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(itemDecoHotUser)
         }
-
+        //stoies and genre
+        var itemDecoStoriesAndGenre= SetItemDecorationForRecyclerView(0,0,10,5)
+        binding.rvCardStoriesAndGenreComicStoriesUser.apply {
+            layoutManager= GridLayoutManager(requireContext(),1, LinearLayoutManager.VERTICAL,false)
+            addItemDecoration(itemDecoStoriesAndGenre)
+            setHasFixedSize(true)
+        }
 
     }
 
