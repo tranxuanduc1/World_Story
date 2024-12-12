@@ -55,7 +55,7 @@
 
 
     <string-array name="story_options">
-        <item>Truyện chữ</item>
         <item>Truyện hình</item>
+        <item>Truyện chữ</item>
     </string-array>
 </resources>

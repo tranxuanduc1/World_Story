@@ -3,7 +3,6 @@ package com.example.worldstory.dat.admin_view_navs.chapter_activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
@@ -11,23 +10,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityAddChapterBinding
@@ -47,9 +38,7 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -58,7 +47,7 @@ import java.io.InputStream
 import kotlinx.coroutines.awaitAll
 import java.util.Collections
 
-class AddChapterActivity : AppCompatActivity() {
+class EditChapterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddChapterBinding
     private val tempImgs = mutableMapOf<Int, Uri>()
     private lateinit var prvImgAdapter: PreviewUploadedAdapter

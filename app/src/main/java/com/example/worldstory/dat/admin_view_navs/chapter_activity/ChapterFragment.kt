@@ -57,18 +57,18 @@ class ChapterFragment() : Fragment() {
     private var idStory: Int? = 0
 
     companion object {
-        fun newInstance(idStory: Int): ChapterFragment {
+        fun newInstance(idStory: Int, type: Int): ChapterFragment {
             val fragment = ChapterFragment()
             val args = Bundle()
             args.putInt("idStory", idStory)
+            args.putInt("type", type)
             fragment.arguments = args
             return fragment
         }
     }
 
-    private val storyViewModel: StoryViewModel by activityViewModels {
-        StoryViewModelFactory(DatabaseHelper(requireActivity()))
-    }
+    private var type: Int = 0
+    private lateinit var storyViewModel: StoryViewModel
 
 
     private lateinit var chapterAdapter: ChapterAdapter
@@ -108,6 +108,12 @@ class ChapterFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        type = arguments?.getInt("type") ?: 0
+        storyViewModel = StoryViewModelFactory(
+            DatabaseHelper(requireContext()),
+            type
+        ).create(StoryViewModel::class.java)
+
         binding = FragmentChapterBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -121,9 +127,9 @@ class ChapterFragment() : Fragment() {
         binding.storyViewModel = storyViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+
         // gán thuộc tính truyện hiện tại
         idStory = arguments?.getInt("idStory")
-        Log.w("id", idStory.toString())
         storyViewModel.setStoryByID(idStory)
         storyViewModel.setIDStory(idStory)
 
@@ -138,7 +144,8 @@ class ChapterFragment() : Fragment() {
         Picasso.get().load(storyViewModel.storyImg.first()).into(binding.avtStory)
 
 
-        chapterAdapter = ChapterAdapter(storyViewModel.chapterListByStory.value)
+        chapterAdapter =
+            ChapterAdapter(storyViewModel.chapterListByStory.value?.toMutableList(), storyViewModel)
 
         binding.chapterList.layoutManager = LinearLayoutManager(requireContext())
         binding.chapterList.adapter = chapterAdapter
@@ -209,20 +216,17 @@ class ChapterFragment() : Fragment() {
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
                         storyViewModel.setStoryByID(idStory)
-                    }
-                    else if(upload){
+                    } else if (upload) {
                         storyViewModel.updateBackGroundStory(story)
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
                         storyViewModel.setStoryByID(idStory)
-                    }
-                    else if(uploadAvt){
+                    } else if (uploadAvt) {
                         storyViewModel.updateFaceStory(story)
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
                         storyViewModel.setStoryByID(idStory)
-                    }
-                    else {
+                    } else {
                         storyViewModel.updateInforStory(story)
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
@@ -252,8 +256,19 @@ class ChapterFragment() : Fragment() {
 
         driveService = getDriveService(requireContext())
 
+
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.w("start", "yes")
+        storyViewModel.fetchAllChaptersAsynce()
+//        storyViewModel.chapterListByStory.value = storyViewModel.chapterListByStory.value
+    }
 
     fun onClickAddChapter() {
 
@@ -306,7 +321,6 @@ class ChapterFragment() : Fragment() {
             return true
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("k up dc", "hythtyht")
             return false
         }
 

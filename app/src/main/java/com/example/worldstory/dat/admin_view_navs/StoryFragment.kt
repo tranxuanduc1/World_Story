@@ -39,6 +39,8 @@ import com.example.worldstory.dat.admin_viewmodels.SharedViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducutils.getUserIdSession
+import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
 import com.example.worldstory.model.Story
 import com.example.worldstory.model.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,17 +53,15 @@ import kotlinx.coroutines.withContext
 class StoryFragment : Fragment(), OnItemClickListener {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var storyAdapter: StoryAdapter
-    private val storyList = mutableListOf<Story>()
     private var isSearchViewOpen = false
-    private val genreViewModel: GenreViewModel by activityViewModels {
-        GenreViewModelFactory(DatabaseHelper(requireActivity()))
-    }
+
     private val storyViewModel: StoryViewModel by activityViewModels {
-        StoryViewModelFactory(DatabaseHelper(requireActivity()))
+        StoryViewModelFactory(DatabaseHelper(requireActivity()), 0)
     }
+
     private lateinit var binding: FragmentStoryBinding
 
-    private var type=-1
+    private var type = -1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,22 +74,27 @@ class StoryFragment : Fragment(), OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         //spinner
-        val spinner:Spinner=binding.menuStory
+        val spinner: Spinner = binding.menuStory
 
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.story_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
             spinner.adapter = adapter
         }
 
+        savedInstanceState?.let {
+            val selectedPosition = it.getInt("type")
+            spinner.setSelection(selectedPosition)
+        }
+//set để quay lại chọn đúng type trước
+        spinner.setSelection(storyViewModel.type)
 
-        spinner.onItemSelectedListener=object:OnItemSelectedListener{
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
@@ -100,8 +105,8 @@ class StoryFragment : Fragment(), OnItemClickListener {
                 position: Int,
                 id: Long
             ) {
-                if(type!=position){
-                    type=position
+                if (type != position) {
+                    type = position
                     storyViewModel.fetchAllStoriesByType(type)
                 }
             }
@@ -122,7 +127,11 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         //thêm item
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
-        storyAdapter = StoryAdapter(storyViewModel.stories.value?.toMutableList() ?: mutableListOf(), color1, this)
+        storyAdapter = StoryAdapter(
+            storyViewModel.stories.value?.toMutableList() ?: mutableListOf(),
+            color1,
+            this
+        )
         binding.storyList.adapter = storyAdapter
         storyViewModel.stories.observe(viewLifecycleOwner) {
             storyAdapter.updateList(storyViewModel.stories.value ?: emptyList())
@@ -204,12 +213,34 @@ class StoryFragment : Fragment(), OnItemClickListener {
                 val story = storyAdapter.getStory(position)
                 if (direction == ItemTouchHelper.LEFT) {
 
-                    showConfirmationDialog(story, position)
+                    if (requireContext().isUserCurrentAdmin() || requireContext().getUserIdSession() == story.userID) {
+                        showConfirmationDialog(story, position)
+
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Bạn không có quyền xóa đối tượng này",
+                            Toast.LENGTH_SHORT
+
+                        ).show()
+                        storyAdapter.notifyItemChanged(position)
+                    }
+
 
                 } else if (direction == ItemTouchHelper.RIGHT) {
 
-                    showConfirmationDialog(story, position)
+                    if (requireContext().isUserCurrentAdmin() || requireContext().getUserIdSession() == story.userID) {
+                        showConfirmationDialog(story, position)
 
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Bạn không có quyền xóa đối tượng này",
+                            Toast.LENGTH_SHORT
+
+                        ).show()
+                        storyAdapter.notifyItemChanged(position)
+                    }
                 }
             }
 
@@ -256,8 +287,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
                     // Vẽ icon lên Canvas
                     icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                     icon.draw(canvas)
-                }
-                else{
+                } else {
                     paint.color = Color.RED
                     canvas.drawRect(
                         itemView.left.toFloat(),
@@ -291,6 +321,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     }
 
     private fun onAddButtonClicked() {
+
         AddStoryDialog().show(parentFragmentManager, "AddStoryDialogFragment")
     }
 
@@ -308,10 +339,26 @@ class StoryFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(item: Story) {
-        val intent = Intent(requireContext(), ChapterActivity::class.java)
-        intent.putExtra("ID",item.storyID)
+        if (requireContext().isUserCurrentAdmin() || requireContext().getUserIdSession() == item.userID) {
+            val intent = Intent(requireContext(), ChapterActivity::class.java)
+            intent.putExtra("ID", item.storyID)
+            intent.putExtra("type", storyViewModel.type)
+            startActivity(intent)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Bạn không có quyền truy cập truyện này",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
-        startActivity(intent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (::binding.isInitialized) {
+            outState.putInt("type", binding.menuStory.selectedItemPosition)
+        }
     }
 
     private fun showSearchView() {
@@ -328,7 +375,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
         sharedViewModel.searchQueryStory.value = ""
     }
 
-    private fun showConfirmationDialog(story: Story, p:Int) {
+    private fun showConfirmationDialog(story: Story, p: Int) {
         // Tạo AlertDialog.Builder
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage("Có chắc muốn xóa không?")

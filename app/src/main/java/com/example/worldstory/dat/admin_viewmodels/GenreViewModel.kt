@@ -23,8 +23,8 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         fetch()
     }
 
-    fun onAddNewGern(): Long {
-        val genre = Genre(null, genreName = genreName.value.toString(), 1)
+    fun onAddNewGern(userId:Int): Long {
+        val genre = Genre(null, genreName = genreName.value.toString(), userId)
         fetchAllGenre()
         val l = insertGenre(genre)
         genreName.value = ""

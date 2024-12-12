@@ -14,6 +14,7 @@ import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.google.android.material.snackbar.Snackbar
 
 class PickCateNewStoryDialog : DialogFragment() {
@@ -67,7 +68,7 @@ class PickCateNewStoryDialog : DialogFragment() {
                         sb.duration=500
                         sb.show()
                     } else {
-                        storyViewModel.onAddNewStory()
+                        storyViewModel.onAddNewStory(requireContext().getUserIdSession())
                         dialog.dismiss()
                     }
                 }

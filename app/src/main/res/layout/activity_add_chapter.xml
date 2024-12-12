@@ -63,6 +63,8 @@
                     android:id="@+id/ten_chap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
+
                     android:hint="Tên truyện"
                     android:lines="1"
                     android:padding="15dp"

@@ -66,16 +66,14 @@ class StoryAdapter(
     fun filterByCates(catesMap: Map<Int, String>, viewModel: StoryViewModel) {
         if (catesMap.size == 1) filteredList =
             storyList.filter {
-                viewModel.storyGenreMap[it.storyID]?.contains(catesMap.entries.first().key)
-                true
+                viewModel.storyGenreMap[it.storyID]?.contains(catesMap.entries.first().key)==true
             }
         else if (catesMap.size == 0) filteredList = storyList
         else
             catesMap.forEach { c ->
                 filteredList =
                     filteredList.filter {
-                        viewModel.storyGenreMap[it.storyID]?.contains(c.key)
-                        true
+                        viewModel.storyGenreMap[it.storyID]?.contains(c.key)==true
                     }
             }
         notifyDataSetChanged()

@@ -16,6 +16,8 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     val imgMap = mutableMapOf<Int, String>()
     val name = MutableLiveData<String>()
 
+
+
     fun transform(id: String): String {
         return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
@@ -34,7 +36,7 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
     fun onAddChapter(storyID: Int): Boolean {
         if (storyID != -1) {
             val chapter = Chapter(
-                null, name.value.toString(), dateTimeNow().toString(), storyID
+                null, name.value.toString(), dateTimeNow(), storyID
             )
             val l: Long = db.insertChapter(chapter)
 
@@ -55,21 +57,32 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         return false
     }
 
+//    fun updateContent(chapterID: Int){
+//        db.deleteImageByChapterId(chapterID)
+//
+//        val chapter = Chapter(
+//            chapterID, name.value.toString(), dateTimeNow(), storyID
+//        )
+//        db.updateChapter()
+//    }
+
     fun onAddTextChapter(storyID: Int, content: Map<Int, String>): Boolean {
         if (storyID != -1) {
-            val chapter = Chapter(null, name.value.toString(), dateTimeNow().toString(), storyID)
+            val chapter = Chapter(null, name.value.toString(), dateTimeNow(), storyID)
             val l: Long = db.insertChapter(chapter)
 
             if(content.isNotEmpty()){
                 for (c in content){
                     val p= Paragraph(null,c.value,c.key,l.toInt())
-                    val ll=db.insertParagraph(p)
+                    db.insertParagraph(p)
                 }
             }
             return true
         }
         return false
     }
+
+
 
 }
 

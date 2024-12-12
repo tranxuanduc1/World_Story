@@ -1,15 +1,12 @@
 package com.example.worldstory.dat.admin_viewmodels
 
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.worldstory.dat.admin_view_navs.CommentFragment
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.example.worldstory.model.Comment
 import com.example.worldstory.model.User
@@ -18,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.Month
-import java.time.Year
 import java.time.format.DateTimeFormatter
 
 class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : ViewModel() {

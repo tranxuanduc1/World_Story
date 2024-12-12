@@ -64,8 +64,8 @@ class MyBottomSheetFragment : BottomSheetDialogFragment() {
         bottomSheet?.let {
             val behavior = BottomSheetBehavior.from(it)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED // Trạng thái ban đầu
-            behavior.peekHeight = 300 // Chiều cao khi ở trạng thái collapsed
-            behavior.isFitToContents = true // Điều chỉnh theo nội dung
+            behavior.peekHeight = 300
+            behavior.isFitToContents = true
         }
     }
 

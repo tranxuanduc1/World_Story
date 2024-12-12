@@ -100,7 +100,6 @@ class UserFragment : Fragment() {
                 ) {
                     if (itemPosition != position + 1) {
                         userViewModel.setUsersByRoleId(position + 1)
-                        Log.w("sizeu", userViewModel.userList.value.toString())
                         itemPosition = position + 1
                         userViewModel.roleSeclected=itemPosition
                     }

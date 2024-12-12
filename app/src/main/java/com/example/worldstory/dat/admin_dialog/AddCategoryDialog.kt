@@ -17,6 +17,7 @@ import com.example.worldstory.dat.admin_viewmodels.RoleViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.UserViewModel
 import com.example.worldstory.dat.admin_viewmodels.UserViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.duc.ducutils.getUserIdSession
 
 class AddCategoryDialog : DialogFragment() {
 
@@ -53,7 +54,7 @@ class AddCategoryDialog : DialogFragment() {
                         isValid=false
                     }
                     if (isValid) {
-                        genreViewModel.onAddNewGern()
+                        genreViewModel.onAddNewGern(requireContext().getUserIdSession())
                         dialog.dismiss()
                     }
                 }

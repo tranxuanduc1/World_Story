@@ -1,4 +1,4 @@
-package com.example.worldstory.dat.admin_view_navs
+package com.example.worldstory.dat.admin_view_navs.chapter_activity
 
 import android.os.Build
 import android.os.Bundle
@@ -15,17 +15,11 @@ import com.example.worldstory.dat.admin_adapter.CommentAdapter
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModel
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.User
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class CommentFragment : Fragment() {
