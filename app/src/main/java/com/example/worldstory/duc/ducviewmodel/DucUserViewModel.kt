@@ -18,8 +18,10 @@ class DucUserViewModel (var repository: DucDataRepository, var context: Context)
     private val _authorUser= MutableLiveData<List< User>>()
     val userAuthor:LiveData< List< User>>  get()=_authorUser
 
+    private val _userbyUserId= MutableLiveData<User>()
+    val userbyUserId:LiveData<  User>  get()=_userbyUserId
     init {
-        fetchAuthorUser()
+        //fetchAuthorUser()
     }
 
     fun fetchAuthorUser() {
@@ -29,6 +31,15 @@ class DucUserViewModel (var repository: DucDataRepository, var context: Context)
                 repository.getUsersByRole(authorRoleId)
             }
             _authorUser.value=resultAuthorUsers
+
+        }
+    }
+    fun fetchUserByUserId(userId: Int){
+        viewModelScope.launch{
+            var resultUser= withContext(Dispatchers.IO){
+                repository.getUserByUserId(userId)
+            }
+            _userbyUserId.value=resultUser
 
         }
     }

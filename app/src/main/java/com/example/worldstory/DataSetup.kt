@@ -29,12 +29,13 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
         VALUES 
         ('admin', '${hashPassword(SampleDataStory.getExamplePassword())}', 'admin@example.com', 'Admin',  "https://drive.google.com/uc?id=1mhFCwRj-lk34oo3tnND3A_6yGCq2aDpz", '${dateTimeNow()}', 1),
         ('author1', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author1@example.com', 'Văn Thanh', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
-        ('member', '${hashPassword(SampleDataStory.getExamplePassword())}', 'member@example.com', 'văn Hậu',"https://drive.google.com/uc?id=1-dvznsZJ_MEzxHP9kam5X36Zxj2Q6pVG",  '${dateTimeNow()}', 3),
-        ('author2', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author2@example.com', 'Tiến Linh', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
-        ('author3', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author3@example.com', 'Công Pượng', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
-        ('author4', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author4@example.com', 'Đình Bắc', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
-        ('author5', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author5@example.com', 'Xuân Kha', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
-        ('author6', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author6@example.com', 'Bảo Tiến', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2)
+        ('author2', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author2@example.com', 'Tiến Linh', "https://drive.google.com/uc?id=1EKOG4MJteSF2SxLAnaWQ5-ZNu4AaeFZl",  '${dateTimeNow()}', 2),
+        ('author3', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author3@example.com', 'Công Pượng', "https://drive.google.com/uc?id=164A3525fCaPAZeiOhRbT6JWRAIg9Lb6Z",  '${dateTimeNow()}', 2),
+        ('author4', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author4@example.com', 'Đình Bắc', "https://drive.google.com/uc?id=1ZAPhqEXNCa8h8rqZSm12Dt2N6S9L2Rwa",  '${dateTimeNow()}', 2),
+        ('author5', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author5@example.com', 'Xuân Kha', "https://drive.google.com/uc?id=1UKV60N8QyI9ROAjsduUp6cK_ysE3XUxT",  '${dateTimeNow()}', 2),
+        ('author6', '${hashPassword(SampleDataStory.getExamplePassword())}', 'author6@example.com', 'Bảo Tiến', "https://drive.google.com/uc?id=1fPVkJqspSh0IQsQ_8teVapd5qf_q1ppV",  '${dateTimeNow()}', 2),
+        ('member', '${hashPassword(SampleDataStory.getExamplePassword())}', 'member@example.com', 'văn Hậu',"https://drive.google.com/uc?id=1-dvznsZJ_MEzxHP9kam5X36Zxj2Q6pVG",  '${dateTimeNow()}', 3)
+        
    
     
     """

@@ -8,7 +8,7 @@
     tools:context="com.example.worldstory.duc.ducfragment.Duc_ComicStories_User_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -175,9 +175,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_cardStoriesAndGenre_ComicStoriesUser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
+            </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -62,6 +62,12 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
         return listOfStories
 
     }
+    fun getStoriesByUser(userId:Int): List<Story> {
+        var listOfStories = dbHelper.getStoriesByUser(userId)
+
+        return listOfStories
+
+    }
     //genre
     fun getAllGenres(): List<Genre> {
         var list = dbHelper.getAllGenres()

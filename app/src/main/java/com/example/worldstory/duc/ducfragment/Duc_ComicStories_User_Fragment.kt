@@ -21,10 +21,12 @@ import com.example.worldstory.duc.ducactivity.DucAllStoriesActivity
 import com.example.worldstory.duc.ducactivity.DucSearchActivity
 import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducadapter.Duc_Button_Adapter
+import com.example.worldstory.duc.ducadapter.Duc_CardStoryAndGenre_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_CardStoryItem_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_HighScoreStory_Adapter
 import com.example.worldstory.duc.ducadapter.Duc_UseCreatedStory_Adapter
 import com.example.worldstory.duc.ducutils.SetItemDecorationForRecyclerView
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.createGridCardViewStory
 import com.example.worldstory.duc.ducutils.getKeyIsText
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
@@ -217,6 +219,9 @@ class Duc_ComicStories_User_Fragment : Fragment() {
         // lay 6 phan tu
         var limitStories = stories.take(numberStoryShow)
         var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
+
+        //xoa adapter cu
+        binding.rvHotStoriesComicStoriesUser.adapter=null
         binding.rvHotStoriesComicStoriesUser.apply {
             adapter = adapterHotStories
         }
@@ -235,6 +240,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             var adapterHighScoreStories =
                 Duc_HighScoreStory_Adapter(requireContext(), ArrayList(limitStories))
 
+            //xoa adapter cu
+            binding.rvHighScoreStoriesComicStoriesUser.adapter=null
             binding.rvHighScoreStoriesComicStoriesUser.apply {
                 adapter = adapterHighScoreStories
             }
@@ -250,6 +257,8 @@ class Duc_ComicStories_User_Fragment : Fragment() {
             var numUsers = 6
             var topUser = getHotUsers(users, numUsers, stories)
             var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
+            //xoa adapter cu
+            binding.rvHotUsersComicStoriesUser.adapter=null
             binding.rvHotUsersComicStoriesUser.apply {
                 adapter = adapterAuthorUser
 
@@ -285,7 +294,13 @@ class Duc_ComicStories_User_Fragment : Fragment() {
                 GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(itemDecoHotUser)
         }
-
+        //stoies and genre
+        var itemDecoStoriesAndGenre= SetItemDecorationForRecyclerView(0,0,10,5)
+        binding.rvCardStoriesAndGenreComicStoriesUser.apply {
+            layoutManager= GridLayoutManager(requireContext(),1, LinearLayoutManager.VERTICAL,false)
+            addItemDecoration(itemDecoStoriesAndGenre)
+            setHasFixedSize(true)
+        }
 
     }
 

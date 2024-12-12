@@ -185,6 +185,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
         // lay 6 phan tu
         var limitStories = stories.take(numberStoryShow)
         var adapterHotStories = Duc_CardStoryItem_Adapter(requireContext(), ArrayList(limitStories))
+        //xoa adapter cu
+        binding.rvHotStoriesTextStoriesUser.adapter=null
         binding.rvHotStoriesTextStoriesUser.apply {
             adapter = adapterHotStories
 
@@ -202,7 +204,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
             var limitStories = combo.sortedByDescending { it.numRating }.take(numberStoryShow)
             var adapterHighScoreStories =
                 Duc_HighScoreStory_Adapter(requireContext(), ArrayList(limitStories))
-
+            //xoa adapter cu
+            binding.rvHighScoreStoriesTextStoriesUser.adapter=null
             binding.rvHighScoreStoriesTextStoriesUser.apply {
                 adapter = adapterHighScoreStories
 
@@ -220,6 +223,8 @@ class Duc_TextStories_User_Fragment : Fragment() {
             var numUsers = 6
             var topUser = getHotUsers(users, numUsers, stories)
             var adapterAuthorUser = Duc_UseCreatedStory_Adapter(requireContext(), topUser, isText)
+            //xoa adapter cu
+            binding.rvHotUsersTextStoriesUser.adapter=null
             binding.rvHotUsersTextStoriesUser.apply {
                 adapter = adapterAuthorUser
             }

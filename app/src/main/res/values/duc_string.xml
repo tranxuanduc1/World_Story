@@ -24,6 +24,7 @@
     <string name="YouNeedToLoginToUseThisFeature">Bạn cần phải đăng nhập để sử dụng tính năng này</string>
     <string name="switchToAdmin">Chuyển sang Quản trị viên</string>
     <string name="login">Đăng nhập</string>
+    <string name="postUser">Người đăng : </string>
     <string name="signUp">Đăng ký</string>
     <string name="worldOfStories">Thế Giới Truyện</string>
     <string name="welcome">Welcome</string>

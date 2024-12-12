@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -54,118 +54,15 @@
                 android:text="Ten cua tui"
                 android:layout_gravity="center_horizontal|bottom"/>
         </FrameLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_userPostStory_infoUser"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp">
-                <ImageView
-                    android:layout_margin="15dp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/cat"
-                    />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="80dp"
-                    android:layout_marginTop="15dp"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="Ten cua use nguoi "
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="2024-11-10 "
-                        android:textSize="14sp"
-                        />
-                </LinearLayout>
-                <ImageView
-                    android:layout_marginVertical="80dp"
-                    android:layout_width="300dp"
-                    android:layout_height="400dp"
-                    android:src="@drawable/a5"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="center_horizontal"
-                    />
-
-            </FrameLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/green1"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp">
-                <ImageView
-                    android:layout_margin="15dp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/cat"
-                    />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="80dp"
-                    android:layout_marginTop="15dp"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="Ten cua use nguoi "
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="2024-11-10 "
-                        android:textSize="14sp"
-                        />
-                </LinearLayout>
-                <ImageView
-                    android:layout_marginVertical="80dp"
-                    android:layout_width="300dp"
-                    android:layout_height="400dp"
-                    android:src="@drawable/a5"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="center_horizontal"
-                    />
-            </FrameLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/green1"/>
-        </LinearLayout>
+</androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
 
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

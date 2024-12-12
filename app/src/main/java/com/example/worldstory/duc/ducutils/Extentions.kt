@@ -104,15 +104,15 @@ fun callLog(name: String, text: String) {
 }
 
 fun dateTimeNow(): String {
-    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
 }
 
 fun dateNow(): String {
-    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
 }
 
 fun timeNow(): String {
-    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+    return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
 }
 
 //--------------------------------------
@@ -405,6 +405,6 @@ fun formatFloat(num: Float): String {
     return String.format("%.1f", num)
 }
 
-fun DateFromDateTime(dateTime: String): String {
-    return dateTime.split(" ")[0]
+fun String.dateFromDateTime(): String {
+    return split(" ")[0]
 }
