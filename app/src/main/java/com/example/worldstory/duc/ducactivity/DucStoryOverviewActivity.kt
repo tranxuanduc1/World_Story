@@ -24,6 +24,7 @@ import com.example.worldstory.duc.ducutils.getKeyChapterInfo
 import com.example.worldstory.duc.ducutils.getKeyMainChapter
 import com.example.worldstory.duc.ducutils.getKeyNextChapter
 import com.example.worldstory.duc.ducutils.getKeyPreviousChapter
+import com.example.worldstory.duc.ducutils.getKeyUserInfo
 import com.example.worldstory.duc.ducutils.isUserCurrentGuest
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
@@ -36,15 +37,18 @@ import com.example.worldstory.duc.ducviewmodel.DucGenreViewModel
 import com.example.worldstory.duc.ducviewmodel.DucRateViewModel
 import com.example.worldstory.duc.ducviewmodel.DucSwipeRefreshViewModel
 import com.example.worldstory.duc.ducviewmodel.DucUserLoveStoryViewModel
+import com.example.worldstory.duc.ducviewmodel.DucUserViewModel
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterHistoryViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucChapterViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucGenreViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucRateViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucSwipeRefreshViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucUserLoveStoryViewModelFactory
+import com.example.worldstory.duc.ducviewmodelfactory.DucUserViewModelFactory
 import com.example.worldstory.model.Chapter
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
+import com.example.worldstory.model.User
 
 class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.DialogListener {
     private lateinit var binding: ActivityDucStoryOverviewBinding
@@ -69,7 +73,9 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
     private val ducSwipeRefreshViewModel: DucSwipeRefreshViewModel by viewModels {
         DucSwipeRefreshViewModelFactory(this)
     }
-
+    private val ducUserViewModel: DucUserViewModel by viewModels {
+        DucUserViewModelFactory(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDucStoryOverviewBinding.inflate(layoutInflater)
@@ -95,9 +101,15 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
                 )
                     .show()
             }
+        ducUserViewModel.userbyUserId.observe(this, Observer{
+            user->
+            setUserPost(user)
+
+        })
         setDialogRequestLogin()
         setSwipeRefresh(key)
     }
+
 
 
 
@@ -154,9 +166,15 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
         binding.imgBackgroundStoryStoryOverview.loadImgURL(this, storyInfo.bgImgUrl)
         binding.txtScoreStoryStoryOverview.text = storyInfo.score.toString()
         generateChapter(storyInfo)
+        ducUserViewModel.fetchUserByUserId(storyInfo.userID)
+    }
+    private fun setUserPost(user: User) {
+        binding.txtPostUserStoryOverview.text=user.nickName
+        binding.txtPostUserStoryOverview.setOnClickListener{
+            toActivity(DucInfoUserActivity::class.java, getKeyUserInfo(this),user)
+        }
 
     }
-
     fun generateChapter(story: Story) {
         ducChapterViewModel.fetchChaptersByStory(storyInfo.storyID ?: 1)
         ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->

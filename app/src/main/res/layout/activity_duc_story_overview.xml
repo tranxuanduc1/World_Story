@@ -114,7 +114,6 @@
 
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
                                     android:text="Hay qua troi dat oi ki ád ád ád ád knei  ên"
                                     android:textSize="25sp"
                                     android:textStyle="bold"
@@ -128,7 +127,7 @@
                                     android:ellipsize="end"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
+
                                     android:text="Ten tac gia"
                                     android:textSize="18sp"
                                     android:textStyle="normal" />
@@ -204,13 +203,15 @@
                         android:drawableEnd="@drawable/icon_heart_outline"
                         android:paddingHorizontal="20dp"
                         android:text="@string/buttonLoveStoryOverview"
-                        android:textColor="@color/color_text_user_not_love_story" />
+                        android:textColor="@color/color_text_user_not_love_story"
+                        android:textSize="13sp"
+                        />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_readFirstChapter_storyOverview"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-
+                        android:textSize="13sp"
                         android:layout_gravity="center"
                         android:layout_marginVertical="10dp"
                         android:background="@drawable/shape_button_secondary"
@@ -225,20 +226,43 @@
                         android:layout_marginHorizontal="25dp"
                         android:numStars="5"
                         android:progressBackgroundTint="@color/gray"
-                        android:progressTint="@color/duc_yellow"
+                        android:progressTint="@color/green2"
                         android:rating="0"
                         android:scaleX="0.7"
                         android:scaleY="0.7"
                         android:stepSize="1"
                         android:transformPivotX="0dp" />
-
+                    <LinearLayout
+                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/postUser"
+                            />
+                        <TextView
+                            android:layout_marginStart="5dp"
+                            android:textColor="@color/green3"
+                            android:textStyle="bold"
+                            android:id="@+id/txt_postUser_storyOverview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ten tui nay heheh"
+                            android:background="@drawable/image_button_search_slector"
+                            android:clickable="true"
+                            />
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/txtDescriptionStory_storyOverview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:ellipsize="end"
-                        android:maxLines="20"
+                        android:maxLines="15"
                         android:paddingHorizontal="30dp"
                         android:text="Lorem ipsum odor amet, consectetuer adipiscing elit. Leo vehicula maecenas potenti ad praesent. Elit ante cubilia fames ipsum hendrerit. Neque felis porttitor potenti himenaeos lorem ornare, sem taciti? Rutrum inceptos duis facilisi mattis porttitor ipsum euismod sit. Per adipiscing fermentum diam maximus aliquet torquent.
 
