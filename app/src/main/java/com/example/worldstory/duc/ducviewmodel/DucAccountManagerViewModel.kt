@@ -11,7 +11,6 @@ import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.isUserCurrentGuest
-import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.model.User
 import com.example.worldstory.model.Role
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +33,9 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     private val _checkEmailExist= MutableLiveData<Pair<UserLoginStateEnum, User?>>()
     val checkEmailExist:LiveData<Pair<UserLoginStateEnum, User?>>  get()=_checkEmailExist
 
+    private val _userByUserId= MutableLiveData< User?>()
+    val userByUserId:LiveData<User?>  get()=_userByUserId
+
 //    private val _userSession= MutableLiveData<User>()
 //    val userSession:LiveData<User>  get()=_userSession
 
@@ -44,6 +46,15 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
 
             }
             _checkAccountLogin.value=resultCheck
+        }
+    }
+    fun fetchUserByUserId(userId: Int){
+        viewModelScope.launch{
+            val result= withContext(Dispatchers.IO){
+                repository.getUserByUserId(userId)
+
+            }
+            _userByUserId.value=result
         }
     }
     fun fetchCheckAccountExist(userName: String,email: String){
@@ -109,6 +120,7 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     fun updatePassword(user: User){
         repository.updateUser(user)
     }
+
     fun SignUpNewAccount(username: String,password: String,email: String,nickname: String){
 
         repository.addNewUserMember(username,password,email,nickname,dateTimeNow())

@@ -1,6 +1,7 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,16 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucInfoUserBinding
 import com.example.worldstory.duc.ducadapter.Duc_StoryPostedByUser_Adapter
+import com.example.worldstory.duc.ducdialog.DucEditInfoUserDialogFragment
 import com.example.worldstory.duc.ducutils.getKeyUserInfo
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
+import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
+import com.example.worldstory.duc.ducviewmodelfactory.DucAccountManagerViewModelFactory
 import com.example.worldstory.duc.ducviewmodelfactory.DucStoryViewModelFactory
 import com.example.worldstory.model.User
 
 class DucInfoUserActivity : AppCompatActivity() {
     private val ducStoryViewModel: DucStoryViewModel by viewModels {
         DucStoryViewModelFactory(this)
+    }
+    private val ducAccountManagerViewModel: DucAccountManagerViewModel by viewModels {
+        DucAccountManagerViewModelFactory(this)
     }
     private lateinit var binding: ActivityDucInfoUserBinding
     private var userInfo: User? = null
@@ -33,7 +41,22 @@ class DucInfoUserActivity : AppCompatActivity() {
         setContentView(view)
 
 
+        ducAccountManagerViewModel.userByUserId.observe(this, Observer{
+            user->
+            userInfo=user
+            binding.swipeRefreshInfoUser.isRefreshing=false
 
+            setData()
+            userInfo?.let { user->
+                user.userID?.let {
+                    ducStoryViewModel.fetchStoriesByUser(it)
+
+
+                }
+            }
+
+
+        })
         if (checkloadInfoUser()) {
             loadData()
             setData()
@@ -51,13 +74,24 @@ class DucInfoUserActivity : AppCompatActivity() {
 
     private fun loadData() {
         userInfo = intent.getParcelableExtra(getKeyUserInfo(this))
+        userInfo?.let { user->
+            user.userID?.let {
+                ducAccountManagerViewModel.fetchUserByUserId(it)
+
+            }
+        }
     }
 
     private fun setData() {
         userInfo?.let { user ->
             binding.txtNicknameInfoUser.text = user.nickName
             binding.imgAvatarInfoUser.loadImgURL(this, user.imgAvatar)
+            if(user.userID==getUserIdSession()){
+                binding.imgAvatarInfoUser.setOnClickListener{
+                    DucEditInfoUserDialogFragment().show(supportFragmentManager,"")
 
+                }
+            }
         }
     }
 
@@ -71,6 +105,12 @@ class DucInfoUserActivity : AppCompatActivity() {
             //kiem stories ma user nay da post
             ducStoryViewModel.fetchStoriesByUser(user.userID ?: numDef)
             ducStoryViewModel.storiesByUser.observe(this, Observer { stories ->
+                if(stories.isEmpty()){
+                    binding.txtDataNotFoundInfoUser.visibility= View.VISIBLE
+                }else{
+                    binding.txtDataNotFoundInfoUser.visibility= View.GONE
+
+                }
                 // xoa dapter cu
                 binding.rvUserPostStoryInfoUser.adapter=null
                 var adapterStoryPost= Duc_StoryPostedByUser_Adapter(this,stories,user)
@@ -85,6 +125,14 @@ class DucInfoUserActivity : AppCompatActivity() {
     private fun setConfigButton() {
         binding.btnBackInfoUser.setOnClickListener {
             finish()
+        }
+        binding.swipeRefreshInfoUser.setOnRefreshListener{
+            userInfo?.let { user->
+                user.userID?.let {
+                    ducAccountManagerViewModel.fetchUserByUserId(it)
+
+                }
+            }
         }
     }
 }

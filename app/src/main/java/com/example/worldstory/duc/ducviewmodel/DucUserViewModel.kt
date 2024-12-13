@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.AUTHOR
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,10 +19,28 @@ class DucUserViewModel (var repository: DucDataRepository, var context: Context)
     private val _authorUser= MutableLiveData<List< User>>()
     val userAuthor:LiveData< List< User>>  get()=_authorUser
 
-    private val _userbyUserId= MutableLiveData<User>()
-    val userbyUserId:LiveData<  User>  get()=_userbyUserId
+    private val _userbyUserId= MutableLiveData<User?>()
+    val userbyUserId:LiveData<  User?>  get()=_userbyUserId
+
+    private val _userLiveData= MutableLiveData<User?>()
+    val userLiveData:LiveData<  User?>  get()=_userLiveData
+
+    var avtIdLiveData= mutableListOf<String>()
     init {
         //fetchAuthorUser()
+        fetchUserSession()
+    }
+
+    fun fetchUserSession() {
+
+        viewModelScope.launch{
+            var userId= context.getUserIdSession()
+            var result= withContext(Dispatchers.IO){
+                repository.getUserByUserId(userId)
+            }
+            _userLiveData.value=result
+
+        }
     }
 
     fun fetchAuthorUser() {
@@ -42,5 +61,21 @@ class DucUserViewModel (var repository: DucDataRepository, var context: Context)
             _userbyUserId.value=resultUser
 
         }
+    }
+    fun updateAvatar(){
+        var userId=context.getUserIdSession()
+        viewModelScope.launch{
+            var user =withContext(Dispatchers.IO){
+                repository.getUserByUserId(userId)
+            }
+                user?.let {
+                    it.imgAvatar=transform( avtIdLiveData.firstOrNull().toString())
+                    repository.updateUser(it)
+
+                }
+        }
+    }
+    fun transform(id: String): String {
+        return "https://drive.usercontent.google.com/download?id=${id}&export=view"
     }
 }

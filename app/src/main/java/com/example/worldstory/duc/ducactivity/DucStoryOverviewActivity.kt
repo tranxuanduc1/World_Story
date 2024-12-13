@@ -103,7 +103,10 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
             }
         ducUserViewModel.userbyUserId.observe(this, Observer{
             user->
-            setUserPost(user)
+            user?.let {
+                setUserPost(it)
+
+            }
 
         })
         setDialogRequestLogin()
@@ -179,7 +182,13 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
         ducChapterViewModel.fetchChaptersByStory(storyInfo.storyID ?: 1)
         ducChapterViewModel.chaptersByStory.observe(this, Observer() { chapters ->
 
+            if (chapters.isEmpty())
+            {
+                binding.txtChapterNotFoundStoryOverview.visibility= View.VISIBLE
+            }else{
+                binding.txtChapterNotFoundStoryOverview.visibility= View.GONE
 
+            }
             storyInfo?.let {
                 setChapterHistoryAndChapterNotRead(
                     it.storyID ?: return@let,

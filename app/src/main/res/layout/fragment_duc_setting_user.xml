@@ -1,83 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.worldstory.duc.ducfragment.Duc_Setting_User_Fragment"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:id="@+id/swipeRefresh_settingUserFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
 
-    <androidx.cardview.widget.CardView
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="50dp"
-        >
-        <ImageButton
-            android:id="@+id/img_avatar_settingUserFragment"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/cat"
-            android:scaleType="centerCrop"
-            android:background="@drawable/image_button_search_slector"
-            android:clickable="true"
+        <androidx.cardview.widget.CardView
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="50dp"
+            >
+            <ImageButton
+                android:id="@+id/img_avatar_settingUserFragment"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/cat"
+                android:scaleType="centerCrop"
+                android:background="@drawable/image_button_search_slector"
+                android:clickable="true"
+
+                />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txt_nickanme_settingUserFragment"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ten Cua Nguoi Ta"
+            android:gravity="end"
+            android:paddingHorizontal="20dp"
+            android:layout_marginBottom="10dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green1"
+            android:layout_marginHorizontal="30dp"
 
             />
-    </androidx.cardview.widget.CardView>
-
-<TextView
-    android:id="@+id/txt_nickanme_settingUserFragment"
-    android:textSize="22sp"
-    android:textStyle="bold"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Ten Cua Nguoi Ta"
-    android:gravity="end"
-    android:paddingHorizontal="20dp"
-    android:layout_marginBottom="10dp"
-    />
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@color/green1"
-    android:layout_marginHorizontal="30dp"
-
-    />
 
 
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_toChaptermarked_settingUserFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:background="@drawable/image_button_search_slector"
-                    android:text="@string/titleChapterMarkedSetting"
-                    android:drawableLeft="@drawable/icon_chapter_mark"
-                    android:paddingStart="20dp"
-                    android:drawablePadding="20dp"
-                    android:gravity="start|center_vertical"
-                    />
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    -->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="70dp"-->
-<!--                    android:background="@drawable/image_button_search_slector"-->
-<!--                    android:text="@string/titleCommentHistorySetting"-->
-<!--                    android:drawableLeft="@drawable/icon_comment_history"-->
-<!--                    android:paddingStart="20dp"-->
-<!--                    android:drawablePadding="20dp"-->
-<!--                    android:gravity="start|center_vertical"-->
-<!--                    />-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_toChaptermarked_settingUserFragment"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/image_button_search_slector"
+            android:text="@string/titleChapterMarkedSetting"
+            android:drawableLeft="@drawable/icon_chapter_mark"
+            android:paddingStart="20dp"
+            android:drawablePadding="20dp"
+            android:gravity="start|center_vertical"
+            />
+        <!--                <androidx.appcompat.widget.AppCompatButton-->
+        <!--                    -->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="70dp"-->
+        <!--                    android:background="@drawable/image_button_search_slector"-->
+        <!--                    android:text="@string/titleCommentHistorySetting"-->
+        <!--                    android:drawableLeft="@drawable/icon_comment_history"-->
+        <!--                    android:paddingStart="20dp"-->
+        <!--                    android:drawablePadding="20dp"-->
+        <!--                    android:gravity="start|center_vertical"-->
+        <!--                    />-->
 
         <View
             android:layout_width="match_parent"
@@ -124,3 +129,5 @@
             />
     </LinearLayout>
 </ScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -8,7 +8,7 @@ data class User(
     val userName:String,
     var hashedPw:String,
     val email: String,
-    val imgAvatar: String,
+    var imgAvatar: String,
     val nickName:String,
     val roleID: Int,
     val createdDate:String,

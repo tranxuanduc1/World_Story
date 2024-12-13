@@ -59,6 +59,12 @@ class Duc_ReadBookStories_Fragment : Fragment() {
             //ket thuc hieu ung load
             binding.swipeRefreshReadBookStoryFragment.isRefreshing=false
             //
+            if(stories.isNullOrEmpty()){
+                binding.txtStoryNotFoundReadBookStoryFragment.visibility= View.VISIBLE
+            }else{
+                binding.txtStoryNotFoundReadBookStoryFragment.visibility= View.GONE
+
+            }
             var cardStoryAdapter = Duc_CardStoryItem_Adapter(view.context, ArrayList(stories))
             binding.recyclerCardStoryReadBookFragment.apply {
                 adapter = cardStoryAdapter
