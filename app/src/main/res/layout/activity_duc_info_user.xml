@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/swipeRefresh_infoUser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.worldstory.duc.ducactivity.DucInfoUserActivity"
@@ -10,78 +10,86 @@
     android:orientation="vertical"
     android:background="@color/white"
     >
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         >
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/green2"
-            android:layout_marginBottom="100dp"
+            android:orientation="vertical"
             >
-            <ImageButton
-                android:id="@+id/btn_back_infoUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/icon_back"
-                android:background="@drawable/image_button_search_slector"
-                />
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/shape_bottom_background_info_user"
-                >
-
-            </FrameLayout>
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="100dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="70dp"
-                android:layout_gravity="center_horizontal"
-
+                android:background="@color/green2"
+                android:layout_marginBottom="100dp"
                 >
-                <ImageView
-                    android:id="@+id/img_avatar_infoUser"
-                    android:clickable="true"
+                <ImageButton
+                    android:id="@+id/btn_back_infoUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_back"
                     android:background="@drawable/image_button_search_slector"
-                    android:scaleType="centerCrop"
-                    android:layout_width="150dp"
+                    />
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:src="@drawable/cat"/>
-            </androidx.cardview.widget.CardView>
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/shape_bottom_background_info_user"
+                    >
 
+                </FrameLayout>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="100dp"
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_gravity="center_horizontal"
+
+                    >
+                    <ImageView
+                        android:id="@+id/img_avatar_infoUser"
+                        android:clickable="true"
+                        android:background="@drawable/image_button_search_slector"
+                        android:scaleType="centerCrop"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/cat"/>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/txt_nickname_infoUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="Ten cua tui"
+                    android:layout_gravity="center_horizontal|bottom"/>
+            </FrameLayout>
             <TextView
-                android:id="@+id/txt_nickname_infoUser"
+                android:layout_margin="20dp"
+
+                android:id="@+id/txt_dataNotFound_infoUser"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Ten cua tui"
-                android:layout_gravity="center_horizontal|bottom"/>
-        </FrameLayout>
-        <TextView
-            android:id="@+id/txt_dataNotFound_infoUser"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:text="@string/dataNotFound"
-            />
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/rv_userPostStory_infoUser"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+                android:textSize="17sp"
+                android:text="@string/dataNotFound"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_userPostStory_infoUser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
-</androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 
-</androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

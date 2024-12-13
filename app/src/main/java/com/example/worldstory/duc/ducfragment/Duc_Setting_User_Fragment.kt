@@ -69,7 +69,8 @@ class Duc_Setting_User_Fragment : Fragment() {
         ducAccountManagerViewModel.fetchUserSessionAndRoleByUserSession()
         ducAccountManagerViewModel.userSessionAndRole.observe(viewLifecycleOwner, Observer{
             userAndRole->
-
+            //tat hieu ung load
+            binding.swipeRefreshSettingUserFragment.isRefreshing=false
 
             setInfoUser(userAndRole)
 
@@ -118,6 +119,10 @@ class Duc_Setting_User_Fragment : Fragment() {
             dialogLogout.show()
 
 
+
+        }
+        binding.swipeRefreshSettingUserFragment.setOnRefreshListener{
+            ducAccountManagerViewModel.fetchUserSessionAndRoleByUserSession()
 
         }
     }

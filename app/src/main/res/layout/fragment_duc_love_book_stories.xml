@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.worldstory.duc.ducfragment.Duc_LoveBookStories_Fragment"
     android:id="@+id/swipeRefresh_loveBookStoryFragment"
+    android:background="@color/white"
     >
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,7 +14,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+        <TextView
+            android:layout_margin="20dp"
+            android:id="@+id/txt_storyNotFound_loveBookStoryFragment"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/storyDataNotFound"
+            />
         <androidx.recyclerview.widget.RecyclerView
+            android:background="@color/white"
+
             android:backgroundTint="@color/white"
             android:padding="15dp"
             android:id="@+id/recycler_cardStory_loveBookFragment"

@@ -29,6 +29,8 @@
         app:layout_constraintBottom_toTopOf="@+id/tabLayoutUserHome"
         />
     <com.google.android.material.tabs.TabLayout
+        android:background="@color/white"
+
         android:id="@+id/tabLayoutUserHome"
         android:layout_width="409dp"
         app:tabMode="fixed"
