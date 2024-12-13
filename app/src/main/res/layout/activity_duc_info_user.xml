@@ -37,15 +37,25 @@
                 >
 
             </FrameLayout>
-            <ImageView
-                android:id="@+id/img_avatar_infoUser"
-
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="100dp"
                 android:layout_marginBottom="50dp"
                 android:layout_marginTop="70dp"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/cat"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+
+                >
+                <ImageView
+                    android:id="@+id/img_avatar_infoUser"
+                    android:clickable="true"
+                    android:background="@drawable/image_button_search_slector"
+                    android:scaleType="centerCrop"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/cat"/>
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/txt_nickname_infoUser"
                 android:layout_width="wrap_content"
@@ -54,6 +64,15 @@
                 android:text="Ten cua tui"
                 android:layout_gravity="center_horizontal|bottom"/>
         </FrameLayout>
+        <TextView
+            android:id="@+id/txt_dataNotFound_infoUser"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:text="@string/dataNotFound"
+            />
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/rv_userPostStory_infoUser"
     android:layout_width="match_parent"

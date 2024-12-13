@@ -1,6 +1,7 @@
 package com.example.worldstory.duc.ducactivity
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucInfoUserBinding
 import com.example.worldstory.duc.ducadapter.Duc_StoryPostedByUser_Adapter
+import com.example.worldstory.duc.ducdialog.DucEditInfoUserDialogFragment
 import com.example.worldstory.duc.ducutils.getKeyUserInfo
+import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.numDef
 import com.example.worldstory.duc.ducviewmodel.DucStoryViewModel
@@ -57,7 +60,12 @@ class DucInfoUserActivity : AppCompatActivity() {
         userInfo?.let { user ->
             binding.txtNicknameInfoUser.text = user.nickName
             binding.imgAvatarInfoUser.loadImgURL(this, user.imgAvatar)
+            if(user.userID==getUserIdSession()){
+                binding.imgAvatarInfoUser.setOnClickListener{
+                    DucEditInfoUserDialogFragment().show(supportFragmentManager,"")
 
+                }
+            }
         }
     }
 
@@ -71,6 +79,9 @@ class DucInfoUserActivity : AppCompatActivity() {
             //kiem stories ma user nay da post
             ducStoryViewModel.fetchStoriesByUser(user.userID ?: numDef)
             ducStoryViewModel.storiesByUser.observe(this, Observer { stories ->
+                if(stories.isEmpty()){
+                    binding.txtDataNotFoundInfoUser.visibility= View.VISIBLE
+                }
                 // xoa dapter cu
                 binding.rvUserPostStoryInfoUser.adapter=null
                 var adapterStoryPost= Duc_StoryPostedByUser_Adapter(this,stories,user)

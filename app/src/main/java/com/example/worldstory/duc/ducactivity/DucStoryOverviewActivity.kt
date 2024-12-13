@@ -103,7 +103,10 @@ class DucStoryOverviewActivity : AppCompatActivity(), DucLoginDialogFragment.Dia
             }
         ducUserViewModel.userbyUserId.observe(this, Observer{
             user->
-            setUserPost(user)
+            user?.let {
+                setUserPost(it)
+
+            }
 
         })
         setDialogRequestLogin()

@@ -109,6 +109,7 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     fun updatePassword(user: User){
         repository.updateUser(user)
     }
+
     fun SignUpNewAccount(username: String,password: String,email: String,nickname: String){
 
         repository.addNewUserMember(username,password,email,nickname,dateTimeNow())
