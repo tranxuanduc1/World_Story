@@ -290,6 +290,70 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
 
         }
     }
+    for (storyId in 21..30) {
+
+        //them chapter
+
+        for (chapterId in 1..5) {
+            val chapterTitle = "Chương $chapterId truyen $storyId"
+            val dateCreated = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
+
+            // Chèn dữ liệu chapter vào bảng chapter_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ChapterEntry.TABLE_NAME} 
+                    (${Contract.ChapterEntry.COLUMN_TITLE}, ${Contract.ChapterEntry.COLUMN_DATE_CREATED}, 
+                     ${Contract.ChapterEntry.COLUMN_STORY_ID_FK})
+                    VALUES ('$chapterTitle', '$dateCreated', $storyId)
+                """)
+
+
+
+        }
+    }
+
+    val step = 5
+
+    val a = (1..50 step step).toList()
+    val b = (2..50 step step).toList()
+    val c = (3..50 step step).toList()
+    val d = (4..50 step step).toList()
+    val e = (5..50 step step).toList()
+
+    val i1=listOf<String>(
+        "https://drive.google.com/uc?id=1iKBgjMHw73OAytl8Run4d_2oQWL4eQEz",
+        "https://drive.google.com/uc?id=1AGQ-8vJM63LgX2mftNKgsAllvgfRk3PC",
+        "https://drive.google.com/uc?id=1aR0RpxtLg3837T_qKG5EVaV5FZ8Ws4f6",
+        "https://drive.google.com/uc?id=1EyHe_ttla2SudbPJnC_GpEQKC9YG8w59",
+        "https://drive.google.com/uc?id=11N8CFRv6-8pUZGA6dBA0RDlsQo7jX5Rx",
+    )
+    val i2=listOf<String>(
+        "https://drive.google.com/uc?id=1eakvmaORdnsqh2qwqKWu-SCOs-gjtLdw",
+        "https://drive.google.com/uc?id=1_0aORA9dNAZ7q8NLpLET0106CnkHkfaT",
+        "https://drive.google.com/uc?id=1KIW78-XpmWOmVwjwui8e0nzWznCZxqIJ",
+        "https://drive.google.com/uc?id=1esD2ena8DXZ2754nXfLDqhRvCNzO_y1d",
+        "https://drive.google.com/uc?id=1NxN-jMkOrP3GyhBugBvs47v6-f25e_5R",
+    )
+    val i3=listOf<String>(
+        "https://drive.google.com/uc?id=1SjtGjd4_EPA4BgASitrDZ68zQ9RoKD0W",
+        "https://drive.google.com/uc?id=1c0taXa9rMZ6XCpUYMQYkeSYD5_Amsirv",
+        "https://drive.google.com/uc?id=1i1PqOWyRQrC1YnBBCYhwIjo4Pjtuymzv",
+        "https://drive.google.com/uc?id=1l7Cpk9ab3cojsvHDQPY1jw1ygpuP0VbW",
+        "https://drive.google.com/uc?id=1kN99pqcIwlezJNX1ye5Sf-jSeG4NLtit",
+    )
+    val i4=listOf<String>(
+        "https://drive.google.com/uc?id=1K4FfQU9qjn5ln347AgqO3lyKPvemD_BC",
+        "https://drive.google.com/uc?id=1Z-6kRVl7L_fMMfTt8bHyCiHPQR7RzQX0",
+        "https://drive.google.com/uc?id=1cvPhmmD1X18aolmbLRTjCuFOfmdTS6JP",
+        "https://drive.google.com/uc?id=12V9oRlRsLkhAVOFSb2UIqolV4qYl2-kW",
+        "https://drive.google.com/uc?id=1Q-Fzr9vHHJFpCw6sp38vMIYKXg0FQUnO",
+    )
+    val i5=listOf<String>(
+        "https://drive.google.com/uc?id=1JNEAb_iOtRTyOhsd1POlm3vOYxPCj3CG",
+        "https://drive.google.com/uc?id=1Gl4pPxFjXNLWeSIOo5vIbeZ__q82arAv",
+        "https://drive.google.com/uc?id=1sTk-ml8qXbbF8-J1nxqezt1yOzem00ul",
+        "https://drive.google.com/uc?id=1p5XhOnSc2LR5bndBX_ZjtkRiPAtE1Z0N",
+        "https://drive.google.com/uc?id=19gHQBpKIY0WC3p_pwaHCgpJT0DYNNX4R"
+    )
     var listOfImageChapterUrl=listOf<String>(
         "https://drive.google.com/uc?id=1eFvesLiPiREI8q8B2EAufHPWYv5D_jul",
         "https://drive.google.com/uc?id=1qcKZ_12g0qdq1wO9kSAzjf3vb4geWepj",
@@ -297,11 +361,8 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
         "https://drive.google.com/uc?id=1Tuc_sSJgZqdT2ip_54xISNXS2xu3nVxv",
         "https://drive.google.com/uc?id=1zuCJMczfObSTSb50tMXeyRJkYyTLEr4y",
     )
-    for (chapterId in 1..50) {
-
-
-        // Tạo 5 hình ảnh cho mỗi chapter
-        for (image in 1..listOfImageChapterUrl.size) {
+    a.forEach{chapterId->
+        for (image in 0..(i1.size-1)) {
 
 
             val order = image
@@ -311,10 +372,238 @@ fun DatabaseHelper.createDataFirstTime(db: SQLiteDatabase?) {
                     INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
                     (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
                      ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
-                    VALUES ('${listOfImageChapterUrl[image-1]}', $order, $chapterId)
+                    VALUES ('${i1[image]}', $order, $chapterId)
                 """)
         }
     }
+    b.forEach{chapterId->
+        for (image in 0..(i2.size-1)) {
+
+
+            val order = image
+
+            // Chèn dữ liệu hình ảnh vào bảng img_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+                    VALUES ('${i2[image]}', $order, $chapterId)
+                """)
+        }
+    }
+    c.forEach{chapterId->
+        for (image in 0..(i3.size-1)) {
+
+
+            val order = image
+
+            // Chèn dữ liệu hình ảnh vào bảng img_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+                    VALUES ('${i3[image]}', $order, $chapterId)
+                """)
+        }
+    }
+    d.forEach{chapterId->
+        for (image in 0..(i4.size-1)) {
+
+
+            val order = image
+
+            // Chèn dữ liệu hình ảnh vào bảng img_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+                    VALUES ('${i4[image]}', $order, $chapterId)
+                """)
+        }
+    }
+    e.forEach{chapterId->
+        for (image in 0..(i5.size-1)) {
+
+
+            val order = image
+
+            // Chèn dữ liệu hình ảnh vào bảng img_table
+            db?.execSQL("""
+                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+                    VALUES ('${i5[image]}', $order, $chapterId)
+                """)
+        }
+    }
+
+    val a1 = (51..100 step step).toList()
+    val b1 = (52..100 step step).toList()
+    val c1 = (53..100 step step).toList()
+    val d1 = (54..100 step step).toList()
+    val e1 = (55..100 step step).toList()
+
+    val i11 = listOf(
+        "Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus habitasse conubia quis primis metus. Sit facilisi blandit elit convallis et aenean. Tincidunt vestibulum sem tempor facilisi lacinia. Auctor aptent nascetur nibh consectetur neque condimentum. Praesent ultricies porta nec curabitur vivamus posuere vel cubilia nisi? Faucibus accumsan proin ligula; fames quisque consectetur inceptos aliquet. Luctus molestie nec turpis ligula fermentum porttitor cubilia. In pellentesque tortor auctor eu mollis varius purus ligula.",
+        "Amet rhoncus posuere posuere volutpat ultrices. Mattis euismod augue efficitur ut tellus ante. Pharetra molestie blandit ultricies blandit semper faucibus taciti nec. Nisl condimentum purus sed amet laoreet himenaeos. Pellentesque volutpat suspendisse quis ut dis. Mi habitasse eu elit hendrerit litora pellentesque tincidunt turpis. Purus orci himenaeos erat duis lorem et sodales penatibus velit.",
+        "Donec vitae odio; adipiscing inceptos orci dis torquent. Parturient commodo vivamus arcu finibus libero montes hac ac. Pretium fusce placerat nunc primis placerat dis pretium. Augue vestibulum felis venenatis vehicula; proin at a? Erat ornare etiam primis euismod tempus lobortis. Ipsum molestie et nibh justo ipsum dolor ac cubilia. Facilisis litora semper leo fames blandit blandit. Porttitor conubia nam dis placerat purus faucibus laoreet. Duis bibendum feugiat netus parturient mus, congue potenti himenaeos.",
+        "Efficitur vivamus tincidunt proin pulvinar elit vestibulum tristique fermentum. Mattis velit class turpis euismod per senectus amet. Consectetur velit proin vel at in, aliquet commodo arcu. Tincidunt parturient porta ipsum ullamcorper felis aliquam non. Sapien dapibus eleifend fames mi iaculis rhoncus nisi. Arcu dolor massa molestie euismod orci maecenas consequat senectus ornare.",
+        "Semper maximus aenean blandit sed scelerisque mollis velit fusce lacinia. Habitant fermentum vitae ultrices vehicula dolor. Etiam malesuada praesent et libero cubilia. Est lacinia nunc conubia nullam proin lobortis quis eros. Ultrices efficitur ridiculus suscipit himenaeos platea. Et litora potenti inceptos phasellus auctor sed risus nec interdum. Luctus sollicitudin ex sagittis egestas faucibus lectus hac diam. Leo praesent aptent nulla pretium, torquent rutrum posuere per."
+    )
+
+    val i22 = listOf(
+        "Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus habitasse conubia quis primis metus. Sit facilisi blandit elit convallis et aenean. Tincidunt vestibulum sem tempor facilisi lacinia. Auctor aptent nascetur nibh consectetur neque condimentum. Praesent ultricies porta nec curabitur vivamus posuere vel cubilia nisi? Faucibus accumsan proin ligula; fames quisque consectetur inceptos aliquet. Luctus molestie nec turpis ligula fermentum porttitor cubilia. In pellentesque tortor auctor eu mollis varius purus ligula.",
+        "Amet rhoncus posuere posuere volutpat ultrices. Mattis euismod augue efficitur ut tellus ante. Pharetra molestie blandit ultricies blandit semper faucibus taciti nec. Nisl condimentum purus sed amet laoreet himenaeos. Pellentesque volutpat suspendisse quis ut dis. Mi habitasse eu elit hendrerit litora pellentesque tincidunt turpis. Purus orci himenaeos erat duis lorem et sodales penatibus velit.",
+        "Donec vitae odio; adipiscing inceptos orci dis torquent. Parturient commodo vivamus arcu finibus libero montes hac ac. Pretium fusce placerat nunc primis placerat dis pretium. Augue vestibulum felis venenatis vehicula; proin at a? Erat ornare etiam primis euismod tempus lobortis. Ipsum molestie et nibh justo ipsum dolor ac cubilia. Facilisis litora semper leo fames blandit blandit. Porttitor conubia nam dis placerat purus faucibus laoreet. Duis bibendum feugiat netus parturient mus, congue potenti himenaeos.",
+        "Efficitur vivamus tincidunt proin pulvinar elit vestibulum tristique fermentum. Mattis velit class turpis euismod per senectus amet. Consectetur velit proin vel at in, aliquet commodo arcu. Tincidunt parturient porta ipsum ullamcorper felis aliquam non. Sapien dapibus eleifend fames mi iaculis rhoncus nisi. Arcu dolor massa molestie euismod orci maecenas consequat senectus ornare.",
+        "Semper maximus aenean blandit sed scelerisque mollis velit fusce lacinia. Habitant fermentum vitae ultrices vehicula dolor. Etiam malesuada praesent et libero cubilia. Est lacinia nunc conubia nullam proin lobortis quis eros. Ultrices efficitur ridiculus suscipit himenaeos platea. Et litora potenti inceptos phasellus auctor sed risus nec interdum. Luctus sollicitudin ex sagittis egestas faucibus lectus hac diam. Leo praesent aptent nulla pretium, torquent rutrum posuere per."
+    )
+
+    val i33 = listOf(
+        "Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus habitasse conubia quis primis metus. Sit facilisi blandit elit convallis et aenean. Tincidunt vestibulum sem tempor facilisi lacinia. Auctor aptent nascetur nibh consectetur neque condimentum. Praesent ultricies porta nec curabitur vivamus posuere vel cubilia nisi? Faucibus accumsan proin ligula; fames quisque consectetur inceptos aliquet. Luctus molestie nec turpis ligula fermentum porttitor cubilia. In pellentesque tortor auctor eu mollis varius purus ligula.",
+        "Amet rhoncus posuere posuere volutpat ultrices. Mattis euismod augue efficitur ut tellus ante. Pharetra molestie blandit ultricies blandit semper faucibus taciti nec. Nisl condimentum purus sed amet laoreet himenaeos. Pellentesque volutpat suspendisse quis ut dis. Mi habitasse eu elit hendrerit litora pellentesque tincidunt turpis. Purus orci himenaeos erat duis lorem et sodales penatibus velit.",
+        "Donec vitae odio; adipiscing inceptos orci dis torquent. Parturient commodo vivamus arcu finibus libero montes hac ac. Pretium fusce placerat nunc primis placerat dis pretium. Augue vestibulum felis venenatis vehicula; proin at a? Erat ornare etiam primis euismod tempus lobortis. Ipsum molestie et nibh justo ipsum dolor ac cubilia. Facilisis litora semper leo fames blandit blandit. Porttitor conubia nam dis placerat purus faucibus laoreet. Duis bibendum feugiat netus parturient mus, congue potenti himenaeos.",
+        "Efficitur vivamus tincidunt proin pulvinar elit vestibulum tristique fermentum. Mattis velit class turpis euismod per senectus amet. Consectetur velit proin vel at in, aliquet commodo arcu. Tincidunt parturient porta ipsum ullamcorper felis aliquam non. Sapien dapibus eleifend fames mi iaculis rhoncus nisi. Arcu dolor massa molestie euismod orci maecenas consequat senectus ornare.",
+        "Semper maximus aenean blandit sed scelerisque mollis velit fusce lacinia. Habitant fermentum vitae ultrices vehicula dolor. Etiam malesuada praesent et libero cubilia. Est lacinia nunc conubia nullam proin lobortis quis eros. Ultrices efficitur ridiculus suscipit himenaeos platea. Et litora potenti inceptos phasellus auctor sed risus nec interdum. Luctus sollicitudin ex sagittis egestas faucibus lectus hac diam. Leo praesent aptent nulla pretium, torquent rutrum posuere per."
+    )
+
+    val i44 = listOf(
+        "Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus habitasse conubia quis primis metus. Sit facilisi blandit elit convallis et aenean. Tincidunt vestibulum sem tempor facilisi lacinia. Auctor aptent nascetur nibh consectetur neque condimentum. Praesent ultricies porta nec curabitur vivamus posuere vel cubilia nisi? Faucibus accumsan proin ligula; fames quisque consectetur inceptos aliquet. Luctus molestie nec turpis ligula fermentum porttitor cubilia. In pellentesque tortor auctor eu mollis varius purus ligula.",
+        "Amet rhoncus posuere posuere volutpat ultrices. Mattis euismod augue efficitur ut tellus ante. Pharetra molestie blandit ultricies blandit semper faucibus taciti nec. Nisl condimentum purus sed amet laoreet himenaeos. Pellentesque volutpat suspendisse quis ut dis. Mi habitasse eu elit hendrerit litora pellentesque tincidunt turpis. Purus orci himenaeos erat duis lorem et sodales penatibus velit.",
+        "Donec vitae odio; adipiscing inceptos orci dis torquent. Parturient commodo vivamus arcu finibus libero montes hac ac. Pretium fusce placerat nunc primis placerat dis pretium. Augue vestibulum felis venenatis vehicula; proin at a? Erat ornare etiam primis euismod tempus lobortis. Ipsum molestie et nibh justo ipsum dolor ac cubilia. Facilisis litora semper leo fames blandit blandit. Porttitor conubia nam dis placerat purus faucibus laoreet. Duis bibendum feugiat netus parturient mus, congue potenti himenaeos.",
+        "Efficitur vivamus tincidunt proin pulvinar elit vestibulum tristique fermentum. Mattis velit class turpis euismod per senectus amet. Consectetur velit proin vel at in, aliquet commodo arcu. Tincidunt parturient porta ipsum ullamcorper felis aliquam non. Sapien dapibus eleifend fames mi iaculis rhoncus nisi. Arcu dolor massa molestie euismod orci maecenas consequat senectus ornare.",
+        "Semper maximus aenean blandit sed scelerisque mollis velit fusce lacinia. Habitant fermentum vitae ultrices vehicula dolor. Etiam malesuada praesent et libero cubilia. Est lacinia nunc conubia nullam proin lobortis quis eros. Ultrices efficitur ridiculus suscipit himenaeos platea. Et litora potenti inceptos phasellus auctor sed risus nec interdum. Luctus sollicitudin ex sagittis egestas faucibus lectus hac diam. Leo praesent aptent nulla pretium, torquent rutrum posuere per."
+    )
+
+    val i55 = listOf(
+        "Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus habitasse conubia quis primis metus. Sit facilisi blandit elit convallis et aenean. Tincidunt vestibulum sem tempor facilisi lacinia. Auctor aptent nascetur nibh consectetur neque condimentum. Praesent ultricies porta nec curabitur vivamus posuere vel cubilia nisi? Faucibus accumsan proin ligula; fames quisque consectetur inceptos aliquet. Luctus molestie nec turpis ligula fermentum porttitor cubilia. In pellentesque tortor auctor eu mollis varius purus ligula.",
+        "Amet rhoncus posuere posuere volutpat ultrices. Mattis euismod augue efficitur ut tellus ante. Pharetra molestie blandit ultricies blandit semper faucibus taciti nec. Nisl condimentum purus sed amet laoreet himenaeos. Pellentesque volutpat suspendisse quis ut dis. Mi habitasse eu elit hendrerit litora pellentesque tincidunt turpis. Purus orci himenaeos erat duis lorem et sodales penatibus velit.",
+        "Donec vitae odio; adipiscing inceptos orci dis torquent. Parturient commodo vivamus arcu finibus libero montes hac ac. Pretium fusce placerat nunc primis placerat dis pretium. Augue vestibulum felis venenatis vehicula; proin at a? Erat ornare etiam primis euismod tempus lobortis. Ipsum molestie et nibh justo ipsum dolor ac cubilia. Facilisis litora semper leo fames blandit blandit. Porttitor conubia nam dis placerat purus faucibus laoreet. Duis bibendum feugiat netus parturient mus, congue potenti himenaeos.",
+        "Efficitur vivamus tincidunt proin pulvinar elit vestibulum tristique fermentum. Mattis velit class turpis euismod per senectus amet. Consectetur velit proin vel at in, aliquet commodo arcu. Tincidunt parturient porta ipsum ullamcorper felis aliquam non. Sapien dapibus eleifend fames mi iaculis rhoncus nisi. Arcu dolor massa molestie euismod orci maecenas consequat senectus ornare.",
+        "Semper maximus aenean blandit sed scelerisque mollis velit fusce lacinia. Habitant fermentum vitae ultrices vehicula dolor. Etiam malesuada praesent et libero cubilia. Est lacinia nunc conubia nullam proin lobortis quis eros. Ultrices efficitur ridiculus suscipit himenaeos platea. Et litora potenti inceptos phasellus auctor sed risus nec interdum. Luctus sollicitudin ex sagittis egestas faucibus lectus hac diam. Leo praesent aptent nulla pretium, torquent rutrum posuere per."
+    )
+
+    a1.forEach { chapterId ->
+        for (image in i11.indices) {
+            val order = image
+            db?.execSQL("""
+            INSERT INTO ${Contract.ParagraphEntry.TABLE_NAME} 
+            (${Contract.ParagraphEntry.COLUMN_CONTENT_FILE}, ${Contract.ParagraphEntry.COLUMN_NUMBER_ORDER}, 
+             ${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK})
+            VALUES ('${i11[image]}', $order, $chapterId)
+        """)
+        }
+    }
+
+    b1.forEach { chapterId ->
+        for (image in i22.indices) {
+            val order = image
+            db?.execSQL("""
+            INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+            (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+             ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+            VALUES ('${i22[image]}', $order, $chapterId)
+        """)
+        }
+    }
+
+    c1.forEach { chapterId ->
+        for (image in i33.indices) {
+            val order = image
+            db?.execSQL("""
+            INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+            (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+             ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+            VALUES ('${i33[image]}', $order, $chapterId)
+        """)
+        }
+    }
+
+    d1.forEach { chapterId ->
+        for (image in i44.indices) {
+            val order = image
+            db?.execSQL("""
+            INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+            (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+             ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+            VALUES ('${i44[image]}', $order, $chapterId)
+        """)
+        }
+    }
+
+    e.forEach { chapterId ->
+        for (image in i55.indices) {
+            val order = image
+            db?.execSQL("""
+            INSERT INTO ${Contract.ImageEntry.TABLE_NAME} 
+            (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER}, 
+             ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+            VALUES ('${i55[image]}', $order, $chapterId)
+        """)
+        }
+    }
+
+    // Tạo dữ liệu cho bảng Comment
+    for (storyId in 1..100) {
+        val commentCount = random.nextInt(8) + 3 // 3 - 10 comments
+        for (i in 1..commentCount) {
+            val userId = random.nextInt(7) + 1 // user_id từ 1 đến 7
+            val content = "Comment content for story $storyId by user $userId"
+            val time = "2024-12-${random.nextInt(30) + 1} ${random.nextInt(24)}:${random.nextInt(60)}:${random.nextInt(60)}"
+
+            db?.execSQL(
+                """
+                INSERT INTO ${Contract.CommentEntry.TABLE_NAME} 
+                (${Contract.CommentEntry.COLUMN_CONTENT}, ${Contract.CommentEntry.COLUMN_TIME}, 
+                 ${Contract.CommentEntry.COLUMN_USER_ID_FK}, ${Contract.CommentEntry.COLUMN_STORY_ID_FK})
+                VALUES (?, ?, ?, ?)
+                """.trimIndent(), arrayOf(content, time, userId, storyId)
+            )
+        }
+    }
+
+    // Tạo dữ liệu cho bảng Rate
+    for (storyId in 1..100) {
+        val rateCount = random.nextInt(6) + 1 // 1 - 6 ratings
+        val usedUserIds = mutableSetOf<Int>() // Đảm bảo không lặp user_id cho cùng story
+
+        for (i in 1..rateCount) {
+            var userId: Int
+            do {
+                userId = random.nextInt(7) + 1 // user_id từ 1 đến 7
+            } while (usedUserIds.contains(userId))
+
+            usedUserIds.add(userId)
+            val rate = random.nextInt(5) + 1 // rate từ 1 đến 5
+
+            db?.execSQL(
+                """
+                INSERT INTO ${Contract.RateEntry.TABLE_NAME} 
+                (${Contract.RateEntry.COLUMN_RATE}, ${Contract.RateEntry.COLUMN_USER_ID_FK}, 
+                 ${Contract.RateEntry.COLUMN_STORY_ID_FK})
+                VALUES (?, ?, ?)
+                """.trimIndent(), arrayOf(rate, userId, storyId)
+            )
+        }
+    }
+//    for (chapterId in 1..50) {
+//
+//
+//        // Tạo 5 hình ảnh cho mỗi chapter
+//        for (image in 1..listOfImageChapterUrl.size) {
+//
+//
+//            val order = image
+//
+//            // Chèn dữ liệu hình ảnh vào bảng img_table
+//            db?.execSQL("""
+//                    INSERT INTO ${Contract.ImageEntry.TABLE_NAME}
+//                    (${Contract.ImageEntry.COLUMN_CONTENT_FILE}, ${Contract.ImageEntry.COLUMN_NUMBER_ORDER},
+//                     ${Contract.ImageEntry.COLUMN_CHAPTER_ID_FK})
+//                    VALUES ('${listOfImageChapterUrl[image-1]}', $order, $chapterId)
+//                """)
+//        }
+//    }
 
 }
 
