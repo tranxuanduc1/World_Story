@@ -45,13 +45,13 @@ class ChangeUserPasswordDialog : DialogFragment() {
                         binding.oldPw.error="Sai mật khẩu"
                         userViewModel.resetValue()
                     }
-                    else if (!binding.cfPw.text.toString().equals(binding.newPw.text.toString())) {
+                     if (!binding.cfPw.text.toString().equals(binding.newPw.text.toString())) {
                         isValid = false
                         binding.cfPw.error = "Không khớp"
                         userViewModel.resetValue()
                     }
 
-                    else if (isValid) {
+                     if (isValid) {
                         userViewModel.passWord.value = binding.newPw.text.toString()
                         userViewModel.updatetUserPw(user)
                         dialog.dismiss()

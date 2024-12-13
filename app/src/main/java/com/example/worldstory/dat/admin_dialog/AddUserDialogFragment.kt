@@ -86,6 +86,7 @@ class AddUserDialogFragment : DialogFragment() {
                 .setPositiveButton("Add") { dialog, _ ->
                 }
                 .setNegativeButton("Cancel") { dialog, which ->
+                    userViewModel.onFail()
                     dialog.cancel()
                 }
                 .setCancelable(false)
@@ -108,7 +109,10 @@ class AddUserDialogFragment : DialogFragment() {
                         binding.newUserName.error = "Username không được để trống"
                         isValid = false
                     }
-
+                    if (userViewModel.userNameList.contains(binding.newUserName.text.toString())) {
+                        binding.newUserName.error = "Username đã tồn tại"
+                        isValid = false
+                    }
                     if (binding.newPassword.text.isNullOrEmpty()) {
                         binding.newPassword.error = "Password không được để trống"
                         isValid = false
@@ -141,13 +145,13 @@ class AddUserDialogFragment : DialogFragment() {
                             "Vui lòng thêm hình đại diện",
                             Toast.LENGTH_SHORT
                         ).show()
-                        isValid=false
+                        isValid = false
                     }
                     if (isValid) {
                         lifecycleScope.launch {
                             withContext(Dispatchers.Main) {
                                 binding.progressBar.visibility = View.VISIBLE
-                                addButton.isEnabled=false
+                                addButton.isEnabled = false
                             }
                             try {
                                 val isUploadAvt = uploadImageAsynce(uriAvt, userViewModel.avtId)
@@ -162,8 +166,12 @@ class AddUserDialogFragment : DialogFragment() {
                                         "Không tạo user được",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    userViewModel.onFail()
+                                    addButton.isEnabled = true
                                 }
                             } catch (e: Exception) {
+                                userViewModel.onFail()
+                                addButton.isEnabled = true
                                 e.printStackTrace()
                             } finally {
                                 withContext(Dispatchers.Main) {
@@ -184,6 +192,8 @@ class AddUserDialogFragment : DialogFragment() {
                 Picasso.get().load(R.drawable.cat).into(binding.avtUserByAdmin)
                 uriAvt = "".toUri()
             }
+
+
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")
@@ -255,30 +265,4 @@ class AddUserDialogFragment : DialogFragment() {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
-    fun disableMainScreenInteraction() {
-        val overlay = View(requireContext())
-        overlay.setBackgroundColor(Color.parseColor("#80000000")) // Màu đen trong suốt
-        overlay.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
-        )
-
-        // Thêm lớp phủ vào root view
-        val rootLayout = view?.findViewById<FrameLayout>(android.R.id.content)
-        rootLayout?.addView(overlay)
-
-        overlay.setOnTouchListener { v, event ->
-            true
-        }
-    }
-
-    fun enableMainScreenInteraction() {
-        // Loại bỏ overlay khi tải lên hoàn tất
-        val rootLayout = view?.findViewById<FrameLayout>(android.R.id.content)
-        val overlay = rootLayout?.getChildAt(rootLayout?.childCount?.minus(1) ?: 0)
-        if (overlay != null) {
-            rootLayout.removeView(overlay)
-        }
-    }
 }

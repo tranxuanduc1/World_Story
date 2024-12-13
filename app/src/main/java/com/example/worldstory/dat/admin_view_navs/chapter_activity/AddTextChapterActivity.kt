@@ -123,6 +123,10 @@ class AddTextChapterActivity : AppCompatActivity() {
 
         binding.topAppBar.setNavigationOnClickListener{onBackPressedDispatcher.onBackPressed()}
 
+
+        binding.cancelAddChapterTxt.setOnClickListener {
+            this.finish()
+        }
     }
 
     fun readTextFromUri(uri: Uri, contentResolver: ContentResolver): String? {

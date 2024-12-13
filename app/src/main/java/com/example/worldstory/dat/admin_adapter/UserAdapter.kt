@@ -72,13 +72,14 @@ class UserAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(p0: CharSequence): FilterResults {
-                val query: String = p0.toString()
+                val query: String = p0.toString().trim()
                 filteredList = if (query.isEmpty()) {
                     userList
                 } else {
                     userList.filter {
                         it.nickName.contains(query, ignoreCase = true)
                                 || it.userID.toString().contains(query, ignoreCase = true)
+                                ||it.userName.contains(query, ignoreCase = true)
                     }
                 }
                 val result = FilterResults()

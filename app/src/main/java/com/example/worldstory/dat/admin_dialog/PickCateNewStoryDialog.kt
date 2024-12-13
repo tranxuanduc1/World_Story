@@ -49,6 +49,7 @@ class PickCateNewStoryDialog : DialogFragment() {
                 }
             builder.setPositiveButton("Add", null)
                 .setNegativeButton("Cancel") { dialog, _ ->
+                    storyViewModel.onFail()
                     dialog.cancel()
                 }
 
@@ -74,6 +75,8 @@ class PickCateNewStoryDialog : DialogFragment() {
                 }
 
             }
+
+
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
             dialog
         } ?: throw IllegalStateException("Activity cannot be null")

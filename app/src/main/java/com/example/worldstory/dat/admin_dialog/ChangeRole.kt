@@ -33,7 +33,7 @@ class ChangeRole : DialogFragment() {
             var roleId=-1
             builder.setTitle("Thay đổi vai trò của ${user?.nickName}")
                 .setSingleChoiceItems(arr, -1) { dialog, which ->
-                    roleId = which
+                    roleId = which+1
                 }
                 .setPositiveButton("Accept"){dialog,_->
 

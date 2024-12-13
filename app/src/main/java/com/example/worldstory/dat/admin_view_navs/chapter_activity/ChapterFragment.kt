@@ -145,7 +145,13 @@ class ChapterFragment() : Fragment() {
 
 
         chapterAdapter =
-            ChapterAdapter(storyViewModel.chapterListByStory.value?.toMutableList(), storyViewModel,requireContext(),idStory?:-1,type)
+            ChapterAdapter(
+                storyViewModel.chapterListByStory.value?.toMutableList(),
+                storyViewModel,
+                requireContext(),
+                idStory ?: -1,
+                type
+            )
 
         binding.chapterList.layoutManager = LinearLayoutManager(requireContext())
         binding.chapterList.adapter = chapterAdapter
@@ -205,6 +211,12 @@ class ChapterFragment() : Fragment() {
             var upload = false
             lifecycleScope.launch {
                 try {
+
+                    withContext(Dispatchers.Main) {
+                        binding.saveChanges.isEnabled = false
+                        binding.progressBar.visibility=View.VISIBLE
+                    }
+
                     if (::uriav.isInitialized)
                         uploadAvt = uploadImageAsynce(uriav, storyViewModel.storyImg)
                     if (::uribg.isInitialized)
@@ -230,9 +242,7 @@ class ChapterFragment() : Fragment() {
                         storyViewModel.updateInforStory(story)
                         Toast.makeText(requireContext(), "Lưu thành công", Toast.LENGTH_LONG)
                             .show()
-                        storyViewModel.setStoryByID(idStory)
-                        storyViewModel.resetValue()
-                        storyViewModel.setStoryByID(idStory)
+
                     }
 
                 } catch (e: Exception) {
@@ -241,6 +251,15 @@ class ChapterFragment() : Fragment() {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "Đã xảy ra lỗi", Toast.LENGTH_LONG).show()
                     }
+                } finally {
+
+                    storyViewModel.resetValue()
+                    storyViewModel.setStoryByID(idStory)
+                    withContext(Dispatchers.Main) {
+                        binding.saveChanges.isEnabled = true
+                        binding.progressBar.visibility=View.GONE
+                    }
+
                 }
             }
         }

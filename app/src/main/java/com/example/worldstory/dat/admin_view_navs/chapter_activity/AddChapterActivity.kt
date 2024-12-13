@@ -170,6 +170,10 @@ class AddChapterActivity : AppCompatActivity() {
 
         binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
+
+        binding.cancelAddChapter.setOnClickListener {
+            this.finish()
+        }
     }
 
     fun openImagePicker() {
@@ -209,6 +213,7 @@ class AddChapterActivity : AppCompatActivity() {
 
 
         try {
+            binding.acceptAddChapter.isEnabled = false
             val file = driveService.files().create(fileMetadata, mediaContent).apply {
                 fields = "id, webViewLink"
                 mediaHttpUploader.apply {
@@ -226,39 +231,11 @@ class AddChapterActivity : AppCompatActivity() {
             mediaContent.closeInputStream
             return false
         } finally {
-
+            binding.acceptAddChapter.isEnabled = true
         }
 
 
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    fun disableMainScreenInteraction() {
-        val overlay = View(this)
-        overlay.setBackgroundColor(Color.parseColor("#80000000")) // Màu đen trong suốt
-        overlay.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
-        )
-
-        // Thêm lớp phủ vào root view
-        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
-        rootLayout.addView(overlay)
-
-        overlay.setOnTouchListener { v, event ->
-            true
-        }
-    }
-
-    fun enableMainScreenInteraction() {
-        // Loại bỏ overlay khi tải lên hoàn tất
-        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
-        val overlay = rootLayout.getChildAt(rootLayout.childCount - 1)
-        if (overlay != null) {
-            rootLayout.removeView(overlay)
-        }
-    }
-
 
 
 }

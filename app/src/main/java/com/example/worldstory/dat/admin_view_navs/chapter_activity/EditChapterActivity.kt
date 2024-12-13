@@ -173,7 +173,6 @@ class EditChapterActivity : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
-                            enableMainScreenInteraction()
                         }
                     }
                 }
@@ -223,7 +222,6 @@ class EditChapterActivity : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
-                            enableMainScreenInteraction()
                         }
                     }
                 }
@@ -234,6 +232,10 @@ class EditChapterActivity : AppCompatActivity() {
 
         binding.topAppBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
+
+        binding.cancelAddChapter.setOnClickListener {
+            this.finish()
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -336,14 +338,6 @@ class EditChapterActivity : AppCompatActivity() {
         }
     }
 
-    fun enableMainScreenInteraction() {
-        // Loại bỏ overlay khi tải lên hoàn tất
-        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
-        val overlay = rootLayout.getChildAt(rootLayout.childCount - 1)
-        if (overlay != null) {
-            rootLayout.removeView(overlay)
-        }
-    }
 
 
     fun hideKeyboard(activity: Activity) {

@@ -20,6 +20,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     private val tempUsers = mutableListOf<User>()
     val users: LiveData<List<User>> get() = _users
+    val userNameList = mutableListOf<String>()
     val userName = MutableLiveData<String>()
     val passWord = MutableLiveData<String>()
     val nickName = MutableLiveData<String>()
@@ -36,14 +37,14 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
     val userList: LiveData<List<User>> get() = _userList
 
     init {
-//        fetchAllUsers()
+     fetchAllUsers()
 //        setUsersByRoleId(roleSeclected)
     }
 
     fun fetchAllUsers() {
-        tempUsers.clear()
+
         tempUsers.addAll(db.getAllUsers())
-        _users.value = tempUsers
+        tempUsers.map { it.userName }.toList().let { userNameList.addAll(it) }
     }
 
 
@@ -51,7 +52,6 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         tempUserList.clear()
 
         viewModelScope.launch {
-            // Chạy việc truy xuất dữ liệu từ database trên Dispatchers.IO
             val tempUserList = withContext(Dispatchers.IO) {
                 val tempList = mutableListOf<User>()
                 tempList.addAll(db.getUserByRoleID(id))
@@ -64,22 +64,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             // Sau đó cập nhật `_userList`
             _userList.value = tempUserList
         }
-//
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                tempUserList.addAll(db.getUserByRoleID(id))
-//                Log.w("sizev", tempUserList.toString())
-//                Log.w("else", "y")
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            withContext(Dispatchers.Main) {
-//                    _roleMap.value = mapOf(id to tempUserList)
-//                    _userList.value = tempUserList
-//                Log.w("sizu", userList.value.toString())
-//            }
-//
-//        }
+        fetchAllUsers()
 
     }
 
@@ -103,15 +88,12 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
         return l
     }
 
-    fun deleteAllUser() {
-        db.deleteAllUser()
+    fun onFail(){
+        resetValue()
+        setUsersByRoleId(roleSeclected)
     }
 
 
-    fun insertUser(user: User) {
-        db.insertUser(user)
-        fetchAllUsers()
-    }
 
     fun updatetUserRole(u: User?) {
         val user = User(
@@ -134,7 +116,7 @@ class UserViewModel(val db: DatabaseHelper) : ViewModel() {
             userID = u?.userID,
             userName = u?.userName ?: "",
             nickName = u?.nickName ?: "",
-            hashedPw = hashPassword(password = passWord.toString()),
+            hashedPw = hashPassword(password = passWord.value.toString()),
             email = u?.email ?: "",
             roleID = u?.roleID ?: -1,
             createdDate = u?.createdDate ?: "",

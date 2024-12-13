@@ -106,8 +106,13 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         val l: Long = insertStory(story)
         genreIDList.value?.forEach { gID -> insertStoryGenre(l.toInt(), gID) }
         resetValue()
-        fetchAllStoriesByTypeAsynce(type ?: 0)
+        fetchAllStoriesByTypeAsynce(type)
         return l
+    }
+
+    fun onFail(){
+        resetValue()
+        fetchAllStoriesByTypeAsynce(type)
     }
 
     fun resetValue() {

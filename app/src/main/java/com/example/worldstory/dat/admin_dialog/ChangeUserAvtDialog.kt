@@ -90,6 +90,9 @@ class ChangeUserAvtDialog : DialogFragment() {
                     if (uriAvt != "".toUri()) {
                         lifecycleScope.launch {
                             try {
+                                withContext(Dispatchers.Main){
+                                    binding.progressBar.visibility=View.VISIBLE
+                                }
                                 val isUploadAvt = uploadImageAsynce(uriAvt, userViewModel.avtId)
                                 if (isUploadAvt) {
                                     userViewModel.updateAvt(user)
@@ -105,6 +108,8 @@ class ChangeUserAvtDialog : DialogFragment() {
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
+                            }finally {
+                                binding.progressBar.visibility=View.GONE
                             }
                         }
                     }
