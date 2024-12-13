@@ -111,6 +111,9 @@ class DucLoginActivity : AppCompatActivity() {
             //truy cap database de kiem tra tai khoan
             ducAccountManagerViewModel.fetchCheckAccountLogin(username, password)
         }
-
+        //quen mat khau
+        bindinng.btnForgotPasswordLogin.setOnClickListener{
+            toActivity(DucForgotPasswordActivity::class.java)
+        }
     }
 }

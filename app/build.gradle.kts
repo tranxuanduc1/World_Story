@@ -97,7 +97,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation (libs.flexbox)
-    implementation (libs.touchimageview)
     implementation (libs.photoview)
     implementation(libs.androidx.core.ktx.v1150)
     implementation(libs.androidx.fragment.ktx)

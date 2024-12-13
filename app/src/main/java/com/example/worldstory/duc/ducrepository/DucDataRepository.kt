@@ -1,11 +1,11 @@
 package com.example.worldstory.duc.ducrepository
 
 
-import android.provider.CallLog
 import com.example.worldstory.dbhelper.DatabaseHelper
+import com.example.worldstory.dbhelper.getAllEmails
+import com.example.worldstory.dbhelper.getUserByEmail
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
-import com.example.worldstory.duc.ducutils.AUTHOR
 import com.example.worldstory.duc.ducutils.GUEST
 import com.example.worldstory.duc.ducutils.MEMBER
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
@@ -123,7 +123,6 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
             if (it.commentReplyId!=null) {
                 var listCommentReply=listOfComments.filter { commentR->commentR.commentId==it.commentReplyId }
                 commentReply= if (listCommentReply.isNotEmpty()) listCommentReply.first() else null
-                callLog("reposityaahave",commentReply.toString())
             }
             if (user != null) {
                 var ducComment = DucCommentDataClass(
@@ -137,7 +136,6 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
                     commentReplyId = commentReply?.commentId,
                     contentReply = commentReply?.content
                 )
-                callLog("reposityaa",ducComment.toString())
 
                 listOfDucComments.add(ducComment)
 
@@ -199,28 +197,40 @@ class DucDataRepository(private var dbHelper: DatabaseHelper) {
 
             }
         } catch (e: Exception) {
-            callLog("repoaaa", e.toString())
             return UserLoginStateEnum.ACCOUNT_DOES_NOT_EXIST
         }
 
 
     }
 
-    fun checkAccountExist(userName: String): UserLoginStateEnum {
+    fun checkAccountExist(userName: String,email: String): UserLoginStateEnum {
         var userNameTrim = userName.trim()
         var user = dbHelper.getUserByUsersName(userNameTrim)
-        return if (user == null) {
-            UserLoginStateEnum.CORRECT
-        } else {
+        var listOfEmail=dbHelper.getAllEmails()
+
+        return if (user != null) {
             UserLoginStateEnum.USERNAME_ALREADY_EXISTS
+        }
+        else if(listOfEmail.contains(email) ){
+
+            UserLoginStateEnum.EMAIL_ALREADY_EXISTS
+        }
+        else {
+            UserLoginStateEnum.CORRECT
+
         }
 
     }
 
+    fun updateUser(user: User) {
+       dbHelper.updateUser(user)
+    }
     fun getUserByUsername(username: String): User? {
         return dbHelper.getUserByUsersName(username)
     }
-
+    fun getUserByEmail(email: String): User? {
+        return dbHelper.getUserByEmail(email)
+    }
     fun getUserByUserId(userId: Int): User? {
         return dbHelper.getUserByUsersId(userId)
     }
