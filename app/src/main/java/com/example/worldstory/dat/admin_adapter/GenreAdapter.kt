@@ -21,6 +21,7 @@ import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
 import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
 import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Rate
+import java.util.Collections
 
 class GenreAdapter(
     private val genreViewModel: GenreViewModel,
@@ -83,8 +84,8 @@ class GenreAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(genre: List<Genre>) {
-        genreList = genre
+    fun updateList(genres: List<Genre>) {
+        genreList = genres
         notifyDataSetChanged()
     }
 
@@ -168,6 +169,8 @@ class GenreAdapter(
         }
         popupMenu.show()
     }
+
+
 
 
 }

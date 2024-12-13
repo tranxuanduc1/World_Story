@@ -3,12 +3,14 @@ package com.example.worldstory.dat.admin_adapter
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,8 @@ import com.example.worldstory.dat.admin_dialog.ChangeUserPasswordDialog
 import com.example.worldstory.model.User
 import com.example.worldstory.dat.admin_viewholder.UserViewHolder
 import com.squareup.picasso.Picasso
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class UserAdapter(
     private val userList: MutableList<User>,
@@ -37,6 +41,7 @@ class UserAdapter(
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = filteredList[position]
@@ -45,7 +50,7 @@ class UserAdapter(
         Picasso.get().load(user.imgAvatar).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
         holder.column1.text = "Nickname: ${user.nickName}"
-        holder.column3.text = user.createdDate
+        holder.column3.text = getFormatedDate(user.createdDate)
         holder.column4.text = "Username: ${user.userName}"
         holder.itemView.setOnLongClickListener {
             showPopupMenu(holder.itemView, user)
@@ -148,5 +153,13 @@ class UserAdapter(
         popupMenu.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getFormatedDate(dateTime: String?): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+        val date = LocalDateTime.parse(dateTime, inputFormatter)
+        val formattedDate = date.format(outputFormatter)
+        return formattedDate
 
+    }
 }

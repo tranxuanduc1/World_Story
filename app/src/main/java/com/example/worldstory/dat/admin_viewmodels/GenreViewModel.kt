@@ -40,12 +40,11 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
     fun fetchAllGenre() {
         tempGenres.clear()
 
-                tempGenres.addAll(db.getAllGenres())
+        tempGenres.addAll(db.getAllGenres())
 
 
-            _genres.value = tempGenres
-            tempGenres.clear()
-
+        _genres.value = tempGenres
+        tempGenres.clear()
 
 
     }
@@ -86,6 +85,25 @@ class GenreViewModel(private val db: DatabaseHelper) : ViewModel(db) {
         val set = db.getStoriesIdbyGenreId(id)
         return set.size
     }
+
+//    fun des_sort() {
+//        try {
+//            val tempList = _genres.value?.sortedByDescending { it.genreID }
+//            _genres.value = tempList!!
+//        } catch (e: Exception) {
+//        }
+//
+//    }
+//
+//    fun sort() {
+//        try {
+//            val tempList = _genres.value?.sortedBy { it.genreID }
+//            _genres.value = tempList!!
+//        } catch (e: Exception) {
+//        }
+//
+//    }
+
 }
 
 class GenreViewModelFactory(private val databaseHelper: DatabaseHelper) :

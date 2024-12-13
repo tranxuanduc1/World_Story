@@ -103,7 +103,6 @@ class StoryAdapter(
                             query,
                             ignoreCase = true
                         )
-                        true
                     }
                 }
 
@@ -185,7 +184,7 @@ class StoryAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormatedDate(dateTime: String?): String {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH/mm/ss")
+        val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
         val date = LocalDateTime.parse(dateTime, inputFormatter)
         val formattedDate = date.format(outputFormatter)
         return formattedDate

@@ -37,6 +37,24 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/sort_id_genre"-->
+<!--                            android:layout_width="15dp"-->
+<!--                            android:layout_height="15dp"-->
+<!--                            android:layout_gravity="center_vertical"-->
+<!--                            android:backgroundTint="@color/lgt_white"-->
+<!--                            android:src="@drawable/baseline_arrow_drop_up_12"-->
+<!--                            android:visibility="visible" />-->
+
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/des_sort_id_genre"-->
+<!--                            android:layout_width="15dp"-->
+<!--                            android:layout_height="15dp"-->
+<!--                            android:layout_gravity="center_vertical"-->
+<!--                            android:backgroundTint="@color/lgt_white"-->
+<!--                            android:src="@drawable/baseline_arrow_drop_down_12"-->
+<!--                            android:visibility="gone" />-->
+
                         <TextView
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"

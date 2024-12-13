@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +58,10 @@ class RateFragment : Fragment() {
 
 
     private val maxScore = 5
+
+    private val DEBOUNCE_DELAY = 500L
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -169,7 +175,16 @@ class RateFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return true
+                runnable?.let { handler.removeCallbacks(it) }
+
+                runnable= Runnable {
+                    newText?.let{
+                        rateAdapter.filter.filter(it)
+                    }
+                }
+
+                handler.postDelayed(runnable!!, DEBOUNCE_DELAY)
+                return false
             }
         })
 

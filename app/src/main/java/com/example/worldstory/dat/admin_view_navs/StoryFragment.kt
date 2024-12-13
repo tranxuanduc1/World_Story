@@ -9,6 +9,8 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -62,6 +65,11 @@ class StoryFragment : Fragment(), OnItemClickListener {
     private lateinit var binding: FragmentStoryBinding
 
     private var type = -1
+
+    private val DEBOUNCE_DELAY = 500L
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -140,14 +148,22 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         //searchview
         binding.searchViewStory.setOnQueryTextListener(object :
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
-                storyAdapter.updateSearchQuery(p0)
+                runnable?.let { handler.removeCallbacks(it) }
+
+                runnable= Runnable {
+                    p0?.let{
+                        storyAdapter.filter.filter(it)
+                    }
+                }
+
+                handler.postDelayed(runnable!!, DEBOUNCE_DELAY)
                 return false
             }
 
             override fun onQueryTextSubmit(p0: String?): Boolean {
-                storyAdapter.updateSearchQuery(p0)
+                storyAdapter.filter.filter(p0)
                 sharedViewModel.searchQueryStory.value = p0
                 return false
             }

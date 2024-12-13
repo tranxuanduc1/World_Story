@@ -8,6 +8,8 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -54,6 +56,11 @@ class UserFragment : Fragment() {
         UserViewModelFactory(DatabaseHelper(requireActivity()))
     }
     var itemPosition = -1
+
+    private val DEBOUNCE_DELAY = 500L
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -130,7 +137,15 @@ class UserFragment : Fragment() {
         binding.searchViewUser.setOnQueryTextListener(object :
             SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
-                userAdapter.filter.filter(p0)
+                runnable?.let { handler.removeCallbacks(it) }
+
+                runnable= Runnable {
+                    p0?.let{
+                        userAdapter.filter.filter(it)
+                    }
+                }
+
+                handler.postDelayed(runnable!!, DEBOUNCE_DELAY)
                 return false
             }
 

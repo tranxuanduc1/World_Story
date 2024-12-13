@@ -8,6 +8,8 @@ import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,6 +45,10 @@ class GenreFragment : Fragment() {
     private val genreViewModel: GenreViewModel by activityViewModels {
         GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }
+
+    private val DEBOUNCE_DELAY = 500L
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,7 +86,15 @@ class GenreFragment : Fragment() {
         binding.searchViewCate.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
-                genreAdapter.filter.filter(p0)
+                runnable?.let { handler.removeCallbacks(it) }
+
+                runnable = Runnable {
+                    p0?.let {
+                        genreAdapter.filter.filter(it)
+                    }
+                }
+
+                handler.postDelayed(runnable!!, DEBOUNCE_DELAY)
                 return false
             }
 
@@ -237,6 +251,24 @@ class GenreFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.categoryList)
 
+
+        //sort
+//
+//        binding.sortIdGenre.setOnClickListener {
+//            if (it.visibility == View.VISIBLE) {
+//                binding.desSortIdGenre.visibility = View.VISIBLE
+//                it.visibility = View.GONE
+//                genreViewModel.des_sort()
+//            }
+//        }
+//
+//        binding.desSortIdGenre.setOnClickListener {
+//            if (it.visibility == View.VISIBLE) {
+//                binding.sortIdGenre.visibility = View.VISIBLE
+//                it.visibility = View.GONE
+//                genreViewModel.sort()
+//            }
+//        }
     }
 
 

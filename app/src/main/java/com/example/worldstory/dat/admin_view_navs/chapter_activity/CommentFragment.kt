@@ -3,6 +3,8 @@ package com.example.worldstory.dat.admin_view_navs.chapter_activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +43,11 @@ class CommentFragment : Fragment() {
     private lateinit var binding: FragmentCommentBinding
     private lateinit var commentViewModel: CommentViewModel
     private lateinit var commentAdapter: CommentAdapter
+
+    private val DEBOUNCE_DELAY = 500L
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -99,7 +106,16 @@ class CommentFragment : Fragment() {
 
         binding.searchCmt.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
-                return true
+                runnable?.let { handler.removeCallbacks(it) }
+
+                runnable= Runnable {
+                    newText?.let{
+                        commentAdapter.filter.filter(it)
+                    }
+                }
+
+                handler.postDelayed(runnable!!, DEBOUNCE_DELAY)
+                return false
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
