@@ -9,6 +9,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityDucSignUpBinding
 import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducviewmodel.DucAccountManagerViewModel
@@ -37,18 +38,38 @@ class DucSignUpActivity : AppCompatActivity() {
             if (check == UserLoginStateEnum.USERNAME_ALREADY_EXISTS) {
                 binding.inputLayoutUsernameSignup.error = getString(R.string.usernameAlreadyExists)
                 binding.inputLayoutComfirmpasswordSignup.error = null
-
-            } else if (check == UserLoginStateEnum.CORRECT) {
+                binding.inputLayoutEmailSignup.error =null
+            }
+            if (check == UserLoginStateEnum.EMAIL_ALREADY_EXISTS) {
+                binding.inputLayoutEmailSignup.error = getString(R.string.emailAlreadyExists)
+                binding.inputLayoutComfirmpasswordSignup.error = null
+                binding.inputLayoutUsernameSignup.error=null
+            }
+            else if (check == UserLoginStateEnum.CORRECT) {
                 // neu tenn dang nhap chua ton tai, tiep tuc kiem tra mat khau bi trung
                 var password = binding.etxtPasswordSignup.text.toString().trim()
                 var confirmPassword = binding.etxtConfirmPasswordSignup.text.toString().trim()
+                var email=binding.etxtEmailSignup.text.toString().trim()
                 if (password != confirmPassword) {
                     // mat khau khac, hien canh bao
                     binding.inputLayoutComfirmpasswordSignup.error =
                         getString(R.string.comfirmPasswordDoesNotMatchPassword)
                     binding.inputLayoutUsernameSignup.error = null
+                    binding.inputLayoutEmailSignup.error =null
+                }else
+                if (!isValidEmail(email)) {
+                    //kiem tra email dung dinh dang khong
+                    binding.inputLayoutEmailSignup.error = getString(R.string.emailFormatIsIncorrect)
+                    binding.inputLayoutComfirmpasswordSignup.error = null
+                    binding.inputLayoutUsernameSignup.error = null
+                }
+                else {
+                    // Email đúng định dạng, đăng ký thành công
+                    binding.inputLayoutEmailSignup.error = null
+                    binding.inputLayoutComfirmpasswordSignup.error = null
+                    binding.inputLayoutUsernameSignup.error = null
 
-                } else {
+
                     // dang ky thanh cong
                     //luu thong tin dang ky
                     saveDataUserSignup()
@@ -66,7 +87,7 @@ class DucSignUpActivity : AppCompatActivity() {
             var username = binding.etxtUsernameSignup.text.toString().trim()
             var email = binding.etxtEmailSignup.text.toString().trim()
 
-            ducAccountManagerViewModel.fetchCheckAccountExist(username)
+            ducAccountManagerViewModel.fetchCheckAccountExist(username,email)
         }
     }
 
@@ -82,6 +103,9 @@ class DucSignUpActivity : AppCompatActivity() {
 
         ducAccountManagerViewModel.SignUpNewAccount(username,password,email,nickname)
     }
-
+    fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return email.matches(emailRegex.toRegex())
+    }
 }
 

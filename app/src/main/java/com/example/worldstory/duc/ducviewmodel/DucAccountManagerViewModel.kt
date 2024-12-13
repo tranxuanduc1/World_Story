@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldstory.duc.ducrepository.DucDataRepository
 import com.example.worldstory.duc.ducutils.UserLoginStateEnum
+import com.example.worldstory.duc.ducutils.callLog
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getUserIdSession
 import com.example.worldstory.duc.ducutils.isUserCurrentGuest
@@ -30,6 +31,8 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
     private val _newGuestUser= MutableLiveData<User>()
     val newGuestUser:LiveData<User>  get()=_newGuestUser
 
+    private val _checkEmailExist= MutableLiveData<Pair<UserLoginStateEnum, User?>>()
+    val checkEmailExist:LiveData<Pair<UserLoginStateEnum, User?>>  get()=_checkEmailExist
 
 //    private val _userSession= MutableLiveData<User>()
 //    val userSession:LiveData<User>  get()=_userSession
@@ -43,12 +46,13 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
             _checkAccountLogin.value=resultCheck
         }
     }
-    fun fetchCheckAccountExist(userName: String){
+    fun fetchCheckAccountExist(userName: String,email: String){
         viewModelScope.launch{
             val resultCheck= withContext(Dispatchers.IO){
-                repository.checkAccountExist(userName)
+                repository.checkAccountExist(userName,email)
 
             }
+            callLog("account",resultCheck.toString())
             _checkAccountExist.value=resultCheck
         }
     }
@@ -86,6 +90,24 @@ class DucAccountManagerViewModel (var repository: DucDataRepository, var context
                 }
             }
         }
+    }
+    fun fetchCheckEmailExist(email: String){
+        viewModelScope.launch{
+            val resultUser= withContext(Dispatchers.IO){
+                repository.getUserByEmail(email)
+
+            }
+            if(resultUser!=null){
+                _checkEmailExist.value= Pair( UserLoginStateEnum.CORRECT,resultUser)
+
+            }else{
+                _checkEmailExist.value= Pair(UserLoginStateEnum.EMAIL_DOES_NOT_EXISTS,null)
+
+            }
+        }
+    }
+    fun updatePassword(user: User){
+        repository.updateUser(user)
     }
     fun SignUpNewAccount(username: String,password: String,email: String,nickname: String){
 

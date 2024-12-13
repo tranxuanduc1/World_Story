@@ -30,10 +30,11 @@
     <string name="welcome">Welcome</string>
     <string name="loginName">Tên đăng nhập</string>
     <string name="password">Mật khẩu</string>
+    <string name="newPassword">Mật khẩu mới</string>
     <string name="forgotPassword">Quên mật khẩu</string>
     <string name="orLoginWith">Hoặc đăng nhập với</string>
     <string name="dontHaveAnAcctount">Không có tài khoản ?</string>
-    <string name="createYourAccout">Tạo tài khoản của bạn</string>
+    <string name="changePassword">Đổi mật khẩu</string>
     <string name="confirmPassword">Xác nhận mật khẩu</string>
     <string name="email">Email</string>
     <string name="nickname">Biệt danh</string>
@@ -50,6 +51,11 @@
     <string name="highScoreStories">Truyện đánh giá cao</string>
     <string name="seeMore">Xem thêm</string>
     <string name="story">Truyện</string>
+    <string name="emailAlreadyExists">Email đã tồn tại</string>
+    <string name="emailDoesNotExists">Email không tồn tại</string>
+    <string name="createYourAccout">Tạo tài khoản của bạn</string>
+    <string name="emailFormatIsIncorrect">Email sai định dạng</string>
+
     //----------------KEY----------------
     <string name="key_storyInfo">STORY_INFO</string>
     <string name="key_storiesByGenre">STORIES_BY_GENRE</string>
