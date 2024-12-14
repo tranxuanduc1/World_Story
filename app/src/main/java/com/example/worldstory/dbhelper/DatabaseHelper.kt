@@ -738,6 +738,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return stories
     }
+
     fun getStoriesByUser(userId: Int): List<Story> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -935,8 +936,8 @@ class DatabaseHelper(context: Context) :
         )
     }
 
-    fun deleteParagraphByChapterId(id: Int){
-        val db=writableDatabase
+    fun deleteParagraphByChapterId(id: Int) {
+        val db = writableDatabase
         db.execSQL("DELETE FROM ${Contract.ParagraphEntry.TABLE_NAME} WHERE ${Contract.ParagraphEntry.COLUMN_CHAPTER_ID_FK}= $id")
     }
 
@@ -1393,6 +1394,15 @@ class DatabaseHelper(context: Context) :
         )
     }
 
+    fun deleteGenreStory(genreId: Int, storyId: Int) {
+        val db = writableDatabase
+        db.execSQL(
+            "DELETE FROM ${Contract.StoryGenreEntry.TABLE_NAME}" +
+                    " WHERE ${Contract.StoryGenreEntry.COLUMN_STORY_ID_FK}=${storyId}" +
+                    " AND ${Contract.StoryGenreEntry.COLUMN_GENRE_ID_FK}=${genreId}"
+        )
+    }
+
     fun updateGenre(genre: Genre): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -1700,6 +1710,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return rates
     }
+
     fun getAllStoryIdsInRate(): List<Int> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1719,6 +1730,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return storyIds
     }
+
     fun getRatesByStory(storyId: Int): List<Rate> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1856,6 +1868,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return comments
     }
+
     fun getAllStoryIdsInComment(): List<Int> {
         val db = readableDatabase
         val cursor = db.rawQuery(
@@ -1876,6 +1889,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return storyIds
     }
+
     //////////////////////////
     ///----ChapterMark-----////
     //////////////////////////
@@ -2153,6 +2167,7 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         return idList
     }
+
 
     fun getStoriesIdbyGenreId(genreId: Int?): Set<Int> {
         val db = readableDatabase

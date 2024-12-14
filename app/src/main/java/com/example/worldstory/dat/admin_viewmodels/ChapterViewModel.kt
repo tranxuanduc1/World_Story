@@ -69,7 +69,6 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
         }
 
         imgMap.clear()
-        name.value = ""
     }
 
     fun updateTextContent(chapterID: Int, storyID: Int, content: Map<Int, String>) {
@@ -87,7 +86,6 @@ class ChapterViewModel(private val db: DatabaseHelper) : ViewModel() {
             }
         }
         imgMap.clear()
-        name.value = ""
     }
 
     fun onAddTextChapter(storyID: Int, content: Map<Int, String>): Boolean {

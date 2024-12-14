@@ -58,9 +58,9 @@ class StoryFragment : Fragment(), OnItemClickListener {
     private lateinit var storyAdapter: StoryAdapter
     private var isSearchViewOpen = false
 
-    private val storyViewModel: StoryViewModel by activityViewModels {
-        StoryViewModelFactory(DatabaseHelper(requireActivity()), 0)
-    }
+        private val storyViewModel: StoryViewModel by activityViewModels {
+            StoryViewModelFactory(DatabaseHelper(requireActivity()), 0)
+        }
 
     private lateinit var binding: FragmentStoryBinding
 
@@ -71,9 +71,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
     private var runnable: Runnable? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStoryBinding.inflate(inflater, container, false)
         return binding.root
@@ -87,9 +85,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
         val spinner: Spinner = binding.menuStory
 
         ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.story_options,
-            android.R.layout.simple_expandable_list_item_1
+            requireContext(), R.array.story_options, android.R.layout.simple_expandable_list_item_1
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
@@ -99,23 +95,29 @@ class StoryFragment : Fragment(), OnItemClickListener {
             val selectedPosition = it.getInt("type")
             spinner.setSelection(selectedPosition)
         }
-        //set để quay lại chọn đúng type trước
+
         spinner.setSelection(storyViewModel.type)
 
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+
+        spinner.onItemSelectedListener = object : OnItemSelectedListener, OnItemClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 if (type != position) {
                     type = position
                     storyViewModel.fetchAllStoriesByType(type)
+                }
+            }
+
+            override fun onItemClick(item: Story) {
+                if (spinner.isEnabled == false) {
+                    Toast.makeText(
+                        requireContext(), "Bỏ lọc thể loại để đổi loại truyện", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -136,9 +138,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
         //thêm item
         val color1 = ContextCompat.getColor(requireContext(), R.color.sweetheart)
         storyAdapter = StoryAdapter(
-            storyViewModel.stories.value?.toMutableList() ?: mutableListOf(),
-            color1,
-            this
+            storyViewModel.stories.value?.toMutableList() ?: mutableListOf(), color1, this
         )
         binding.storyList.adapter = storyAdapter
         storyViewModel.stories.observe(viewLifecycleOwner) {
@@ -147,13 +147,12 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
 
         //searchview
-        binding.searchViewStory.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
+        binding.searchViewStory.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
                 runnable?.let { handler.removeCallbacks(it) }
 
-                runnable= Runnable {
-                    p0?.let{
+                runnable = Runnable {
+                    p0?.let {
                         storyAdapter.filter.filter(it)
                     }
                 }
@@ -206,11 +205,12 @@ class StoryFragment : Fragment(), OnItemClickListener {
         ////Filter Buttun
 
         sharedViewModel._filterBtn.observe(viewLifecycleOwner) { isClicked ->
-
             storyAdapter.filterByCates(sharedViewModel._selectedChips, storyViewModel)
-
-
+            if (sharedViewModel._selectedChips.isEmpty()) {
+                binding.menuStory.isEnabled = true
+            } else binding.menuStory.isEnabled = false
         }
+
 
 //swipe
         val simpleItemTouchCallback = object :
@@ -322,13 +322,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
                 }
                 super.onChildDraw(
-                    canvas,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
             }
         }
@@ -340,6 +334,18 @@ class StoryFragment : Fragment(), OnItemClickListener {
 
         AddStoryDialog().show(parentFragmentManager, "AddStoryDialogFragment")
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.onFilterBtnClicked()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sharedViewModel.onFilterBtnClicked()
+    }
+
 
     override fun onPause() {
         super.onPause()
@@ -362,9 +368,7 @@ class StoryFragment : Fragment(), OnItemClickListener {
             startActivity(intent)
         } else {
             Toast.makeText(
-                requireContext(),
-                "Bạn không có quyền truy cập truyện này",
-                Toast.LENGTH_SHORT
+                requireContext(), "Bạn không có quyền truy cập truyện này", Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -394,13 +398,11 @@ class StoryFragment : Fragment(), OnItemClickListener {
     private fun showConfirmationDialog(story: Story, p: Int) {
         // Tạo AlertDialog.Builder
         val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage("Có chắc muốn xóa không?")
-            .setCancelable(false)
+        builder.setMessage("Có chắc muốn xóa không?").setCancelable(false)
             .setPositiveButton("Chấp nhận") { dialog, id ->
                 storyViewModel.deleteStory(story)
                 dialog.dismiss()
-            }
-            .setNegativeButton("Không chấp nhận") { dialog, id ->
+            }.setNegativeButton("Không chấp nhận") { dialog, id ->
                 storyAdapter.notifyItemChanged(p)
                 dialog.dismiss()
             }

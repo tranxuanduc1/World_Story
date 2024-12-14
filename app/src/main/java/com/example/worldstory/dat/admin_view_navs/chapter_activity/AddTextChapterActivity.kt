@@ -91,6 +91,7 @@ class AddTextChapterActivity : AppCompatActivity() {
         //accept
         binding.acceptAddChapterTxt.setOnClickListener {
             try {
+                binding.acceptAddChapterTxt.isEnabled=false
                 if (binding.tenChap.text.isNullOrEmpty()) {
                     binding.tenChap.error = "Không được bỏ trống"
                 } else {
@@ -106,6 +107,8 @@ class AddTextChapterActivity : AppCompatActivity() {
                 }
             }catch (e:Exception ){
                 Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
+            }finally {
+                binding.acceptAddChapterTxt.isEnabled=true
             }
 
         }

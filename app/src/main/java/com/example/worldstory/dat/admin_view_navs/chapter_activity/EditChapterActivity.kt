@@ -131,7 +131,7 @@ class EditChapterActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main) {
                         binding.progressBar.visibility = View.VISIBLE
-                        disableMainScreenInteraction()
+                        binding.acceptAddChapter.isEnabled=false
                     }
                     try {
                         val deferredTasks =
@@ -173,6 +173,7 @@ class EditChapterActivity : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
+                            binding.acceptAddChapter.isEnabled=true
                         }
                     }
                 }
@@ -180,7 +181,7 @@ class EditChapterActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main) {
                         binding.progressBar.visibility = View.VISIBLE
-                        disableMainScreenInteraction()
+                        binding.acceptAddChapter.isEnabled=false
                     }
                     try {
                         val deferredTasks =
@@ -194,7 +195,6 @@ class EditChapterActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             if (rs.all { it }) {
                                 chapterViewModel.setImgs()
-                                chapterViewModel.arrID.clear()
                                 chapterViewModel.updateContent(
                                     chapterID = chapter?.chapterID ?: -1,
                                     storyID = storyID
@@ -222,6 +222,7 @@ class EditChapterActivity : AppCompatActivity() {
 
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
+                            binding.acceptAddChapter.isEnabled=true
                         }
                     }
                 }
@@ -320,23 +321,7 @@ class EditChapterActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    fun disableMainScreenInteraction() {
-        val overlay = View(this)
-        overlay.setBackgroundColor(Color.parseColor("#80000000")) // Màu đen trong suốt
-        overlay.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
-        )
 
-        // Thêm lớp phủ vào root view
-        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
-        rootLayout.addView(overlay)
-
-        overlay.setOnTouchListener { v, event ->
-            true
-        }
-    }
 
 
 

@@ -50,7 +50,7 @@ class UserAdapter(
         Picasso.get().load(user.imgAvatar).into(holder.avt_user_col)
         holder.column2.text = user.userID.toString()
         holder.column1.text = "Nickname: ${user.nickName}"
-        holder.column3.text = getFormatedDate(user.createdDate)
+        holder.column3.text = getFormatedDate(normalizeDateTime(user.createdDate))
         holder.column4.text = "Username: ${user.userName}"
         holder.itemView.setOnLongClickListener {
             showPopupMenu(holder.itemView, user)
@@ -79,7 +79,7 @@ class UserAdapter(
                     userList.filter {
                         it.nickName.contains(query, ignoreCase = true)
                                 || it.userID.toString().contains(query, ignoreCase = true)
-                                ||it.userName.contains(query, ignoreCase = true)
+                                || it.userName.contains(query, ignoreCase = true)
                     }
                 }
                 val result = FilterResults()
@@ -162,5 +162,9 @@ class UserAdapter(
         val formattedDate = date.format(outputFormatter)
         return formattedDate
 
+    }
+
+    fun normalizeDateTime(input: String): String {
+        return input.replace(Regex("\\b(\\d)\\b"), "0$1") // Thêm số 0 vào giờ 1 chữ số
     }
 }

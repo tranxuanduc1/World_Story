@@ -79,13 +79,15 @@ class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : V
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getMonth(date: String): Month {
-        val dateTime = LocalDateTime.parse(date, formatter)
+        val normalizeDate=normalizeDateTime(date)
+        val dateTime = LocalDateTime.parse(normalizeDate, formatter)
         return dateTime.month
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getYear(date: String): Int {
-        val dateTime = LocalDateTime.parse(date, formatter)
+        val normalizeDate=normalizeDateTime(date)
+        val dateTime = LocalDateTime.parse(normalizeDate, formatter)
         return dateTime.year
     }
 
@@ -120,6 +122,10 @@ class CommentViewModel(private val db: DatabaseHelper, private val id: Int?) : V
                 }
             }
 
+    }
+
+    fun normalizeDateTime(input: String): String {
+        return input.replace(Regex("\\b(\\d)\\b"), "0$1") // Thêm số 0 vào giờ 1 chữ số
     }
 
 }

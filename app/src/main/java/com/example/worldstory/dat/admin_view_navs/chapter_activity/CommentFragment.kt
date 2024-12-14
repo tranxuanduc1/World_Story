@@ -13,12 +13,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentCommentBinding
 import com.example.worldstory.dat.admin_adapter.CommentAdapter
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModel
 import com.example.worldstory.dat.admin_viewmodels.CommentViewModelFactory
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -37,6 +40,10 @@ class CommentFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    private val genreViewModel: GenreViewModel by activityViewModels {
+        GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }
 
     private var idStory: Int? = -1

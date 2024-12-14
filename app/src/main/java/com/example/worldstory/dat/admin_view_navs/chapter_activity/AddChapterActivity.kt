@@ -128,6 +128,7 @@ class AddChapterActivity : AppCompatActivity() {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.Main) {
+                        binding.acceptAddChapter.isEnabled=false
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     try {
@@ -154,6 +155,7 @@ class AddChapterActivity : AppCompatActivity() {
                     } finally {
 
                         withContext(Dispatchers.Main) {
+                            binding.acceptAddChapter.isEnabled=true
                             binding.progressBar.visibility = View.GONE
                             this@AddChapterActivity.finish()
                         }
@@ -213,7 +215,6 @@ class AddChapterActivity : AppCompatActivity() {
 
 
         try {
-            binding.acceptAddChapter.isEnabled = false
             val file = driveService.files().create(fileMetadata, mediaContent).apply {
                 fields = "id, webViewLink"
                 mediaHttpUploader.apply {
@@ -230,8 +231,6 @@ class AddChapterActivity : AppCompatActivity() {
             Log.e("k up dc", "hythtyht")
             mediaContent.closeInputStream
             return false
-        } finally {
-            binding.acceptAddChapter.isEnabled = true
         }
 
 

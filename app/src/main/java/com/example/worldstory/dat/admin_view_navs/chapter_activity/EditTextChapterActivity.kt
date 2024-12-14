@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -100,28 +101,43 @@ class EditTextChapterActivity : AppCompatActivity() {
 
         //accept
         binding.acceptAddChapterTxt.setOnClickListener {
+            try {
+                binding.acceptAddChapterTxt.isEnabled=false
+                val storyID = intent.getIntExtra("storyID", -1)
 
-            val storyID = intent.getIntExtra("storyID", -1)
+                if (binding.tenChap.text.isNullOrEmpty()) {
+                    chapterViewModel.name.value = chapter?.title
+                    for (s in tempFile) {
+                        contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
+                    }
+                    chapterViewModel.updateTextContent(
+                        chapter?.chapterID ?: -1,
+                        storyID,
+                        contentMap
+                    )
+                } else {
+                    for (s in tempFile) {
+                        contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
+                    }
+                    chapterViewModel.updateTextContent(
+                        chapter?.chapterID ?: -1,
+                        storyID,
+                        contentMap
+                    )
+                }
+                prvTxtAdapter.update(mutableMapOf())
 
-            if (binding.tenChap.text.isNullOrEmpty()) {
-                chapterViewModel.name.value = chapter?.title
-                for (s in tempFile) {
-                    contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
-                }
-                chapterViewModel.updateTextContent(chapter?.chapterID ?: -1, storyID, contentMap)
-            } else {
-                for (s in tempFile) {
-                    contentMap[s.key] = readTextFromUri(s.value, contentResolver) ?: "empty !!"
-                }
-                chapterViewModel.updateTextContent(chapter?.chapterID ?: -1, storyID, contentMap)
+
+
+                contentMap.clear()
+                tempFile.clear()
+                index = 0
+            }catch (e:Exception){
+                Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
+            }finally {
+                binding.acceptAddChapterTxt.isEnabled=true
             }
-            prvTxtAdapter.update(mutableMapOf())
 
-
-
-            contentMap.clear()
-            tempFile.clear()
-            index = 0
 
         }
 

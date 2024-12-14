@@ -24,8 +24,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentChapterBinding
 import com.example.worldstory.dat.admin_adapter.ChapterAdapter
+import com.example.worldstory.dat.admin_dialog.EditGenredOfStoryDialog
 import com.example.worldstory.dat.admin_dialog.EditTitleDialog
 import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.dat.admin_viewmodels.GenreViewModelFactory
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
 import com.example.worldstory.dat.admin_viewmodels.StoryViewModelFactory
 import com.example.worldstory.dbhelper.DatabaseHelper
@@ -65,6 +68,11 @@ class ChapterFragment() : Fragment() {
             fragment.arguments = args
             return fragment
         }
+
+    }
+
+    private val genreViewModel: GenreViewModel by activityViewModels {
+        GenreViewModelFactory(DatabaseHelper(requireActivity()))
     }
 
     private var type: Int = 0
@@ -127,11 +135,15 @@ class ChapterFragment() : Fragment() {
         binding.storyViewModel = storyViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        storyViewModel.genresString.observe(viewLifecycleOwner) {
+            binding.gerns.text = storyViewModel.genresString.value
+        }
 
         // gán thuộc tính truyện hiện tại
         idStory = arguments?.getInt("idStory")
         storyViewModel.setStoryByID(idStory)
         storyViewModel.setIDStory(idStory)
+
 
         story = storyViewModel.getStoryById(idStory ?: -1)!!
         // sk thêm truyện
@@ -214,7 +226,7 @@ class ChapterFragment() : Fragment() {
 
                     withContext(Dispatchers.Main) {
                         binding.saveChanges.isEnabled = false
-                        binding.progressBar.visibility=View.VISIBLE
+                        binding.progressBar.visibility = View.VISIBLE
                     }
 
                     if (::uriav.isInitialized)
@@ -253,11 +265,10 @@ class ChapterFragment() : Fragment() {
                     }
                 } finally {
 
-                    storyViewModel.resetValue()
                     storyViewModel.setStoryByID(idStory)
                     withContext(Dispatchers.Main) {
                         binding.saveChanges.isEnabled = true
-                        binding.progressBar.visibility=View.GONE
+                        binding.progressBar.visibility = View.GONE
                     }
 
                 }
@@ -273,8 +284,35 @@ class ChapterFragment() : Fragment() {
             pickImageForAvtLauncher.launch("image/*")
         }
 
-        driveService = getDriveService(requireContext())
 
+        binding.cvBg.setOnClickListener {
+            if (binding.imgBground.visibility == View.GONE) {
+                binding.imgBground.visibility = View.VISIBLE
+                binding.upBackgroundBtn.visibility = View.VISIBLE
+            } else {
+                binding.imgBground.visibility = View.GONE
+                binding.upBackgroundBtn.visibility = View.GONE
+            }
+        }
+
+        binding.cvFace.setOnClickListener {
+            if (binding.avtStory.visibility == View.GONE) {
+                binding.avtStory.visibility = View.VISIBLE
+                binding.upAvtStoryBtn.visibility = View.VISIBLE
+            } else {
+                binding.avtStory.visibility = View.GONE
+                binding.upAvtStoryBtn.visibility = View.GONE
+            }
+        }
+
+        binding.editGenres.setOnClickListener {
+            val dialog = EditGenredOfStoryDialog(genreViewModel, storyViewModel)
+            dialog.show(parentFragmentManager, "EditGenresDialog")
+        }
+
+
+
+        driveService = getDriveService(requireContext())
 
     }
 

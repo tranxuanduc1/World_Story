@@ -13,6 +13,7 @@ import com.example.worldstory.duc.SampleDataStory
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.toInt
 import com.example.worldstory.model.Chapter
+import com.example.worldstory.model.Genre
 import com.example.worldstory.model.Story
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,17 +40,40 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
     private val tempList = mutableListOf<Story>()
     private val tempMap = mutableMapOf<Int, Set<Int>>()
 
+    var updateFlag = false
+
+    val genres = mutableListOf<Genre>()
+    val name_Genres = mutableListOf<String>()
+    private val _genresString = MutableLiveData<String>()
+    val genresString: LiveData<String> get() = _genresString
+
+
+    val genreEditList = mutableListOf<Int>()
+
     init {
 //        fetchAllStoriesByType(type)
         fetchAllStoriesByType(type)
     }
 
     fun fetchAllChapters() {
+        genres.clear()
+        name_Genres.clear()
+        _genresString.value = ""
         val tempChapterList = mutableListOf<Chapter>()
-        if (currentStoryID.value!! >= 0)
-            tempChapterList.addAll(db.getChaptersByStory(currentStoryID.value!!))
+        try {
 
-        chapterListByStory.value = tempChapterList
+            if (currentStoryID.value!! >= 0)
+                tempChapterList.addAll(db.getChaptersByStory(currentStoryID.value!!))
+            genreIDList.value?.forEach { genres.add(db.getGenreByGenresId(it)!!) }
+            genres.forEach { name_Genres.add(it.genreName) }
+            chapterListByStory.value = tempChapterList
+            _genresString.value = name_Genres.joinToString(", ")
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     fun fetchAllChaptersAsynce() {
@@ -83,6 +107,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
             genreIDList.value = storyGenreMap[story.storyID]?.toList()
             storyBgImg.add(story.bgImgUrl)
             storyImg.add(story.imgUrl)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -110,7 +135,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         return l
     }
 
-    fun onFail(){
+    fun onFail() {
         resetValue()
         fetchAllStoriesByTypeAsynce(type)
     }
@@ -140,7 +165,7 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
                         tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
                     }
                 }
-
+                updateFlag = true
                 _stories.value = tempList
                 storyGenreMap.values.clear()
                 tempMap.forEach { k, v -> storyGenreMap[k] = v }
@@ -157,12 +182,12 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
             tempMap.clear()
             tempList.clear()
 
-            tempList.addAll(db.getStoriesByType(type ?: 0))
+            tempList.addAll(db.getStoriesByType(type))
             tempList.forEach { s ->
                 tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
             }
 
-
+            updateFlag = true
             _stories.value = tempList
             storyGenreMap.values.clear()
             tempMap.forEach { k, v -> storyGenreMap[k] = v }
@@ -209,10 +234,8 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         try {
             val i: Int = db.updateBackgroundStory(s)
             fetchAllStoriesByTypeAsynce(type ?: 0)
-            resetValue()
             return i
         } catch (e: Exception) {
-            resetValue()
             e.printStackTrace()
             return -1
         }
@@ -235,10 +258,8 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         try {
             val i: Int = db.updateFaceStory(s)
             fetchAllStoriesByTypeAsynce(type ?: 0)
-            resetValue()
             return i
         } catch (e: Exception) {
-            resetValue()
             e.printStackTrace()
             return -1
         }
@@ -262,10 +283,8 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         try {
             val i: Int = db.updateInforStory(s)
             fetchAllStoriesByTypeAsynce(type ?: 0)
-            resetValue()
             return i
         } catch (e: Exception) {
-            resetValue()
             e.printStackTrace()
             return -1
         }
@@ -288,15 +307,14 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         try {
             val i: Int = db.updateStory(s)
             fetchAllStoriesByTypeAsynce(type ?: 0)
-            resetValue()
             return i
         } catch (e: Exception) {
-            resetValue()
             e.printStackTrace()
             return -1
         }
 
     }
+
 
     fun getStoryById(id: Int): Story? {
         try {
@@ -315,6 +333,44 @@ class StoryViewModel(private val db: DatabaseHelper, private val _type: Int) :
         db.deleteChapter(id)
         fetchAllChaptersAsynce()
     }
+
+    fun updateGenres() {
+        try {
+
+            genreIDList.value?.forEach { db.deleteGenreStory(it, currentStoryID.value!!) }
+            genreEditList.forEach { db.insertStoryGenre(currentStoryID.value!!, it) }
+            genreEditList.clear()
+            genres.clear()
+            name_Genres.clear()
+
+
+            tempMap.clear()
+            tempList.clear()
+
+            tempList.addAll(db.getStoriesByType(type))
+            tempList.forEach { s ->
+                tempMap[s.storyID ?: 0] = db.getGenreIDbyStoryID(s.storyID)
+            }
+
+            updateFlag = true
+            _stories.value = tempList
+            storyGenreMap.values.clear()
+            tempMap.forEach { k, v -> storyGenreMap[k] = v }
+
+            genreIDList.value = storyGenreMap[currentStoryID.value]?.toList()
+            genreIDList.value?.forEach { genres.add(db.getGenreByGenresId(it)!!) }
+            genres.forEach { name_Genres.add(it.genreName) }
+            _genresString.value = name_Genres.joinToString(", ")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+
+        }
+
+
+    }
+
+
 }
 
 class StoryViewModelFactory(

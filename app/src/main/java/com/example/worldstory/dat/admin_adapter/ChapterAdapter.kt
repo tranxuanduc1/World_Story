@@ -68,10 +68,14 @@ class ChapterAdapter(
     fun getFormatedDate(dateTime: String?): String {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val date = LocalDateTime.parse(dateTime, inputFormatter)
+        val date = LocalDateTime.parse(normalizeDateTime(dateTime), inputFormatter)
         val formattedDate = date.format(outputFormatter)
         return formattedDate
 
+    }
+
+    fun normalizeDateTime(input: String?): String {
+        return input?.replace(Regex("\\b(\\d)\\b"), "0$1")?:"" // Thêm số 0 vào giờ 1 chữ số
     }
 
 

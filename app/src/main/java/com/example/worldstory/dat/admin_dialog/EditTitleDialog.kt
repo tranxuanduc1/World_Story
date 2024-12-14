@@ -24,6 +24,6 @@ class EditTitleDialog:DialogFragment() {
             val dialog = builder.create()
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
             dialog
-        } ?: throw IllegalStateException("Activity cannot be null")
+            } ?: throw IllegalStateException("Activity cannot be null")
     }
 }
