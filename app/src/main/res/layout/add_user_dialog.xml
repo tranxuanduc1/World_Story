@@ -6,11 +6,11 @@
 
         <variable
             name="userViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.UserViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.UserViewModel" />
 
         <variable
             name="user"
-            type="com.example.worldstory.model.User" />
+            type="com.example.worldstory.data.model.User" />
     </data>
 
     <FrameLayout

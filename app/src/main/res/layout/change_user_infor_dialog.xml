@@ -5,7 +5,7 @@
 
         <variable
             name="userViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.UserViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.UserViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

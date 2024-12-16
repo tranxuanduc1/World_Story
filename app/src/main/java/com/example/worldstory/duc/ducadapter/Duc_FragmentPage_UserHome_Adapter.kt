@@ -4,10 +4,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.worldstory.duc.ducfragment.Duc_BookStories_User_Fragment
-import com.example.worldstory.duc.ducfragment.Duc_ComicStories_User_Fragment
-import com.example.worldstory.duc.ducfragment.Duc_Setting_User_Fragment
-import com.example.worldstory.duc.ducfragment.Duc_TextStories_User_Fragment
+import com.example.worldstory.view.ducfragment.Duc_BookStories_User_Fragment
+import com.example.worldstory.view.ducfragment.Duc_ComicStories_User_Fragment
+import com.example.worldstory.view.ducfragment.Duc_Setting_User_Fragment
+import com.example.worldstory.view.ducfragment.Duc_TextStories_User_Fragment
 
 class Duc_FragmentPage_UserHome_Adapter(fragmentManager: FragmentManager, lifecycle: Lifecycle):
     FragmentStateAdapter(fragmentManager,lifecycle)

@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddTextChapterActivity">
+    tools:context="com.example.worldstory.view.admin_view_navs.chapter_activity.AddTextChapterActivity">
 
     <data>
 
         <variable
             name="chapterViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.ChapterViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.ChapterViewModel" />
 
         <variable
             name="imageViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.ImageViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.ImageViewModel" />
     </data>
 <FrameLayout
     android:layout_width="match_parent"

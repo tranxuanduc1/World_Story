@@ -18,62 +18,62 @@
         android:theme="@style/Theme.WorldStory"
         tools:targetApi="31">
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucForgotPasswordActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.EditTextChapterActivity"
+            android:name="com.example.worldstory.view.admin_view_navs.chapter_activity.EditTextChapterActivity"
             android:exported="false"
             android:theme="@style/Theme.WorldStory" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucChapterMarkedActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucChapterMarkedActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucInfoUserActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucInfoUserActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucAllStoriesActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucAllStoriesActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddTextChapterActivity"
+            android:name="com.example.worldstory.view.admin_view_navs.chapter_activity.AddTextChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.AddChapterActivity"
+            android:name="com.example.worldstory.view.admin_view_navs.chapter_activity.AddChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucUserHomeActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucUserHomeActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucStoriesByGenreActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucSignUpActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucSignUpActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucLoginActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucLoginActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucResultSearchActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucResultSearchActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucChapterActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucStoryOverviewActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.duc.ducactivity.DucSearchActivity"
+            android:name="com.example.worldstory.view.ducactivity.DucSearchActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.ChapterActivity"
+            android:name="com.example.worldstory.view.admin_view_navs.chapter_activity.ChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.dat.admin_view_navs.chapter_activity.EditChapterActivity"
+            android:name="com.example.worldstory.view.admin_view_navs.chapter_activity.EditChapterActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.worldstory.AdminMainActivity"
+            android:name="com.example.worldstory.view.AdminMainActivity"
             android:exported="false" /> <!-- user gui -->
         <activity
-            android:name="com.example.worldstory.StartActivity"
+            android:name="com.example.worldstory.view.StartActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>

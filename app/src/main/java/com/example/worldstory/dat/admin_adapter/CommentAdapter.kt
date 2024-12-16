@@ -13,9 +13,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.CommentViewHolder
-import com.example.worldstory.dat.admin_viewmodels.CommentViewModel
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.User
+import com.example.worldstory.view_models.admin_viewmodels.CommentViewModel
+import com.example.worldstory.data.model.Comment
+import com.example.worldstory.data.model.User
 
 
 class CommentAdapter(

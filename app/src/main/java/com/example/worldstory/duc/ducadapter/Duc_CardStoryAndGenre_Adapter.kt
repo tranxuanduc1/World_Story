@@ -8,21 +8,15 @@ import android.widget.GridLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.CardStoryItemLayoutBinding
-import com.example.myapplication.databinding.ItemUserCreatedStoryLayoutBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
-import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
-import com.example.worldstory.duc.ducdataclass.DucStoriesAndGenreDataClass
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.data.ducdataclass.DucStoriesAndGenreDataClass
 import com.example.worldstory.duc.ducutils.changeShapeBackgroundColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.formatFloat
-import com.example.worldstory.duc.ducutils.getKeyUserInfo
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Story
-import com.example.worldstory.model.User
 
 class Duc_CardStoryAndGenre_Adapter(
     var context: Context,

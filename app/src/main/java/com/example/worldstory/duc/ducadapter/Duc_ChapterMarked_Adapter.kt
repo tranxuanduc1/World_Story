@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ItemChaperMarkedLayoutBinding
-import com.example.worldstory.duc.ducactivity.DucChapterActivity
-import com.example.worldstory.duc.ducdataclass.DucComboChapterDataClass
+import com.example.worldstory.view.ducactivity.DucChapterActivity
+import com.example.worldstory.data.ducdataclass.DucComboChapterDataClass
 import com.example.worldstory.duc.ducutils.getKeyChapterInfo
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.getKeyMainChapter
@@ -15,8 +15,8 @@ import com.example.worldstory.duc.ducutils.getKeyNextChapter
 import com.example.worldstory.duc.ducutils.getKeyPreviousChapter
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
-import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Story
+import com.example.worldstory.data.model.Chapter
+import com.example.worldstory.data.model.Story
 
 class Duc_ChapterMarked_Adapter(
     var context: Context,

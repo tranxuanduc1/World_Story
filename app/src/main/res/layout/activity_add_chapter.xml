@@ -6,11 +6,11 @@
 
         <variable
             name="chapterViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.ChapterViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.ChapterViewModel" />
 
         <variable
             name="imageViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.ImageViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.ImageViewModel" />
     </data>
 
     <FrameLayout

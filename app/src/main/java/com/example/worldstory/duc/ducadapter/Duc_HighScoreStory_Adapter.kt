@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ItemStoryHighScoreLayoutBinding
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
-import com.example.worldstory.duc.ducdataclass.DucComboHighScoreStoryDataClass
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.data.ducdataclass.DucComboHighScoreStoryDataClass
 import com.example.worldstory.duc.ducutils.formatFloat
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity

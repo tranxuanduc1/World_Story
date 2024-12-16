@@ -2,15 +2,15 @@ package com.example.worldstory.duc
 
 import android.content.Context
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.duc.ducdataclass.DucComboChapterDataClass
-import com.example.worldstory.duc.ducdataclass.DucCommentDataClass
-import com.example.worldstory.duc.ducdataclass.DucGenreDataClass
-import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
+import com.example.worldstory.data.ducdataclass.DucStoryDataClass
+import com.example.worldstory.data.ducdataclass.DucComboChapterDataClass
+import com.example.worldstory.data.ducdataclass.DucCommentDataClass
+import com.example.worldstory.data.ducdataclass.DucGenreDataClass
+import com.example.worldstory.data.ducdataclass.DucParagraphDataClass
 import com.example.worldstory.duc.ducutils.dateTimeNow
 import com.example.worldstory.duc.ducutils.getLoremIpsumLong
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Story
+import com.example.worldstory.data.model.Genre
+import com.example.worldstory.data.model.Story
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -60,7 +60,7 @@ object SampleDataStory {
         var name="guest$id"
         return name
     }
-    fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass{
+    fun getOneStoryByID(context: Context,idStory:Int): DucStoryDataClass {
         return getDataList(context).filter { it.idStory==idStory }.first()
     }
     fun addData(data : DucStoryDataClass){
@@ -148,7 +148,7 @@ object SampleDataStory {
         return list
     }
     //-----------------------------------------------------
-    fun getOneGenreByID(context: Context,idGenre:Int): DucGenreDataClass{
+    fun getOneGenreByID(context: Context,idGenre:Int): DucGenreDataClass {
         return getListOfGenre(context).filter { it.idGenre==idGenre }.first()
     }
     fun addGenre(item : DucGenreDataClass){
@@ -232,7 +232,7 @@ object SampleDataStory {
 //
 //    }
     //------------------------------
-    fun getOneParagraphByID(context: Context,idParagraph:Int): DucParagraphDataClass{
+    fun getOneParagraphByID(context: Context,idParagraph:Int): DucParagraphDataClass {
         return getListOfParagraph(context).filter { it.idParagraph==idParagraph }.first()
     }
     fun addParagraph(item : DucParagraphDataClass){
@@ -241,10 +241,10 @@ object SampleDataStory {
     fun addParagraph(item: Array<DucParagraphDataClass> ){
         listOfParagraph.addAll(item)
     }
-    fun getOneComicParagraph(): DucParagraphDataClass{
+    fun getOneComicParagraph(): DucParagraphDataClass {
         return DucParagraphDataClass(3,getExampleImgURLParagraph(), null,1,2)
     }
-    fun getOneTextParagraph(context:Context): DucParagraphDataClass{
+    fun getOneTextParagraph(context:Context): DucParagraphDataClass {
         return DucParagraphDataClass(1,null, getLoremIpsumLong(context),1,1,false)
     }
     fun getListOfParagraph(context: Context): List<DucParagraphDataClass>{
@@ -306,7 +306,7 @@ object SampleDataStory {
 
     }
     //---------------------------------------------------
-    fun addComment(item: DucCommentDataClass ){
+    fun addComment(item: DucCommentDataClass){
         listOfComment.add(item)
     }
 
@@ -340,10 +340,10 @@ object SampleDataStory {
         sumIdComment=sumIdComment+1
         return sumIdComment
     }
-    fun getexampleGenre():Genre{
+    fun getexampleGenre(): Genre {
         return Genre(1,"Khong co du lieu",1)
     }
-    fun getexampleStory(): Story{
+    fun getexampleStory(): Story {
         return Story(1,"Khong co du lieu","tac gia","mieu ta",getExampleImgURL(),getExampleImgURL(),0,
             dateTimeNow(),1f,1)
 

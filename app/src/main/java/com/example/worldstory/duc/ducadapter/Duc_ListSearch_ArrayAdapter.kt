@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
-import android.widget.Toast
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
 import com.example.worldstory.duc.ducutils.toActivity
-import com.example.worldstory.model.Story
+import com.example.worldstory.data.model.Story
 
 class Duc_ListSearch_ArrayAdapter(
     var appContext: Context,private val resource: Int,private val dataList: List<Story>) :

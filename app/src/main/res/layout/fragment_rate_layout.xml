@@ -6,7 +6,7 @@
 
         <variable
             name="rateViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.RateViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.RateViewModel" />
     </data>
 
     <LinearLayout

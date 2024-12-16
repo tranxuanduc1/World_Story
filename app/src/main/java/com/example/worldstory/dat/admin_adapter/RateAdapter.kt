@@ -14,10 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.RateViewHolder
-import com.example.worldstory.dat.admin_viewmodels.RateViewModel
-import com.example.worldstory.model.Comment
-import com.example.worldstory.model.Rate
-import com.example.worldstory.model.User
+import com.example.worldstory.view_models.admin_viewmodels.RateViewModel
+import com.example.worldstory.data.model.Rate
+import com.example.worldstory.data.model.User
 
 
 class RateAdapter(

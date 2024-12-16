@@ -10,14 +10,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducutils.changeShapeBackgroundColorByScore
 import com.example.worldstory.duc.ducutils.dpToPx
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
-import com.example.worldstory.model.Story
+import com.example.worldstory.data.model.Story
 
 
 class Duc_CardStoryItem_Adapter(var context: Context, private val dataList: ArrayList<Story>) :

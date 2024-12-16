@@ -1,8 +1,6 @@
 package com.example.worldstory.duc.ducadapter
 
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +8,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
-import com.example.worldstory.duc.ducutils.getKeyGenreInfo
-import com.example.worldstory.duc.ducutils.getKeyIsText
-import com.example.worldstory.duc.ducutils.getKeyStoriesByGenre
-import com.example.worldstory.duc.ducutils.toActivity
 import com.example.worldstory.duc.ducutils.toActivityStoriesByGenre
-import com.example.worldstory.model.Genre
+import com.example.worldstory.data.model.Genre
 
 class Duc_Button_Adapter(
     var context: Context,

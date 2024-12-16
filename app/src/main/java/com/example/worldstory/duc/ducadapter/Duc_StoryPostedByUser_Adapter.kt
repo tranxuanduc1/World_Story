@@ -4,17 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.databinding.ItemUserCreatedStoryLayoutBinding
 import com.example.myapplication.databinding.ItemUserPostStoryLayoutBinding
-import com.example.worldstory.duc.ducactivity.DucInfoUserActivity
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
 import com.example.worldstory.duc.ducutils.dateFromDateTime
 import com.example.worldstory.duc.ducutils.getKeyStoryInfo
-import com.example.worldstory.duc.ducutils.getKeyUserInfo
 import com.example.worldstory.duc.ducutils.loadImgURL
 import com.example.worldstory.duc.ducutils.toActivity
-import com.example.worldstory.model.User
-import com.example.worldstory.model.Story
+import com.example.worldstory.data.model.User
+import com.example.worldstory.data.model.Story
 
 class Duc_StoryPostedByUser_Adapter(
     var context: Context,

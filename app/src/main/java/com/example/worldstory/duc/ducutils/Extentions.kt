@@ -18,24 +18,21 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.CardStoryItemLayoutBinding
 import com.example.myapplication.databinding.ListCardStoriesLayoutBinding
-import com.example.worldstory.RoleEnum
+import com.example.worldstory.view.RoleEnum
 import com.example.worldstory.duc.SampleDataStory
-import com.example.worldstory.duc.ducactivity.DucStoriesByGenreActivity
-import com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity
-import com.example.worldstory.duc.ducdataclass.DucParagraphDataClass
-import com.example.worldstory.duc.ducdataclass.DucStoryDataClass
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Story
+import com.example.worldstory.view.ducactivity.DucStoriesByGenreActivity
+import com.example.worldstory.view.ducactivity.DucStoryOverviewActivity
+import com.example.worldstory.data.ducdataclass.DucParagraphDataClass
+import com.example.worldstory.data.ducdataclass.DucStoryDataClass
+import com.example.worldstory.data.model.Genre
+import com.example.worldstory.data.model.Story
 import com.squareup.picasso.Picasso
 import org.mindrot.jbcrypt.BCrypt
 
 import java.io.Serializable
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 //-------------------------------------
 

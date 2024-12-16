@@ -5,7 +5,7 @@
 
         <variable
             name="genreViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.GenreViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.GenreViewModel" />
     </data>
 
     <LinearLayout

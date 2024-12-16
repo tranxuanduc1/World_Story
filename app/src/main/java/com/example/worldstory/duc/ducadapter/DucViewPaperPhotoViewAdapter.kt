@@ -4,13 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Row
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.example.worldstory.dat.admin_adapter.ViewPagerAdapter
-import com.example.worldstory.model.Image
+import com.example.worldstory.data.model.Image
 import com.example.myapplication.R
-import com.example.myapplication.databinding.LayoutDucPhotoviewBinding
 import com.example.worldstory.duc.ducutils.loadImgURL
 
 import com.github.chrisbanes.photoview.PhotoView

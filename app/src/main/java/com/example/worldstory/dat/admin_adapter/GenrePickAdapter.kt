@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.GenrePickViewHolder
-import com.example.worldstory.dat.admin_viewholder.GenreViewHolder
-import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
-import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
+import com.example.worldstory.view_models.admin_viewmodels.GenreViewModel
+import com.example.worldstory.view_models.admin_viewmodels.StoryViewModel
 
 class GenrePickAdapter(
     private val storyViewModel: StoryViewModel,

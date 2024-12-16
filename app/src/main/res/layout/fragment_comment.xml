@@ -5,7 +5,7 @@
 
         <variable
             name="commentViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.CommentViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.CommentViewModel" />
     </data>
 
 

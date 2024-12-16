@@ -11,18 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.dat.admin_view_navs.chapter_activity.EditChapterActivity
-import com.example.worldstory.dat.admin_view_navs.chapter_activity.EditTextChapterActivity
+import com.example.worldstory.view.admin_view_navs.chapter_activity.EditChapterActivity
+import com.example.worldstory.view.admin_view_navs.chapter_activity.EditTextChapterActivity
 import com.example.worldstory.dat.admin_viewholder.ChapterViewHolder
-import com.example.worldstory.dat.admin_viewholder.CommentViewHolder
-import com.example.worldstory.dat.admin_viewmodels.ChapterViewModel
-import com.example.worldstory.dat.admin_viewmodels.StoryViewModel
-import com.example.worldstory.model.Chapter
-import com.example.worldstory.model.Rate
+import com.example.worldstory.view_models.admin_viewmodels.StoryViewModel
+import com.example.worldstory.data.model.Chapter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

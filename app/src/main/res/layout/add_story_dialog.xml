@@ -6,7 +6,7 @@
     <data>
         <variable
             name="storyViewModel"
-            type="com.example.worldstory.dat.admin_viewmodels.StoryViewModel" />
+            type="com.example.worldstory.view_models.admin_viewmodels.StoryViewModel" />
     </data>
 
     <LinearLayout

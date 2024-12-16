@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.worldstory.duc.ducfragment.Duc_LoveBookStories_Fragment"
+    tools:context="com.example.worldstory.view.ducfragment.Duc_LoveBookStories_Fragment"
     android:id="@+id/swipeRefresh_loveBookStoryFragment"
     android:background="@color/white"
     >

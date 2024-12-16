@@ -12,16 +12,12 @@ import android.widget.Filterable
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.worldstory.dat.admin_viewholder.GenreViewHolder
-import com.example.worldstory.dat.admin_viewmodels.GenreViewModel
+import com.example.worldstory.view_models.admin_viewmodels.GenreViewModel
 import com.example.worldstory.duc.ducutils.isUserCurrentAdmin
-import com.example.worldstory.duc.ducutils.isUserCurrentAuthor
-import com.example.worldstory.model.Genre
-import com.example.worldstory.model.Rate
-import java.util.Collections
+import com.example.worldstory.data.model.Genre
 
 class GenreAdapter(
     private val genreViewModel: GenreViewModel,

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.worldstory.duc.ducactivity.DucStoryOverviewActivity">
+    tools:context="com.example.worldstory.view.ducactivity.DucStoryOverviewActivity">
 
     <ScrollView
         android:layout_width="match_parent"

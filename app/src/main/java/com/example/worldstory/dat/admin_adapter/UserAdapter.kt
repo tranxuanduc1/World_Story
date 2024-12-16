@@ -1,8 +1,6 @@
 package com.example.worldstory.dat.admin_adapter
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,11 +13,11 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.worldstory.dat.admin_dialog.ChangeRole
-import com.example.worldstory.dat.admin_dialog.ChangeUserAvtDialog
-import com.example.worldstory.dat.admin_dialog.ChangeUserInforDialog
-import com.example.worldstory.dat.admin_dialog.ChangeUserPasswordDialog
-import com.example.worldstory.model.User
+import com.example.worldstory.view.admin_dialog.ChangeRole
+import com.example.worldstory.view.admin_dialog.ChangeUserAvtDialog
+import com.example.worldstory.view.admin_dialog.ChangeUserInforDialog
+import com.example.worldstory.view.admin_dialog.ChangeUserPasswordDialog
+import com.example.worldstory.data.model.User
 import com.example.worldstory.dat.admin_viewholder.UserViewHolder
 import com.squareup.picasso.Picasso
 import java.time.LocalDateTime
