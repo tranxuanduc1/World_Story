@@ -353,7 +353,7 @@ class DucChapterActivity : AppCompatActivity(), DucLoginDialogFragment.DialogLis
 
             listOfParagraphs.forEach {
                 binding.linearContainerContentChapter.addView(
-                    createContentTextView("idPa : ${it.paragraphID},idChap: ${it.chapterID} --\n ${it.content}")
+                    createContentTextView("     ${it.content}")
                 )
             }
             // cuon ve vi tri dau
