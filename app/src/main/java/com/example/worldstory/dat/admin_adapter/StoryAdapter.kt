@@ -46,7 +46,7 @@ class StoryAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = filteredList[position]
-        Picasso.get().load(SampleDataStory.getExampleImgURL()).into(holder.img)
+        Picasso.get().load(story.imgUrl).into(holder.img)
         holder.column2.text = story.title
         holder.column3.text = story.author
         holder.column4.text = getFormatedDate(story.createdDate)
